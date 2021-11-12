@@ -16,7 +16,11 @@ def get_partition(*args):
 
 if __name__ == "__main__":
     cnt = 0
-    producer = KafkaProducer(bootstrap_servers=["localhost:9092"], value_serializer=json_serializer)
+    producer = KafkaProducer(
+        security_protocol="PLAINTEXT",
+        bootstrap_servers=["localhost:9092"],
+        value_serializer=json_serializer,
+    )
 
     while cnt < 15:
         registered_user = get_registered_user()
