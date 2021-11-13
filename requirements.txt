@@ -1,3 +1,4 @@
 kafka-python
 black
 Faker
+faust

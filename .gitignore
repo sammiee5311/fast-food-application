@@ -66,6 +66,9 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+# faust stuff:
+sameples/faust/myapp-data/
+
 # Scrapy stuff:
 .scrapy
 
