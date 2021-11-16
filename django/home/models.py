@@ -12,7 +12,7 @@ FOOD_TYPES = (
 OPTIONS = (("ready", "ready"), ("not-ready", "not-ready"))
 
 
-class Type(models.Model):
+class RestaurantType(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -28,7 +28,7 @@ class Restaurant(models.Model):
         def get_queryset(self):
             return super().get_queryset().filter(status="ready")
 
-    type = models.ForeignKey(Type, on_delete=models.PROTECT, default=1)
+    type = models.ForeignKey(RestaurantType, on_delete=models.PROTECT, default=1)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)
     phone_number = PhoneNumberField(null=True, blank=True)
