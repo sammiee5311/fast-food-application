@@ -3,3 +3,4 @@ djangorestframework
 black
 django-phonenumber-field
 phonenumbers
+coverage
