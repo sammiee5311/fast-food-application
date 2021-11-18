@@ -65,4 +65,4 @@ class Menu(models.Model):
     food_items = models.ManyToManyField(FoodItem)
 
     def __str__(self):
-        return self.restaurant
+        return str(self.food_items.last().name)

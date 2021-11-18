@@ -20,6 +20,10 @@ jobs:
       - name: Install dependency
         run: |
           make install
+
+      - name: Unittest Django
+        run: |
+          make unittest
       
       - name: Run docker compose
         run: |
@@ -32,3 +36,12 @@ jobs:
       - name: Stop docker compose
         run: |
           make stop-docker-compose
+
+      - name: Slack notify
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: dev
+          SLACK_MESSAGE: 'fast-food CI - ${{job.status}}'
+          SLACK_USERNAME: Github Alert
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
