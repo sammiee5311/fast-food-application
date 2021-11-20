@@ -13,9 +13,11 @@ class User(faust.Record):
 
 
 fake = Faker()
-cnt = 0
 
-app = faust.App("myapp", broker=f"kafka://{socket.gethostbyname(socket.gethostname())}:9092")
+cnt = 0
+ip_address = socket.gethostbyname(socket.gethostname())
+
+app = faust.App("myapp", broker=f"kafka://{ip_address}:9092")
 
 topic = app.topic("registered-user", value_type=User)
 

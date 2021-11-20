@@ -15,7 +15,8 @@ FAUST_FILES = ["start.py", "worker"]
     backoff.expo, (kafka.errors.NoBrokersAvailable, kafka.errors.UnrecognizedBrokerVersion), max_tries=15
 )
 def wait_until_kafka_up():
-    KafkaProducer(bootstrap_servers=f"{socket.gethostbyname(socket.gethostname())}:9092")
+    ip_address = socket.gethostbyname(socket.gethostname())
+    KafkaProducer(bootstrap_servers=f"{ip_address}:9092")
 
 
 def excute_sample(path: str, files: List[str]) -> None:
