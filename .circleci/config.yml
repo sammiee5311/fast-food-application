@@ -1,0 +1,70 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.2
+
+jobs:
+  install-dependencies:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - checkout
+      - run:
+          name: Switch to Python v3.8
+          command: |
+            pyenv global 3.8.5
+      - run:
+          name: Install dependency
+          command: make install
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./
+  django-test:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Switch to Python 3
+          command: |
+            pyenv global 3.8.5
+      - run:
+          name: Unittest Django
+          command: make unittest
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./
+  docker-compose-test:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Switch to Python 3
+          command: |
+            pyenv global 3.8.5
+      - run:
+          name: Run docker compose
+          command: make run-docker-compose
+      - run:
+          name: Test samples
+          command: |
+            make test-run-samples
+      - run:
+          name: Stop docker compose
+          command: make stop-docker-compose
+
+workflows:
+  sample:
+    jobs:
+      - install-dependencies
+      - django-test:
+          requires:
+            - install-dependencies
+      - docker-compose-test:
+          requires:
+            - django-test
