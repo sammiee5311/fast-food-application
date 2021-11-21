@@ -32,8 +32,8 @@ services:
         read_only: true
     ports:
       - "5044:5044"
-      - "5500:5500/tcp"
-      - "5500:5500/udp"
+      - "5501:5501/tcp"
+      - "5501:5501/udp"
       - "9600:9600"
     networks:
       - union-kafka

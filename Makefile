@@ -42,8 +42,8 @@ set-up-django:
 	( \
 		cd django; \
 		$(PIP) install -r requirements.txt; \
-		python manage.py makemigrations; \
-		python manage.py migrate; \
+		$(PYTHON) manage.py makemigrations; \
+		$(PYTHON) manage.py migrate; \
 	)
 
 test-run-samples:
