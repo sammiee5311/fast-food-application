@@ -8,7 +8,7 @@ else
 	PIP := pip3
 endif
 
-make-env:
+create-env:
 	$(PYTHON) -m venv venv
 
 install-env:
