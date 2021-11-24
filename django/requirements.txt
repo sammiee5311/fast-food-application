@@ -4,3 +4,4 @@ black
 django-phonenumber-field
 phonenumbers
 coverage
+django-cors-headers

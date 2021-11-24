@@ -2,7 +2,6 @@ name: CI
 
 on: [push, pull_request]
 
-
 jobs:
   build-and-install-dependencies:
     runs-on: ubuntu-latest
@@ -44,6 +43,8 @@ jobs:
           python-version: 3.9
 
       - name: Unittest Django
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: make unittest
 
   kafka-log-test:
@@ -65,10 +66,10 @@ jobs:
 
       - name: Run docker compose
         run: make run-docker-compose
-      
+
       - name: Test samples
         run: make test-run-samples
-      
+
       - name: Stop docker compose
         run: make stop-docker-compose
 
@@ -77,6 +78,6 @@ jobs:
         uses: rtCamp/action-slack-notify@v2.2.0
         env:
           SLACK_CHANNEL: dev
-          SLACK_MESSAGE: 'fast-food CI - ${{job.status}}'
+          SLACK_MESSAGE: "fast-food CI - ${{job.status}}"
           SLACK_USERNAME: Github Alert
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
