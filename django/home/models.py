@@ -23,6 +23,24 @@ class RestaurantType(models.Model):
         return self.name
 
 
+class FoodItem(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=100)
+    type = models.CharField(max_length=100, choices=FOOD_TYPES)
+
+    def __str__(self):
+        return self.name
+
+
+class Menu(models.Model):
+    name = models.CharField(max_length=100, null=False)
+    price = models.FloatField(null=False)
+    food_items = models.ManyToManyField(FoodItem)
+
+    def __str__(self):
+        return self.name
+
+
 class Restaurant(models.Model):
     class RestaurantObjects(models.Manager):
         def get_queryset(self):
@@ -37,32 +55,18 @@ class Restaurant(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="restaurant")
     status = models.CharField(max_length=10, choices=OPTIONS, default="ready")
     objects = models.Manager()
+    menu = models.ManyToManyField(Menu)
     restaurantobjects = RestaurantObjects()
 
     class Meta:
         ordering = ("-updated",)
 
-    def __str__(self):
-        return self.name
-
-
-class FoodItem(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.CharField(max_length=100)
-    type = models.CharField(max_length=100, choices=FOOD_TYPES)
+    @property
+    def menus(self):
+        res = []
+        for menu in self.menu.all():
+            res.append(menu.name)
+        return res
 
     def __str__(self):
         return self.name
-
-
-class Menu(models.Model):
-    restaurant = models.OneToOneField(
-        Restaurant,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
-
-    food_items = models.ManyToManyField(FoodItem)
-
-    def __str__(self):
-        return str(self.food_items.last().name)
