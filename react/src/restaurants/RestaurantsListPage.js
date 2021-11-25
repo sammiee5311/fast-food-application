@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import ListItem from '../components/ListItem'
+import { Link } from 'react-router-dom'
+import { ReactComponent as BACK } from '../assets/chevron-left.svg'
 
 const RestaurantsListPage = () => {
     let [restaurants, setRestaurants] = useState([])
@@ -7,7 +9,6 @@ const RestaurantsListPage = () => {
     let getRestaurants = async () => {
         let response = await fetch('/api/restaurants/')
         let data = await response.json()
-        console.log('DATA: ', data)
         setRestaurants(data)
     }
 
@@ -17,6 +18,8 @@ const RestaurantsListPage = () => {
 
     return (
         <div>
+            <h2> Restaurants List </h2>
+            <Link to="/"> <BACK /> </Link>
             <div className="restaurants-list">
                 {restaurants.map((restaurant, index) => (
                     <ListItem key={index} restaurant={restaurant} />
