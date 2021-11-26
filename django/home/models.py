@@ -50,12 +50,12 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)
     phone_number = PhoneNumberField(null=True, blank=True)
-    slug = models.SlugField(max_length=100, unique_for_date="updated")
+    slug = models.SlugField(max_length=100, unique_for_date="updated", blank=True)
     updated = models.DateTimeField(default=timezone.now)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="restaurant")
     status = models.CharField(max_length=10, choices=OPTIONS, default="ready")
     objects = models.Manager()
-    menu = models.ManyToManyField(Menu)
+    menu = models.ManyToManyField(Menu, blank=True)
     restaurantobjects = RestaurantObjects()
 
     class Meta:
