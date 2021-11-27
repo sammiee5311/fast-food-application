@@ -12,13 +12,13 @@ class TestViewRestaurant(APITestCase):
 
     def test_view_restaurant_success(self):
         self.client.force_login(self.user)
-        url = reverse("home_api:listcreate")
+        url = reverse("home_api:restaurant")
         response_get = self.client.get(url, format="json")
 
         self.assertEqual(response_get.status_code, status.HTTP_200_OK)
 
     def test_view_restaurant_failure(self):
-        url = reverse("home_api:listcreate")
+        url = reverse("home_api:restaurant")
         response = self.client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -35,7 +35,7 @@ class TestViewRestaurant(APITestCase):
             "owner": self.user.id,
         }
 
-        url = reverse("home_api:listcreate")
+        url = reverse("home_api:restaurant")
         response = self.client.post(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -47,7 +47,7 @@ class TestViewRestaurant(APITestCase):
 
         data = {"name": "Super happy burger"}
 
-        url = reverse("home_api:detailcreate", kwargs={"pk": 1})
+        url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         response = client.patch(url, data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -57,7 +57,7 @@ class TestViewRestaurant(APITestCase):
         client = self.client
         self.create_restaurant(client)
 
-        url = reverse("home_api:detailcreate", kwargs={"pk": 1})
+        url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         response = client.delete(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

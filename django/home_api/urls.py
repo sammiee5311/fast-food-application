@@ -1,10 +1,12 @@
 from django.urls import path
 
-from .views import RestaurantList
+from .views import OrderList, RestaurantList
 
 app_name = "home_api"
 
 urlpatterns = [
-    path("restaurants/<int:pk>/", RestaurantList.as_view(), name="detailcreate"),
-    path("restaurants/", RestaurantList.as_view(), name="listcreate"),
+    path("restaurants/<int:pk>/", RestaurantList.as_view(), name="restaurant_detail"),
+    path("restaurants/", RestaurantList.as_view(), name="restaurant"),
+    path("order/<int:pk>/", OrderList.as_view(), name="order_detail"),
+    path("order/", OrderList.as_view(), name="order"),
 ]

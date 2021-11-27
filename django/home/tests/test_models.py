@@ -40,4 +40,5 @@ class TestHomeModels(TestCase):
         self.assertEqual(str(self.menu2), "cheese-burger")
 
     def test_list_of_menus(self):
-        self.assertEqual(self.restaurant.menus, ["bulgogi-burger", "cheese-burger"])
+        menus = [{"name": "bulgogi-burger", "price": 5.99}, {"name": "cheese-burger", "price": 4.99}]
+        self.assertEqual(self.restaurant.menus, menus)

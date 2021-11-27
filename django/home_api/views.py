@@ -2,11 +2,12 @@ from typing import Dict
 
 import rest_framework
 from home.models import Restaurant
+from order.models import Order
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import RestaurantSerializer
+from .serializers import OrderSerializer, RestaurantSerializer
 
 
 class RestaurantList(APIView):
@@ -71,3 +72,17 @@ class RestaurantList(APIView):
                 return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderList(APIView):
+    def get(self, request, **kwargs):
+        order_id = kwargs.get("pk", None)
+
+        if order_id is None:
+            queryset = Order.objects.all()
+            order_serializer = OrderSerializer(queryset, many=True)
+            return Response(order_serializer.data, status=status.HTTP_200_OK)
+        else:
+            order = Order.objects.get(id=order_id)
+            order_serializer = OrderSerializer(order)
+            return Response(order_serializer.data, status=status.HTTP_200_OK)
