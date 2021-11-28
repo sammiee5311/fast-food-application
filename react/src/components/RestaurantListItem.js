@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ListItem = ({restaurant}) => {
+const RestaurantListItem = ({restaurant}) => {
     return (
         <Link to={`/restaurant/${restaurant.id}`}>
             <h3> {restaurant.name} - {restaurant.address} </h3>
@@ -9,4 +9,4 @@ const ListItem = ({restaurant}) => {
     )
 }
 
-export default ListItem
+export default RestaurantListItem

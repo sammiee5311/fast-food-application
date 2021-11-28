@@ -27,5 +27,13 @@ class Order(models.Model):
             res += menu.price
         return res
 
+    @property
+    def username(self):
+        return self.user.username
+
+    @property
+    def created_on_str(self):
+        return self.created_on.strftime(f"%Y-%m-%d %H:%M")
+
     def __str__(self):
         return f"{self.user} ordered food at {self.restaurant}."

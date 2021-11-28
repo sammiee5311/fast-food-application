@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import ListItem from '../components/ListItem'
+import RestaurantListItem from '../components/RestaurantListItem'
 import { Link } from 'react-router-dom'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
 
@@ -22,7 +22,7 @@ const RestaurantsListPage = () => {
             <Link to="/"> <BACK /> </Link>
             <div className="restaurants-list">
                 {restaurants.map((restaurant, index) => (
-                    <ListItem key={index} restaurant={restaurant} />
+                    <RestaurantListItem key={index} restaurant={restaurant} />
                 ))}
             </div>
         </div>
