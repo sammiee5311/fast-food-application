@@ -12,3 +12,4 @@ omit =
     *settings*
     *__init__*.py*
     *migrations*
+    manage.py
