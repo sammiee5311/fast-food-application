@@ -75,7 +75,7 @@ class RestaurantList(APIView):
 
 
 class OrderList(APIView):
-    def get(self, request, **kwargs):
+    def get(self, request, **kwargs) -> Response:
         order_id = kwargs.get("pk", None)
 
         if order_id is None:

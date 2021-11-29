@@ -1,15 +1,14 @@
-import json
-
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
 from home.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
-from order.models import Order
+from order.models import Order, OrderMenu
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.response import Response
+from rest_framework.test import APIClient, APITestCase
 
 
-def create_restaurant(user, client):
+def create_restaurant(user: User, client: APIClient) -> Response:
     client.force_login(user)
     restaraunt_type = RestaurantType.objects.create(id=1, name="hamburger")
     data = {
@@ -27,7 +26,7 @@ def create_restaurant(user, client):
     return response
 
 
-def create_menu(restaurant):
+def create_menu(restaurant: Restaurant) -> Menu:
     food_item = FoodItem.objects.create(id=1, name="burger", description="burger", type=FOOD_TYPES[1])
     menu = Menu.objects.create(name="bulgogi-burger", price=5.99, restaurant=restaurant)
     menu.food_items.set([food_item])
@@ -36,77 +35,104 @@ def create_menu(restaurant):
     return menu
 
 
-def create_order(user, client, restaurant):
+def create_order(user, client: APIClient, restaurant: Restaurant):
     client.force_login(user)
     menu = create_menu(restaurant)
-    order = Order.objects.create(id=1, user=user, price=menu.price, restaurant=restaurant)
-    order.menu.set([menu])
+    order = Order.objects.create(id=1, user=user, restaurant=restaurant)
+    OrderMenu.objects.create(id=1, menu=menu, order=order, quantity=1)
 
 
 class TestViewRestaurant(APITestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = User.objects.create(id=0, username="username", password="password")
 
-    def test_view_restaurant_success(self):
+    def test_view_restaurant_success(self) -> None:
         self.client.force_login(self.user)
         url = reverse("home_api:restaurant")
         response_get = self.client.get(url, format="json")
 
         self.assertEqual(response_get.status_code, status.HTTP_200_OK)
 
-    def test_view_restaurant_failure(self):
+    def test_view_particualr_restaurant_success(self) -> None:
+        client = self.client
+        client.force_login(self.user)
+        create_restaurant(self.user, client)
+
+        url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
+        response_get = self.client.get(url, format="json")
+
+        self.assertEqual(response_get.status_code, status.HTTP_200_OK)
+
+    def test_view_restaurant_failure(self) -> None:
         url = reverse("home_api:restaurant")
         response = self.client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_create_restaurant(self):
+    def test_create_restaurant(self) -> None:
         client = self.client
+
+        url_invalid_data = reverse("home_api:restaurant")
+        invalid_data = {"phone_number": "Invalid data"}
+
         response = create_restaurant(self.user, client)
+        response_invalid_data = client.post(url_invalid_data, invalid_data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json()["name"], "Happy burger")
+        self.assertEqual(response_invalid_data.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_update_restaurant(self):
+    def test_update_restaurant(self) -> None:
         client = self.client
         create_restaurant(self.user, client)
 
         data = {"name": "Super happy burger"}
+        invalid_data = {"phone_number": "invalid phone number"}
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
+        url_without_id = "http://localhost:8000/api/restaurants/"
+
         response = client.patch(url, data, format="json")
+        response_without_id = client.patch(url_without_id, data, format="json")
+        response_invalid_data = client.patch(url, invalid_data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["name"], "Super happy burger")
+        self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_invalid_data.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_delete_restaurant(self):
+    def test_delete_restaurant(self) -> None:
         client = self.client
         create_restaurant(self.user, client)
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
+        url_without_id = "http://localhost:8000/api/restaurants/"
+
         response = client.delete(url, format="json")
+        response_without_id = client.delete(url_without_id, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestViewOrder(APITestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = User.objects.create(username="username", password="password")
 
-    def test_view_order_success(self):
+    def test_view_order_success(self) -> None:
         self.client.force_login(self.user)
         url = reverse("home_api:order")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_view_order_failure(self):
+    def test_view_order_failure(self) -> None:
         url = reverse("home_api:order")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_view_particular_order(self):
+    def test_view_particular_order(self) -> None:
         client = self.client
         create_restaurant(self.user, client)
         restaurant = Restaurant.objects.get(id=1)
