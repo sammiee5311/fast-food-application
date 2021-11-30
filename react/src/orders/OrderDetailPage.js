@@ -2,6 +2,8 @@ import React, {useEffect, useState, useCallback} from 'react'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
 
+import OrderMenuList from './OrderMenuList'
+
 const OrderDetailPage = () => {
     let orderId = useParams().id
     let [order, setOrder] = useState(null)
@@ -17,13 +19,6 @@ const OrderDetailPage = () => {
         getOrder()
     }, [getOrder])
 
-    let menus = order?.menus.map((menu, index) => (
-        <li key={index}>
-            <p> name: {menu.name} </p>
-            <p> price: {menu.price} </p>
-        </li>
-    ))
-
     if (order?.username !== undefined) {
         text = `Order From : ${order?.username} \n At : ${order?.created_on_str} \n Total Price : ${order?.total_price}`
     }
@@ -35,7 +30,7 @@ const OrderDetailPage = () => {
             <pre>
                 {text}
                 <p> - Menu - </p>
-                {menus}
+                <OrderMenuList menus={order?.menus}/>
             </pre>
         </div>
     )

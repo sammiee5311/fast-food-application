@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
+import RestaurantMenuList from './RestaurantMenuList'
 
 const RestaurantDetailPage = () => {
     let restaurantId = useParams().id
@@ -17,13 +18,6 @@ const RestaurantDetailPage = () => {
         getRestaurant()
     }, [getRestaurant])
 
-    let menus = restaurant?.menus.map((menu, index) => (
-        <li key={index}>
-            <p> name: {menu.name} </p>
-            <p> price: {menu.price} </p>
-        </li>
-    ))
-
     if (restaurant?.name !== undefined) {
         text = `Name : ${restaurant?.name} \n Address : ${restaurant?.address} \n Phone Number : ${restaurant?.phone_number}`
     }
@@ -35,7 +29,7 @@ const RestaurantDetailPage = () => {
             <pre>
                 {text}
                 <p> - Menu - </p>
-                {menus}
+                <RestaurantMenuList menus={restaurant?.menus}/>
             </pre>
         </div>
     )

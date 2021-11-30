@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import RestaurantsListPage from './restaurants/RestaurantsListPage'
+import RestaurantsPage from './restaurants/RestaurantsPage'
 import RestaurantDetailPage from './restaurants/RestaurantDetailPage'
 import OrderListPage from './orders/OrderListPage'
 import OrderDetailPage from "./orders/OrderDetailPage"
@@ -11,7 +11,7 @@ function App() {
     <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/restaurants" exact element={<RestaurantsListPage />} />
+          <Route path="/restaurants" exact element={<RestaurantsPage />} />
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
           <Route path="/orders" exact element={<OrderListPage />} />
           <Route path="/order/:id" exact element={<OrderDetailPage />} />

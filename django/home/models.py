@@ -62,6 +62,10 @@ class Restaurant(models.Model):
         ordering = ("-updated",)
 
     @property
+    def type_name(self):
+        return self.type.name
+
+    @property
     def menus(self):
         res = []
         for menu in self.menu.all():

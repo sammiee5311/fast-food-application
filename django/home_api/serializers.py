@@ -8,7 +8,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = ("id", "type", "name", "owner", "address", "phone_number", "status", "menus")
+        fields = ("id", "type_name", "name", "owner", "address", "phone_number", "menus")
 
 
 class OrderSerializer(serializers.ModelSerializer):
