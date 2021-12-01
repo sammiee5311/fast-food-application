@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react'
+import React, {useEffect, useState, useCallback, Fragment} from 'react'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
 
@@ -24,7 +24,7 @@ const OrderDetailPage = () => {
     }
 
     return (
-        <div>
+        <Fragment>
             <h2> Order Detail </h2>
             <Link to="/orders"> <BACK /> </Link>
             <pre>
@@ -32,7 +32,7 @@ const OrderDetailPage = () => {
                 <p> - Menu - </p>
                 <OrderMenuList menus={order?.menus}/>
             </pre>
-        </div>
+        </Fragment>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import OrderListItem from '../components/OrderListItem'
 import { Link } from 'react-router-dom'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
@@ -17,7 +17,7 @@ const OrderListPage = () => {
     }, [])
 
     return (
-        <div>
+        <Fragment>
             <h2> Order List </h2>
             <Link to="/"> <BACK /> </Link>
             <div className="order-list">
@@ -25,7 +25,7 @@ const OrderListPage = () => {
                     <OrderListItem key={index} order={order} />
                 ))}
             </div>
-        </div>
+        </Fragment>
     )
 }
 

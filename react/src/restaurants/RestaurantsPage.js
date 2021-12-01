@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, Fragment} from 'react'
 import RestaurantType from './RestaurantType'
 import RestaurantsList from './RestaurantsList'
 import { Link } from 'react-router-dom'
@@ -25,14 +25,14 @@ const RestaurantsPage = () => {
     }, [])
 
     return (
-        <div>
+        <Fragment>
             <h2> Restaurants List </h2>
             <Link to="/"> <BACK /> </Link>
             <div className="filter-type">
             <RestaurantType onFilterType={filterType}/>
             </div>
             <RestaurantsList restaurants={restaurants} restaurantType={restaurantType}/>
-        </div>
+        </Fragment>
     )
 }
 

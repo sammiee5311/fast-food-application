@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import RestaurantListItem from '../components/RestaurantListItem'
 
 const RestaurantsList = (props) => {
@@ -11,11 +11,11 @@ const RestaurantsList = (props) => {
     })
 
     return (
-        <div>
+        <Fragment>
         {filteredRestaurants.map((restaurant, index) => (
             <RestaurantListItem key={index} restaurant={restaurant} />
         ))}
-        </div>
+        </Fragment>
     )
 }
 
