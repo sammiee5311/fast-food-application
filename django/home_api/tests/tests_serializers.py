@@ -53,15 +53,18 @@ class TestViewRestaurant(APITestCase):
 
         self.assertEqual(response_get.status_code, status.HTTP_200_OK)
 
-    def test_view_particualr_restaurant_success(self) -> None:
+    def test_view_particualr_restaurant(self) -> None:
         client = self.client
         client.force_login(self.user)
         create_restaurant(self.user, client)
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
-        response_get = self.client.get(url, format="json")
+        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
+        response = client.get(url, format="json")
+        response_id_does_not_exist = client.get(url_id_does_not_exist, format="json")
 
-        self.assertEqual(response_get.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_view_restaurant_failure(self) -> None:
         url = reverse("home_api:restaurant")
@@ -91,15 +94,18 @@ class TestViewRestaurant(APITestCase):
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         url_without_id = "http://localhost:8000/api/restaurants/"
+        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.patch(url, data, format="json")
         response_without_id = client.patch(url_without_id, data, format="json")
         response_invalid_data = client.patch(url, invalid_data, format="json")
+        response_id_does_not_exist = client.patch(url_id_does_not_exist, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["name"], "Super happy burger")
         self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response_invalid_data.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_restaurant(self) -> None:
         client = self.client
@@ -107,12 +113,15 @@ class TestViewRestaurant(APITestCase):
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         url_without_id = "http://localhost:8000/api/restaurants/"
+        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.delete(url, format="json")
         response_without_id = client.delete(url_without_id, format="json")
+        response_id_does_not_exist = client.delete(url_id_does_not_exist, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestViewOrder(APITestCase):
@@ -139,7 +148,11 @@ class TestViewOrder(APITestCase):
         create_order(self.user, client, restaurant)
 
         url = reverse("home_api:order_detail", kwargs={"pk": 1})
-        response = self.client.get(url)
+        url_id_does_not_exist = reverse("home_api:order_detail", kwargs={"pk": 123})
+
+        response = client.get(url, format="json")
+        response_id_does_not_exist = client.get(url_id_does_not_exist, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["total_price"], 5.99)
+        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
