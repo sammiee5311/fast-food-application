@@ -1,7 +1,21 @@
 import click
 import requests
 
-FEATURES = [...]
+FEATURES = [
+    "fixed_acidity",
+    "volatile_acidity",
+    "citric_acid",
+    "residual_sugar",
+    "chlorides",
+    "free_sulfur_dioxide",
+    "total_sulfur_dioxide",
+    "density",
+    "pH",
+    "sulphates",
+    "alcohol",
+]
+HOST = 000
+PORT = 000
 
 
 @click.group()
@@ -10,8 +24,8 @@ def cli():
 
 
 @click.command("predict")
-@click.option("--data", help="weather, location, time")
-@click.option("--host", default="http://localhost:8080/predict", help="host")
+@click.option("--data", help="feature data")
+@click.option("--host", default=f"https://{HOST}/predict", help="host")
 def predict_value(data: str, host: str):
     _data = list(map(lambda feature: feature.strip(), data.split(",")))
 

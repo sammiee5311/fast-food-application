@@ -46,6 +46,14 @@ set-up-django:
 		$(PYTHON) manage.py migrate; \
 	)
 
+set-up-flask:
+	cd data-handling &&\
+		$(PIP) install -r requirements.txt; \
+
+test-flask:
+	cd data-handling &&\
+		$(PYTHON) -m pytest
+
 test-run-samples:
 	$(PYTHON) tests/test_run_samples.py
 
@@ -56,6 +64,8 @@ test-django:
 dependency: install
 
 unittest: set-up-django test-django
+
+pytest: set-up-flask test-flask
 
 kafka-docker: run-docker-compose test-run-samples stop-docker-compose
 
