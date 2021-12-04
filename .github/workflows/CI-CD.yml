@@ -98,3 +98,15 @@ jobs:
           SLACK_MESSAGE: "fast-food CI - ${{job.status}}"
           SLACK_USERNAME: Github Alert
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  api-server-deployment:
+    runs-on: ubuntu-latest
+    needs: [kafka-log-test, django-test, api-server-test]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "data-handling"

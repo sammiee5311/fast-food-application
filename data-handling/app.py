@@ -1,7 +1,7 @@
+import argparse
 import logging
 from typing import Dict
 
-import click
 from flask import Flask, jsonify, request
 from flask.logging import create_logger
 
@@ -21,12 +21,11 @@ def predict() -> Dict[str, str]:
     return jsonify(result_payload)
 
 
-@click.command("flask")
-@click.option("--host", default="0.0.0.0", help="host")
-@click.option("--port", default="8080", help="port")
-def main(host: str, port: str):
-    app.run(host, port, debug=True)
-
-
 if __name__ == "__main__":
-    main()
+    args = argparse.ArgumentParser()
+    args.add_argument("--host", default="0.0.0.0", help="host for flask")
+    args.add_argument("--port", default="8080", help="port for flask")
+
+    parsed_args = args.parse_args()
+
+    app.run(parsed_args.host, parsed_args.port, debug=True)
