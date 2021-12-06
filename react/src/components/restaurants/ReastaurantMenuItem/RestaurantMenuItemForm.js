@@ -1,21 +1,21 @@
 import React, { useRef, useState } from 'react'
-import {v4 as uuidv4} from 'uuid'
-import { useNavigate } from "react-router-dom"
+// import {v4 as uuidv4} from 'uuid'
+// import { useNavigate } from "react-router-dom"
 
-import Input from '../../UI/Input'
+import Input from '../../../UI/Input'
 
 const RestaurantMenuItemForm = (props) => {
     const [amountIsValid, setAmountIsValid] = useState(false)
     const amountInputRef = useRef()
 
-    let navigate = useNavigate()
+    // let navigate = useNavigate()
 
     const handleSubmit = (event) => {
         event.preventDefault()
         
         const inputAmount = amountInputRef.current.value
         const inputAmountNumber = +inputAmount
-        const uuid = uuidv4()
+        // const uuid = uuidv4()
 
         if (inputAmountNumber === 0 || inputAmountNumber < 0) {
             setAmountIsValid(true)

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import RestaurantListItem from '../components/RestaurantListItem'
+import RestaurantListItem from './RestaurantListItem'
 
 const RestaurantsList = (props) => {
     if (props.restaurants === undefined) {

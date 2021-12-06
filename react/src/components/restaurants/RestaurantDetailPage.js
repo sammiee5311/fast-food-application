@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback, Fragment} from 'react'
-import { ReactComponent as BACK } from '../assets/chevron-left.svg'
+import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
 import RestaurantMenuList from './RestaurantMenuList'
 

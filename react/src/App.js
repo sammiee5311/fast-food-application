@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import RestaurantsPage from './restaurants/RestaurantsPage'
-import RestaurantDetailPage from './restaurants/RestaurantDetailPage'
-import OrderListPage from './orders/OrderListPage'
-import OrderDetailPage from "./orders/OrderDetailPage"
+import RestaurantsPage from './components/restaurants/RestaurantsPage'
+import RestaurantDetailPage from './components/restaurants/RestaurantDetailPage'
+import OrderListPage from './components/orders/OrderListPage'
+import OrderDetailPage from "./components/orders/OrderDetailPage"
 import Home from './components/Home'
 
 

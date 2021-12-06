@@ -2,7 +2,7 @@ import React, {useState, useEffect, Fragment} from 'react'
 import RestaurantType from './RestaurantType'
 import RestaurantsList from './RestaurantsList'
 import { Link } from 'react-router-dom'
-import { ReactComponent as BACK } from '../assets/chevron-left.svg'
+import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 import classes from './RestaurantsPage.module.css'
 
 

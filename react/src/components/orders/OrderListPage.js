@@ -1,7 +1,7 @@
 import React, {useState, useEffect, Fragment} from 'react'
-import OrderListItem from '../components/OrderListItem'
+import OrderListItem from './OrderListItem'
 import { Link } from 'react-router-dom'
-import { ReactComponent as BACK } from '../assets/chevron-left.svg'
+import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 
 const OrderListPage = () => {
     let [orders, setOrders] = useState([])
