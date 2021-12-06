@@ -3,7 +3,7 @@ import RestaurantType from './RestaurantType'
 import RestaurantsList from './RestaurantsList'
 import { Link } from 'react-router-dom'
 import { ReactComponent as BACK } from '../assets/chevron-left.svg'
-import './RestaurantsPage.css'
+import classes from './RestaurantsPage.module.css'
 
 
 const RestaurantsPage = () => {
@@ -28,7 +28,7 @@ const RestaurantsPage = () => {
         <Fragment>
             <h2> Restaurants List </h2>
             <Link to="/"> <BACK /> </Link>
-            <div className="filter-type">
+            <div className={classes.filter_type}>
             <RestaurantType onFilterType={filterType}/>
             </div>
             <RestaurantsList restaurants={restaurants} restaurantType={restaurantType}/>
