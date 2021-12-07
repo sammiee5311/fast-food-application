@@ -1,39 +1,54 @@
-import React, { useRef, useState } from 'react'
-// import {v4 as uuidv4} from 'uuid'
-// import { useNavigate } from "react-router-dom"
-
+import React, { useRef, useState, useContext } from 'react'
+import CartContext from '../../../store/cart-context'
 import Input from '../../../UI/Input'
 
-const RestaurantMenuItemForm = (props) => {
-    const [amountIsValid, setAmountIsValid] = useState(false)
-    const amountInputRef = useRef()
 
-    // let navigate = useNavigate()
+const isQuantityIsValid = (quantity) => {
+    return (quantity !== 0 || quantity >= 0)
+}
+
+const hasDifferentRestarauntMenu = (cartRestaurantId, inputRestaurantId) => {
+    return cartRestaurantId !== '' && inputRestaurantId !== cartRestaurantId
+}
+
+
+const RestaurantMenuItemForm = (props) => {
+    const [quantityIsValid, setQuantityIsValid] = useState(true)
+    const quantityInputRef = useRef()
+    const [orderIsValid, setOrderIsValid] = useState(true)
+    const cartCtx = useContext(CartContext)
 
     const handleSubmit = (event) => {
         event.preventDefault()
         
-        const inputAmount = amountInputRef.current.value
-        const inputAmountNumber = +inputAmount
-        // const uuid = uuidv4()
+        const inputQuantity = +(quantityInputRef.current.value)
 
-        if (inputAmountNumber === 0 || inputAmountNumber < 0) {
-            setAmountIsValid(true)
+        if (!isQuantityIsValid(inputQuantity)) {
+            setQuantityIsValid(false)
             return
         }
 
-        setAmountIsValid(false)
+        setQuantityIsValid(true)
 
-        // navigate(`/orders/`) // navigate to /orders/review/ param=uuid
+        const inputRestaurantId = event.target.action.split('/')[4]
+        
+        if (hasDifferentRestarauntMenu(cartCtx.currentRestaurantId, inputRestaurantId)){
+            setOrderIsValid(false)
+            return
+        }
+
+        setOrderIsValid(true)
+
+        props.onAddToCart(inputQuantity, inputRestaurantId)
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <Input 
-            ref={amountInputRef}
-            label="Amount: "
+            ref={quantityInputRef}
+            label="Quantity: "
             input={{
-                id: "amount",
+                id: "quantity",
                 type: "number",
                 min: '0',
                 step: '1',
@@ -41,7 +56,8 @@ const RestaurantMenuItemForm = (props) => {
             }}
             />
             <button type="submit">Add</button>
-            {amountIsValid && <p>Invalid amount</p>}
+            {!quantityIsValid && <p>*Invalid quantity*</p>}
+            {!orderIsValid && <p>*You cannot add different restuarant's menu in the cart.*</p>}
         </form>
     )
 }

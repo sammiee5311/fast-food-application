@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const RestaurantListItem = ({restaurant}) => {
     return (
-        <Link to={`/restaurant/${restaurant.id}`}>
+        <Link to={`/restaurant/${restaurant.id}`} >
             <h3> {restaurant.name} - {restaurant.address} </h3>
         </Link>
     )

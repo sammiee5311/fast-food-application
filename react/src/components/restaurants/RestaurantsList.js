@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+
 import RestaurantListItem from './RestaurantListItem'
 
 const RestaurantsList = (props) => {

@@ -2,8 +2,9 @@ import React, {useEffect, useState, useCallback, Fragment} from 'react'
 import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
 import RestaurantMenuList from './RestaurantMenuList'
+import Line from '../../UI/Line'
 
-const RestaurantDetailPage = () => {
+const RestaurantDetailPage = (props) => {
     let restaurantId = useParams().id
     let [restaurant, setRestaurant] = useState(null)
     let text = "There is not a restaurant."
@@ -29,6 +30,7 @@ const RestaurantDetailPage = () => {
             <pre>
                 {text}
                 <p> - Menu - </p>
+                <Line />
                 <RestaurantMenuList menus={restaurant?.menus}/>
             </pre>
         </Fragment>

@@ -7,9 +7,9 @@ const Home = () => {
         <div>
             <h2> Home </h2>
             <SEARCH />
-            <Link to="/restaurants"> <h2> Restaurants List </h2> </Link>
+            <Link to="/restaurants"> <h2> Order Food </h2> </Link>
             <Link to="/orders"> <h2> Order List </h2> </Link>
-            <Link to="/"> <h2> Order Food </h2> </Link>
+            <Link to="/cart"> <h2> Cart </h2> </Link>
         </div>
     );
 }

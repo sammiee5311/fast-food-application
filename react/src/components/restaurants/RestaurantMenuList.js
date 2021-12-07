@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import RestaurantMenuitem from './ReastaurantMenuItem/RestaurantMenuitem'
 
 
@@ -15,6 +16,7 @@ const RestaurantMenuList = (props) => {
     return (
         <Fragment>
             {menus}
+            <Link to="/cart/"> Cart </Link>
         </Fragment>
     )
 }
