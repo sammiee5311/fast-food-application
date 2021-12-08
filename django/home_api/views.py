@@ -7,7 +7,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import OrderSerializer, RestaurantSerializer
+from .serializers import (
+    OrderMenuCheckSerializer,
+    OrderMenuSerializer,
+    OrderSerializer,
+    RestaurantSerializer,
+)
 
 
 class RestaurantList(APIView):
@@ -82,6 +87,15 @@ class RestaurantList(APIView):
 
 
 class OrderList(APIView):
+    def validate_or_create_menu(self, menus, serializer, order_id=None) -> None:
+        for menu in menus:
+            if order_id:
+                menu["order"] = order_id
+                data = serializer.run_validation(menu)
+                serializer.create(data)
+            else:
+                serializer.run_validation(menu)
+
     def get(self, request, **kwargs) -> Response:
         order_id = kwargs.get("pk", None)
 
@@ -96,3 +110,18 @@ class OrderList(APIView):
                 return Response(order_serializer.data, status=status.HTTP_200_OK)
             except Order.DoesNotExist:
                 return Response("Order does not exist.", status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request) -> Response:
+        order_serializer = OrderSerializer(data=request.data)
+        order_menu_serializer = OrderMenuSerializer()
+        order_menu_check_serializer = OrderMenuCheckSerializer()
+
+        menus = request.data.get("menus", None)
+
+        if order_serializer.is_valid():
+            self.validate_or_create_menu(menus, order_menu_check_serializer)
+            order_res = order_serializer.save()
+            self.validate_or_create_menu(menus, order_menu_serializer, order_res.id)
+            return Response(order_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(order_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

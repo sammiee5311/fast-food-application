@@ -4,10 +4,10 @@ from home.models import Menu, Restaurant
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="order")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="order", null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     menu = models.ManyToManyField(Menu, through="OrderMenu")
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT, null=False)
 
     class Meta:
         ordering = ("-created_on",)
@@ -41,7 +41,7 @@ class Order(models.Model):
 class OrderMenu(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1, null=False)
 
     class Meta:
         verbose_name_plural = "Order menus"
