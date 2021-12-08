@@ -35,7 +35,7 @@ def create_menu(restaurant: Restaurant) -> Menu:
     return menu
 
 
-def create_order(user, client: APIClient, restaurant: Restaurant):
+def create_order(user, client: APIClient, restaurant: Restaurant) -> None:
     client.force_login(user)
     menu = create_menu(restaurant)
     order = Order.objects.create(id=1, user=user, restaurant=restaurant)
@@ -46,14 +46,14 @@ class TestViewRestaurant(APITestCase):
     def setUp(self) -> None:
         self.user = User.objects.create(id=0, username="username", password="password")
 
-    def test_view_restaurant_success(self) -> None:
+    def test_get_restaurant_success(self) -> None:
         self.client.force_login(self.user)
         url = reverse("home_api:restaurant")
         response_get = self.client.get(url, format="json")
 
         self.assertEqual(response_get.status_code, status.HTTP_200_OK)
 
-    def test_view_particualr_restaurant(self) -> None:
+    def test_get_particualr_restaurant(self) -> None:
         client = self.client
         client.force_login(self.user)
         create_restaurant(self.user, client)
@@ -66,7 +66,7 @@ class TestViewRestaurant(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_view_restaurant_failure(self) -> None:
+    def test_get_restaurant_failure(self) -> None:
         url = reverse("home_api:restaurant")
         response = self.client.get(url, format="json")
 
@@ -128,20 +128,20 @@ class TestViewOrder(APITestCase):
     def setUp(self) -> None:
         self.user = User.objects.create(username="username", password="password")
 
-    def test_view_order_success(self) -> None:
+    def test_get_order_success(self) -> None:
         self.client.force_login(self.user)
         url = reverse("home_api:order")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_view_order_failure(self) -> None:
+    def test_get_order_failure(self) -> None:
         url = reverse("home_api:order")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_view_particular_order(self) -> None:
+    def test_get_particular_order(self) -> None:
         client = self.client
         create_restaurant(self.user, client)
         restaurant = Restaurant.objects.get(id=1)
@@ -156,3 +156,33 @@ class TestViewOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["total_price"], 5.99)
         self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_post_order(self) -> None:
+        client = self.client
+        create_restaurant(self.user, client)
+        restaurant = Restaurant.objects.get(id=1)
+        create_menu(restaurant)
+        menu = Menu.objects.get(id=1)
+
+        url = reverse("home_api:order")
+
+        data = [
+            {
+                "restaurant": restaurant.id,
+                "user": self.user.id,
+                "menus": [{"menu": menu.id, "quantity": 1}],
+                "expect": status.HTTP_201_CREATED,
+            },
+            {
+                "restaurant": restaurant.id,
+                "user": self.user.id,
+                "menus": [{"menu": menu.id, "quantity": -1}],
+                "expect": status.HTTP_400_BAD_REQUEST,
+            },
+            {"restaurant": restaurant.id, "user": self.user.id, "expect": status.HTTP_400_BAD_REQUEST},
+        ]
+
+        for d in data:
+            expect = d.pop("expect")
+            response = client.post(url, d, format="json")
+            self.assertEqual(response.status_code, expect)

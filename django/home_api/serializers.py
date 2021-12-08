@@ -1,4 +1,4 @@
-from home.models import Restaurant
+from home.models import Menu, Restaurant
 from order.models import Order, OrderMenu
 from rest_framework import serializers
 

@@ -116,9 +116,8 @@ class OrderList(APIView):
         order_menu_serializer = OrderMenuSerializer()
         order_menu_check_serializer = OrderMenuCheckSerializer()
 
-        menus = request.data.get("menus", None)
-
         if order_serializer.is_valid():
+            menus = request.data.get("menus", None)
             self.validate_or_create_menu(menus, order_menu_check_serializer)
             order_res = order_serializer.save()
             self.validate_or_create_menu(menus, order_menu_serializer, order_res.id)
