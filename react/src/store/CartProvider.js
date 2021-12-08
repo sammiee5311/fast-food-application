@@ -45,6 +45,10 @@ const cartReducer = (state, action) => {
             (item) => item.id === action.id
         )
 
+        if (state.items.length === 1) {
+            return defaultCartState
+        }
+
         const cartItem = state.items[cartItemIndex]
         const updatedTotalPrice = state.totalPrice - (cartItem.price * cartItem.quantity)
         
@@ -55,7 +59,7 @@ const cartReducer = (state, action) => {
         return {
             items: updatedItems,
             totalPrice: updatedTotalPrice,
-            currentRestaurantId: action.item.restaurantId
+            currentRestaurantId: state.restaurantId
         }
 
     }
