@@ -5,3 +5,5 @@ django-phonenumber-field
 phonenumbers
 coverage
 django-cors-headers
+pytz
+django_extensions

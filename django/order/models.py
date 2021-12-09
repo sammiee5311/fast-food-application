@@ -20,6 +20,10 @@ class Order(models.Model):
         return res
 
     @property
+    def restaurant_name(self):
+        return self.restaurant.name
+
+    @property
     def total_price(self):
         res = 0
         for orders in self.ordermenu_set.all():

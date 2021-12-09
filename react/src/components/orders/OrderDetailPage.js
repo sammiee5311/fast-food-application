@@ -20,7 +20,7 @@ const OrderDetailPage = () => {
     }, [getOrder])
 
     if (order?.username !== undefined) {
-        text = `Order From : ${order?.username} \n At : ${order?.created_on_str} \n Total Price : ${order?.total_price}`
+        text = `Order From : ${order?.username} \n Time : ${order?.created_on_str} \n At : ${order?.restaurant_name} \n Total Price : ${order?.total_price.toFixed(2)} $`
     }
 
     return (

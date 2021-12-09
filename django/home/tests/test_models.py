@@ -4,7 +4,7 @@ from django.utils import timezone
 from home.models import FOOD_TYPES, OPTIONS, FoodItem, Menu, Restaurant, RestaurantType
 
 
-class TestHomeModels(TestCase):
+class TestRestaurantsModels(TestCase):
     def setUp(self):
         self.user = User.objects.create(username="username", password="password")
         self.food_item = FoodItem.objects.create(id=0, name="burger", description="burger", type=FOOD_TYPES[1])
@@ -40,5 +40,8 @@ class TestHomeModels(TestCase):
         self.assertEqual(str(self.menu2), "cheese-burger")
 
     def test_list_of_menus(self):
-        menus = [{"name": "bulgogi-burger", "price": 5.99}, {"name": "cheese-burger", "price": 4.99}]
+        menus = [
+            {"menu_id": self.menu1.id, "name": "bulgogi-burger", "price": 5.99},
+            {"menu_id": self.menu2.id, "name": "cheese-burger", "price": 4.99},
+        ]
         self.assertEqual(self.restaurant.menus, menus)

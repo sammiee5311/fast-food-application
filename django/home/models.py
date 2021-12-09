@@ -69,7 +69,7 @@ class Restaurant(models.Model):
     def menus(self):
         res = []
         for menu in self.menu.all():
-            res.append({"name": menu.name, "price": menu.price})
+            res.append({"menu_id": menu.id, "name": menu.name, "price": menu.price})
         return res
 
     def __str__(self):

@@ -9,8 +9,8 @@ const RestaurantMenuList = (props) => {
         return <h2>No menu found.</h2>
     }
 
-    let menus = props.menus.map((menu, index) => (
-        <RestaurantMenuitem key={index} id={index} name={menu.name} price={menu.price}/>
+    const menus = props.menus.map((menu, index) => (
+        <RestaurantMenuitem key={index} id={menu.menu_id} name={menu.name} price={menu.price}/>
     ))
 
     return (

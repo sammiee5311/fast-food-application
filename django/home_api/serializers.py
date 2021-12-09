@@ -35,7 +35,7 @@ class OrderMenuCheckSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ("id", "username", "user", "created_on_str", "menus", "total_price", "restaurant")
+        fields = ("id", "username", "user", "created_on_str", "menus", "total_price", "restaurant", "restaurant_name")
 
     def validate(self, data):
         input_data = set(self.initial_data.keys())

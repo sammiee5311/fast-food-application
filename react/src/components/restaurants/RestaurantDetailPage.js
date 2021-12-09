@@ -1,38 +1,55 @@
 import React, {useEffect, useState, useCallback, Fragment} from 'react'
 import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
-import RestaurantMenuList from './RestaurantMenuList'
-import Line from '../../UI/Line'
+import Restaurant from './Restaurant'
 
-const RestaurantDetailPage = (props) => {
-    let restaurantId = useParams().id
-    let [restaurant, setRestaurant] = useState(null)
-    let text = "There is not a restaurant."
+const RestaurantDetailPage = () => {
+    const restaurantId = useParams().id
+    const [restaurant, setRestaurant] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
 
-    let getRestaurant = useCallback(async () => {
-        let response = await fetch(`/api/restaurants/${restaurantId}/`)
-        let data = await response.json()
-        setRestaurant(data)
+    let content = "No restaurant found."
+
+    const getRestaurantDetail = useCallback(async () => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const response = await fetch(`/api/restaurants/${restaurantId}/`)
+            
+            if (!response.ok) {
+                throw new Error("Invalid request.")
+            }
+
+            const data = await response.json()
+            setRestaurant(data)
+        } catch (error) {
+            setError(error)
+        }
+        setIsLoading(false)
     }, [restaurantId])
 
     useEffect(() => {
-        getRestaurant()
-    }, [getRestaurant])
+        getRestaurantDetail()
+    }, [getRestaurantDetail])
 
     if (restaurant?.name !== undefined) {
-        text = `Name : ${restaurant?.name} \n Address : ${restaurant?.address} \n Phone Number : ${restaurant?.phone_number}`
+        content = <Restaurant restaurant={restaurant}/>
+    }
+
+    if (error) {
+        content = <p>{error}</p>
+    }
+
+    if (isLoading) {
+        content = <p>Loading...</p>
     }
 
     return (
         <Fragment>
             <h2>Restaurant Detail </h2>
             <Link to="/restaurants"> <BACK /> </Link>
-            <pre>
-                {text}
-                <p> - Menu - </p>
-                <Line />
-                <RestaurantMenuList menus={restaurant?.menus}/>
-            </pre>
+            {content}
         </Fragment>
     )
 }

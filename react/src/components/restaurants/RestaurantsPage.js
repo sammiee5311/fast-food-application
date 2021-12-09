@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react'
+import React, {useState, useEffect, useCallback, Fragment} from 'react'
 import RestaurantType from './RestaurantType'
 import RestaurantsList from './RestaurantsList'
 import { Link } from 'react-router-dom'
@@ -7,22 +7,22 @@ import classes from './RestaurantsPage.module.css'
 
 
 const RestaurantsPage = () => {
-    let [restaurants, setRestaurants] = useState([])
-    let [restaurantType, setRestaurantType] = useState('pizza')
+    const [restaurants, setRestaurants] = useState([])
+    const [restaurantType, setRestaurantType] = useState('')
     
     const filterType = (filteredType) => {
         setRestaurantType(filteredType)
     }
 
-    let getRestaurants = async () => {
-        let response = await fetch('/api/restaurants/')
-        let data = await response.json()
+    const getRestaurantList = useCallback(async () => {
+        const response = await fetch('/api/restaurants/')
+        const data = await response.json()
         setRestaurants(data)
-    }
+    }, [])
 
     useEffect(() => {
-        getRestaurants()
-    }, [])
+        getRestaurantList()
+    }, [getRestaurantList])
 
     return (
         <Fragment>
