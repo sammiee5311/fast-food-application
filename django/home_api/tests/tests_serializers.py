@@ -15,6 +15,7 @@ def create_restaurant(user: User, client: APIClient) -> Response:
         "type": restaraunt_type.id,
         "name": "Happy burger",
         "address": "earth",
+        "zipcode": 12345,
         "slug": "happy-burger",
         "updated": timezone.now(),
         "owner": user.id,

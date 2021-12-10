@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import OrderList, RestaurantList
+from .order_views import OrderList
+from .restaruant_views import RestaurantList
 
 app_name = "home_api"
 

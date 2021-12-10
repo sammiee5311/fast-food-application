@@ -14,6 +14,7 @@ class TestRestaurantsModels(TestCase):
             type=self.restaraunt_type,
             name="Happy burger",
             address="earth",
+            zipcode=12345,
             phone_number="+1234567890",
             slug="happy-burger",
             updated=timezone.now(),

@@ -7,3 +7,4 @@ coverage
 django-cors-headers
 pytz
 django_extensions
+kafka-python

@@ -20,8 +20,16 @@ class Order(models.Model):
         return res
 
     @property
+    def user_zipcode(self):
+        return 10001  # need to create custom user model
+
+    @property
     def restaurant_name(self):
         return self.restaurant.name
+
+    @property
+    def restaurant_zipcode(self):
+        return self.restaurant.zipcode
 
     @property
     def total_price(self):

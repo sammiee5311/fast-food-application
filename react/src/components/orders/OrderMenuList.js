@@ -3,7 +3,7 @@ import Line from '../../UI/Line'
 
 const OrderMenuList = (props) => {
 
-    if (props.menus === undefined) {
+    if (props.menus === undefined || props.menus === null) {
         return <h2>No menu found.</h2>
     }
 

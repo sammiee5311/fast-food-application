@@ -16,7 +16,8 @@ jobs:
         with:
           python-version: 3.9
 
-      - uses: actions/cache@v2
+      - name: Cache python dependencies
+        uses: actions/cache@v2
         id: cache
         with:
           path: ~/.cache/pip
@@ -45,26 +46,7 @@ jobs:
       - name: Pytest Flask
         run: make pytest
 
-  django-test:
-    runs-on: ubuntu-latest
-    needs: build-and-install-dependencies
-    steps:
-      - name: Checkout source repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Set up python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Unittest Django
-        env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-        run: make unittest
-
-  kafka-log-test:
+  kafka-django-test:
     runs-on: ubuntu-latest
     needs: build-and-install-dependencies
     steps:
@@ -87,8 +69,30 @@ jobs:
       - name: Test samples
         run: make test-run-samples
 
+      - name: Unittest Django
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        run: make unittest
+
       - name: Stop docker compose
         run: make stop-docker-compose
+
+  api-server-deployment:
+    runs-on: ubuntu-latest
+    needs: [kafka-django-test, api-server-test]
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Deploy api-server in heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "data-handling"
 
       - name: Slack notify
         if: always()
@@ -98,15 +102,3 @@ jobs:
           SLACK_MESSAGE: "fast-food CI - ${{job.status}}"
           SLACK_USERNAME: Github Alert
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-  api-server-deployment:
-    runs-on: ubuntu-latest
-    needs: [kafka-log-test, django-test, api-server-test]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: "data-handling"
