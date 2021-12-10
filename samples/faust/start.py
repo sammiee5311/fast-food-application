@@ -19,7 +19,7 @@ ip_address = socket.gethostbyname(socket.gethostname())
 
 app = faust.App("myapp", broker=f"kafka://{ip_address}:9092")
 
-topic = app.topic("registered-user", value_type=User)
+topic = app.topic("fast-food-order", value_type=User)
 
 
 @app.agent(topic)

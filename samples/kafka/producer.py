@@ -28,6 +28,6 @@ if __name__ == "__main__":
     while cnt < 10:
         registered_user = get_registered_user()
         print(registered_user)
-        producer.send("registered-user", registered_user)
+        producer.send("fast-food-order", registered_user)
         cnt += 1
         sleep(2)
