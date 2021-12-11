@@ -1,0 +1,4 @@
+kafka-python
+black
+mpu
+uszipcode
