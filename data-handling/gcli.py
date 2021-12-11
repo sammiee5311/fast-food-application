@@ -2,17 +2,11 @@ import click
 import requests
 from requests.exceptions import ConnectionError
 
-from utils import get_schema
+from utils import DataNotExist, get_schema
 
 FEATURES = list(get_schema().keys())
 HOST = "localhost"
 PORT = "8080"
-
-
-class DataNotExist(AttributeError):
-    def __init__(self, message="Data does not exist. Please Check your data."):
-        self.message = message
-        super().__init__(self.message)
 
 
 @click.group()
@@ -40,7 +34,7 @@ def predict_value(data: str, host: str):
 
     result = response_data.json()
 
-    bg, fg = ("green", "black") if "error" in result else ("red", "white")
+    bg, fg = ("red", "white") if "error" in result else ("green", "black")
 
     click.echo(click.style(f"Result : {result}", bg=bg, fg=fg))
 

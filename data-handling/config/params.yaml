@@ -1,0 +1,30 @@
+data:
+  source: data/raw/delivery_time.csv
+  raw:
+    path: data/raw/delivery_time.csv
+
+  train:
+    path: data/processed/train_delivery_time.csv
+    random_state: 10
+    target: estimate_deliver_time
+
+  test:
+    path: data/processed/test_delivery_time.csv
+    size: 0.2
+
+api_model_path: models/model.joblib
+
+model:
+  path: models
+
+  ElasticNet:
+    params:
+      lr: 0.9
+      alpha: 0.9
+
+mlflow:
+  artifacts_path: artifacts
+  experiment_name: fast-food-experiment
+  run_name: fast-food-run
+  registered_model_name: fast-food-model
+  remote_server_uri: http://0.0.0.0:1234

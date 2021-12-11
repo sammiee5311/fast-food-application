@@ -10,3 +10,4 @@ gunicorn
 click
 flask
 pyyaml
+mlflow

@@ -1,0 +1,17 @@
+stages:
+  load_dataset:
+    cmd: python src/load_dataset.py
+    deps:
+      - src/get_dataset.py
+      - src/load_dataset.py
+    outs:
+      - data/raw/delivery_time.csv
+
+  split_dataset:
+    cmd: python src/split_dataset.py
+    deps:
+      - src/split_dataset.py
+      - data/raw/delivery_time.csv
+    outs:
+      - data/processed/train_delivery_time.csv
+      - data/processed/test_delivery_time.csv

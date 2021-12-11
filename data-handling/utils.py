@@ -14,6 +14,12 @@ SKLEARN_MODEL = linear_model
 JSON_PAYLOAD = Dict[str, Dict[str, Any]]
 
 
+class DataNotExist(AttributeError):
+    def __init__(self, message="Data does not exist. Please Check your data."):
+        self.message = message
+        super().__init__(self.message)
+
+
 class FeaturesNotSame(Exception):
     def __init__(self, message="Input is not same as expected model features."):
         self.message = message
