@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback, Fragment} from 'react'
 import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 import { useParams, Link } from 'react-router-dom'
-import Restaurant from './Restaurant'
+import Restaurant from './Restaurant/Restaurant'
 
 const RestaurantDetailPage = () => {
     const restaurantId = useParams().id

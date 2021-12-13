@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment} from 'react'
-import OrderListItem from './OrderListItem'
+import OrderListItem from './Order/OrderListItem'
 import { Link } from 'react-router-dom'
 import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
 

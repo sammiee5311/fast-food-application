@@ -1,5 +1,5 @@
 import React from 'react'
-import Line from '../../UI/Line'
+import Line from '../../../UI/Line'
 
 const OrderMenuList = (props) => {
 
