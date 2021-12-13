@@ -2,8 +2,11 @@ import socket
 from subprocess import run
 
 from faker import Faker
+from samples.kafka.consumer import IP_ADDRESS
 
 import faust
+
+IP_ADDRESS = socket.gethostbyname(socket.gethostname())
 
 
 class User(faust.Record):
@@ -15,9 +18,9 @@ class User(faust.Record):
 fake = Faker()
 
 cnt = 0
-ip_address = socket.gethostbyname(socket.gethostname())
 
-app = faust.App("myapp", broker=f"kafka://{ip_address}:9092")
+
+app = faust.App("myapp", broker=f"kafka://{IP_ADDRESS}:9092")
 
 topic = app.topic("fast-food-order", value_type=User)
 
