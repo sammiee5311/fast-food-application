@@ -1,10 +1,10 @@
-from django.contrib.auth.models import User
+from accounts.models import Client
 from django.db import models
 from home.models import Menu, Restaurant
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="order", null=False)
+    user = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="order", null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     menu = models.ManyToManyField(Menu, through="OrderMenu")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT, null=False)

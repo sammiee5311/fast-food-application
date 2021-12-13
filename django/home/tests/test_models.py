@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from accounts.models import Client
 from django.test import TestCase
 from django.utils import timezone
 from home.models import FOOD_TYPES, OPTIONS, FoodItem, Menu, Restaurant, RestaurantType
@@ -6,7 +6,7 @@ from home.models import FOOD_TYPES, OPTIONS, FoodItem, Menu, Restaurant, Restaur
 
 class TestRestaurantsModels(TestCase):
     def setUp(self):
-        self.user = User.objects.create(username="username", password="password")
+        self.user = Client.objects.create(username="username", email="test@test.com", password="password")
         self.food_item = FoodItem.objects.create(id=0, name="burger", description="burger", type=FOOD_TYPES[1])
         self.restaraunt_type = RestaurantType.objects.create(id=0, name="hamburger")
         self.restaurant = Restaurant.objects.create(

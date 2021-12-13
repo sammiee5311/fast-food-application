@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from accounts.models import Client
 from django.db import models
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
@@ -53,7 +53,7 @@ class Restaurant(models.Model):
     phone_number = PhoneNumberField(null=True, blank=True)
     slug = models.SlugField(max_length=100, unique_for_date="updated", blank=True)
     updated = models.DateTimeField(default=timezone.now)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="restaurant")
+    owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="restaurant")
     status = models.CharField(max_length=10, choices=OPTIONS, default="ready")
     objects = models.Manager()
     menu = models.ManyToManyField(Menu, blank=True)

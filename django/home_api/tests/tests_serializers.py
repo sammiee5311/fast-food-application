@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from accounts.models import Client
 from django.urls import reverse
 from django.utils import timezone
 from home.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.test import APIClient, APITestCase
 
 
-def create_restaurant(user: User, client: APIClient) -> Response:
+def create_restaurant(user: Client, client: APIClient) -> Response:
     client.force_login(user)
     restaraunt_type = RestaurantType.objects.create(id=1, name="hamburger")
     data = {
@@ -45,7 +45,7 @@ def create_order(user, client: APIClient, restaurant: Restaurant) -> None:
 
 class TestViewRestaurant(APITestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create(id=0, username="username", password="password")
+        self.user = Client.objects.create(id=0, email="test@test.com", username="username", password="password")
 
     def test_get_restaurant_success(self) -> None:
         self.client.force_login(self.user)
@@ -127,7 +127,7 @@ class TestViewRestaurant(APITestCase):
 
 class TestViewOrder(APITestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create(username="username", password="password")
+        self.user = Client.objects.create(username="username", password="password")
 
     def test_get_order_success(self) -> None:
         self.client.force_login(self.user)
