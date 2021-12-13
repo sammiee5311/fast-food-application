@@ -10,6 +10,7 @@ from kafka import KafkaProducer
 NORMAL_FILES = ["producer.py"]
 FAUST_FILES = ["start.py", "worker"]
 KAFKA_ERRORS = (kafka.errors.NoBrokersAvailable, kafka.errors.UnrecognizedBrokerVersion)
+IP_ADDRESS = socket.gethostbyname(socket.gethostname())
 
 
 def backoff_error(e):
@@ -19,13 +20,13 @@ def backoff_error(e):
 @backoff.on_exception(
     backoff.expo,
     KAFKA_ERRORS,
-    max_tries=10,
+    max_tries=12,
     giveup=backoff_error,
 )
 def wait_until_kafka_up():
-    ip_address = socket.gethostbyname(socket.gethostname())
     KafkaProducer(
-        bootstrap_servers=f"{ip_address}:9092",
+        security_protocol="PLAINTEXT",
+        bootstrap_servers=[f"{IP_ADDRESS}:9092"],
         retries=10,
         retry_backoff_ms=1000,
     )

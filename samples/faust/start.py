@@ -2,7 +2,6 @@ import socket
 from subprocess import run
 
 from faker import Faker
-from samples.kafka.consumer import IP_ADDRESS
 
 import faust
 
