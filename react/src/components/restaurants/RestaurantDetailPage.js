@@ -9,7 +9,7 @@ const RestaurantDetailPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    let content = "No restaurant found."
+    let content = <p> No restaurant found. </p>
 
     const getRestaurantDetail = useCallback(async () => {
         setIsLoading(true)
@@ -18,7 +18,7 @@ const RestaurantDetailPage = () => {
             const response = await fetch(`/api/restaurants/${restaurantId}/`)
             
             if (!response.ok) {
-                throw new Error("Invalid request.")
+                throw new Error("Something went wrong.")
             }
 
             const data = await response.json()

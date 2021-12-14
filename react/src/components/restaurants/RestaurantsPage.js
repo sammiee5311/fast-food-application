@@ -9,20 +9,45 @@ import classes from './RestaurantsPage.module.css'
 const RestaurantsPage = () => {
     const [restaurants, setRestaurants] = useState([])
     const [restaurantType, setRestaurantType] = useState('')
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null)
     
+    let content = <p> No restaurant found. </p>
+
     const filterType = (filteredType) => {
         setRestaurantType(filteredType)
     }
 
     const getRestaurantList = useCallback(async () => {
         const response = await fetch('/api/restaurants/')
+
+        if (!response.ok) {
+            throw new Error("Somthing went wrong.")
+        }
+
         const data = await response.json()
         setRestaurants(data)
+        setIsLoading(false)
     }, [])
 
     useEffect(() => {
-        getRestaurantList()
+        getRestaurantList().catch(error => {
+            setError(error.message)
+            setIsLoading(false)
+        })
     }, [getRestaurantList])
+
+    if (restaurants.length > 0) {
+        content = <RestaurantsList restaurants={restaurants} restaurantType={restaurantType}/>
+    }
+
+    if (error) {
+        content = error
+    }
+
+    if (isLoading) {
+        content = <p>Loading...</p>
+    }
 
     return (
         <Fragment>
@@ -31,7 +56,7 @@ const RestaurantsPage = () => {
             <div className={classes.filter_type}>
             <RestaurantType onFilterType={filterType}/>
             </div>
-            <RestaurantsList restaurants={restaurants} restaurantType={restaurantType}/>
+            {content}
         </Fragment>
     )
 }
