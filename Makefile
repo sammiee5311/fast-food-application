@@ -33,7 +33,7 @@ install:
 	$(PIP) install -r requirements.txt
 
 run-docker-compose:
-	docker-compose -f kafka/docker-compose.yml up -d
+	docker-compose -f kafka/docker-compose.yml up -d --build
 
 stop-docker-compose:
 	docker-compose -f kafka/docker-compose.yml down

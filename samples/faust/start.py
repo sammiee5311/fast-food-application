@@ -1,11 +1,10 @@
-import socket
 from subprocess import run
 
 from faker import Faker
 
 import faust
 
-IP_ADDRESS = socket.gethostbyname(socket.gethostname())
+IP_ADDRESS = '127.0.0.1'
 
 
 class User(faust.Record):
