@@ -37,7 +37,6 @@ const cartReducer = (state, action) => {
             totalPrice: updatedTotalPrice,
             currentRestaurantId: action.item.restaurantId
         }
-
     }
 
     if (action.type === 'REMOVE_ITEM_FROM_CART') {
@@ -59,9 +58,8 @@ const cartReducer = (state, action) => {
         return {
             items: updatedItems,
             totalPrice: updatedTotalPrice,
-            currentRestaurantId: state.restaurantId
+            currentRestaurantId: state.currentRestaurantId
         }
-
     }
 
     if (action.type === 'CLEAR_CART') {
