@@ -5,13 +5,13 @@ import { useParams, Link } from 'react-router-dom'
 import OrderMenuList from './OrderMenu/OrderMenuList'
 
 const OrderDetailPage = () => {
-    let orderId = useParams().id
-    let [order, setOrder] = useState(null)
+    const orderId = useParams().id
+    const [order, setOrder] = useState(null)
     let text = "Invalid request."
 
-    let getOrder = useCallback(async () => {
-        let response = await fetch(`/api/orders/${orderId}/`)
-        let data = await response.json()
+    const getOrder = useCallback(async () => {
+        const response = await fetch(`/api/orders/${orderId}/`)
+        const data = await response.json()
         setOrder(data)
     }, [orderId])
 

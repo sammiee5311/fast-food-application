@@ -2,18 +2,19 @@ import React, { Fragment, useContext, useState } from 'react'
 import Cookies from 'js-cookie'
 import { Link } from 'react-router-dom'
 import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
-import {v4 as uuidv4} from 'uuid'
+// import {v4 as uuidv4} from 'uuid'
 import { useNavigate } from "react-router-dom"
 
 import Line from '../../UI/Line'
 import CartContext from '../../store/cart-context'
 import CartItem from './CartItem'
+import CartPayment from './CartPayment'
 import classes from './CartPage.module.css'
 
 const Cart = () => {
     const cartCtx = useContext(CartContext)
-    const [isSuccessOrder, setIsSuccessOrder] = useState(true)
     const [error, setError] = useState(null)
+    const [isOrderButtonClicked, setIsOrderButtonClicked] = useState(false)
 
     let navigate = useNavigate()
 
@@ -34,13 +35,9 @@ const Cart = () => {
             />
         )
     
-    const orderCartItemsHandler = async() => {
+    const orderConfirmHandler = async() => {
         setError(null)
-        setIsSuccessOrder(true)
         try {
-            if (cartCtx.items.length === 0) {
-                throw new Error("Order cannot be proccessed with no items in Cart.")
-            }
             const restaurantID = cartCtx.currentRestaurantId
             const user = 1
             const menus = cartCtx.items.map((item) => {
@@ -77,14 +74,28 @@ const Cart = () => {
                 navigate(`/order/${data.id}`)
             }).catch(error => {
                 setError(error.message)
-                setIsSuccessOrder(false)
             })
-                
             
         } catch (error) {
             setError(error.message)
-            setIsSuccessOrder(false)
         }
+        setIsOrderButtonClicked(false)
+    }
+
+    const orderClickedHandler = () => {
+        setError(null)
+        try {
+            if (cartCtx.items.length === 0) {
+                throw new Error("Order cannot be proccessed with no items in Cart.")
+            }
+            setIsOrderButtonClicked(true)
+        } catch (error) {
+            setError(error.message)
+        }
+    }
+
+    const cancelOrderHandler = () => {
+        setIsOrderButtonClicked(false)
     }
     
     const isCartEmpty = cartItems.length === 0
@@ -95,20 +106,25 @@ const Cart = () => {
         items = <Fragment> <Line /> {cartItems} </Fragment>
     }
 
+    const cartOrder = 
+    <Fragment>
+        <p> - Menu - </p>
+        {items}
+        <div className={classes.padding}>
+            Total Price: {totalPrice}
+        </div>
+        <div className={classes.padding}>
+            <button onClick={orderClickedHandler}>Order</button>
+        </div>
+    </Fragment>
+
     return (
         <Fragment>
             <h2> Cart </h2>
             <Link to="/"> <BACK /> </Link>
-            <p> - Menu - </p>
-            {items}
-            <div className={classes.padding}>
-                <span>Total Price: </span>
-                <span>{totalPrice}</span>
-            </div>
-            <div className={classes.padding}>
-                <button onClick={orderCartItemsHandler}>Order</button>
-                <p>{!isSuccessOrder && error.length > 0 && error}</p>
-            </div>
+            {!isOrderButtonClicked && cartOrder}
+            {!error && isOrderButtonClicked && <CartPayment onCancel={cancelOrderHandler} onConfrim={orderConfirmHandler} totalPrice={totalPrice}/>}
+            <p>{error}</p>
         </Fragment>
     )
 }
