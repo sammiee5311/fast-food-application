@@ -21,7 +21,7 @@ class Order(models.Model):
 
     @property
     def user_zipcode(self):
-        return 10001  # need to create custom user model
+        return self.user.address.zipcode  # need to create custom user model
 
     @property
     def restaurant_name(self):

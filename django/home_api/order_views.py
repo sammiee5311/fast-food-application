@@ -1,28 +1,12 @@
-import json
-import socket
-
-from kafka import KafkaProducer
 from order.models import Order
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .kafka_connection import conntect_kafka
 from .serializers import OrderMenuCheckSerializer, OrderMenuSerializer, OrderSerializer
 
-IP_ADDRESS = socket.gethostbyname(socket.gethostname())
-
-
-def json_serializer(data):
-    return json.dumps(data).encode("utf-8")
-
-
-producer = KafkaProducer(
-    security_protocol="PLAINTEXT",
-    bootstrap_servers=[f"{IP_ADDRESS}:9092"],
-    value_serializer=json_serializer,
-    retries=10,
-    retry_backoff_ms=1000,
-)
+producer = conntect_kafka()
 
 
 class OrderList(APIView):
@@ -54,6 +38,7 @@ class OrderList(APIView):
         order_serializer = OrderSerializer(data=request.data)
         order_menu_serializer = OrderMenuSerializer()
         order_menu_check_serializer = OrderMenuCheckSerializer()
+
         if order_serializer.is_valid():
             menus = request.data.get("menus", None)
             self.validate_or_create_menu(menus, order_menu_check_serializer)
