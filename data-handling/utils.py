@@ -11,7 +11,7 @@ import yaml
 from sklearn import linear_model
 from sklearn.preprocessing import OneHotEncoder
 
-from config.errors import FeaturesNotIncluded, FeaturesNotSame
+from config.errors import FeatureDataError, FeaturesNotIncluded, FeaturesNotSame
 from config.feature_data import Features, Season, Weather
 
 CONFIG_PATH = os.path.join("config", "params.yaml")
@@ -60,8 +60,21 @@ def load_encoder() -> OneHotEncoder:
     return encoder
 
 
-def get_features_payload(data: List[str], server=False) -> JsonPayload:
-    distance, current_time, weather, traffic, season = data
+def get_features_payload(data: List[str] | JsonPayload, server=False) -> JsonPayload:
+    if isinstance(data, list):
+        distance, current_time, weather, traffic, season = data
+    else:
+        for key, val in data.items():
+            if key == "distance":
+                distance = val
+            elif key == "current_time":
+                current_time = val
+            elif key == "weather":
+                weather = val
+            elif key == "traffic":
+                traffic = val
+            else:
+                season = val
 
     features = Features(
         distance=distance, current_time=current_time, weather=Weather(weather), traffic=traffic, season=Season(season)
@@ -91,7 +104,7 @@ def get_trainable_date(data) -> np.array:
 
 def validate_data(data) -> None:
     schema = get_schema()["required"]
-    features = get_features_payload(data.values(), server=True)
+    features = get_features_payload(data, server=True)
 
     if len(features) != len(schema):
         raise FeaturesNotSame
@@ -113,5 +126,10 @@ def get_prediction(data: JsonPayload) -> JsonPayload:
         prediction = model.predict(data)
 
         return dict(prediction=prediction[0])
-    except (FeaturesNotSame, FeaturesNotIncluded, ValueError) as error:
-        return dict(expected_schema=get_schema(), error=error.args[0])
+    except (FeaturesNotSame, FeaturesNotIncluded, ValueError, FeatureDataError) as error:
+        error_message = error.args[0]
+        if isinstance(error_message, list):
+            error_message = {}
+            for err in error.args[0]:
+                error_message[err._loc] = str(err.exc)
+        return dict(expected_schema=get_schema(), error=error_message)
