@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict, Tuple
 
 import click
@@ -6,10 +7,11 @@ from sklearn.model_selection import train_test_split
 
 from get_dataset import read_params
 
-CONFIG_YAML = Dict[str, Dict[str, Any]]
+ConfigYaml = Dict[str, Dict[str, Any]]
+TrainDataInfo = Tuple[str, str, str, str, str]
 
 
-def get_information(config: CONFIG_YAML) -> Tuple[str, str, str, str, str]:
+def get_information(config: ConfigYaml) -> TrainDataInfo:
     """Get information for splitting dataset into train and test"""
     train_data_path = config["data"]["train"]["path"]
     test_data_path = config["data"]["test"]["path"]
@@ -21,7 +23,7 @@ def get_information(config: CONFIG_YAML) -> Tuple[str, str, str, str, str]:
 
 
 @click.command("get")
-@click.option("--config_path", default="config/params.yaml", help="Config path")
+@click.option("--config_path", default=os.path.join("config", "params.yaml"), help="Config path")
 def split_dataset(config_path: str):
     """Split dataset into test and train dataset as csv files."""
     config = read_params(config_path)

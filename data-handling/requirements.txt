@@ -11,3 +11,4 @@ click
 flask
 pyyaml
 mlflow
+pydantic

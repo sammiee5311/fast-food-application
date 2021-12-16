@@ -3,3 +3,5 @@ black
 Faker
 faust
 backoff
+mpu
+uszipcode

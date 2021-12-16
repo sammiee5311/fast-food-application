@@ -1,10 +1,13 @@
+from pprint import pprint
+
 import click
 import requests
 from requests.exceptions import ConnectionError
 
-from utils import DataNotExist, get_schema
+from config.errors import DataNotExist, FeatureDataError
+from utils import get_features_payload, get_schema
 
-FEATURES = list(get_schema().keys())
+FEATURES = get_schema()["required"]
 HOST = "localhost"
 PORT = "8080"
 
@@ -14,8 +17,13 @@ def cli():
     """Data Handling"""
 
 
+@click.command("schema")
+def schema():
+    pprint(get_schema())
+
+
 @click.command("predict")
-@click.option("--data", help="feature data")
+@click.option("--data", help=f"{FEATURES}")
 @click.option("--host", default=f"http://{HOST}:{PORT}/predict", help="host")
 def predict_value(data: str, host: str):
     try:
@@ -23,10 +31,10 @@ def predict_value(data: str, host: str):
             raise DataNotExist
         _data = list(map(lambda feature: feature.strip(), data.split(",")))
 
-        payload = {key: val for key, val in zip(FEATURES, _data)}
+        payload = get_features_payload(_data)
 
         response_data = requests.post(url=host, json=payload)
-    except (ValueError, DataNotExist, ConnectionError) as error:
+    except (ValueError, DataNotExist, ConnectionError, FeatureDataError) as error:
         click.echo(click.style(f"{error}", bg="red", fg="white"))
         return
 
@@ -40,4 +48,6 @@ def predict_value(data: str, host: str):
 
 
 if __name__ == "__main__":
-    predict_value()
+    cli.add_command(predict_value)
+    cli.add_command(schema)
+    cli()

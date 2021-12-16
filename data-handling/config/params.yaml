@@ -1,5 +1,5 @@
 data:
-  source: data/raw/delivery_time.csv
+  source: data/source/delivery_time.csv
   raw:
     path: data/raw/delivery_time.csv
 
@@ -12,15 +12,18 @@ data:
     path: data/processed/test_delivery_time.csv
     size: 0.2
 
+  encoder:
+    path: config/encoder.pickle
+
 api_model_path: models/model.joblib
 
 model:
-  path: models
+  path: models/
 
   ElasticNet:
     params:
-      lr: 0.9
-      alpha: 0.9
+      l1_ratio: 0.97
+      alpha: 0.5
 
 mlflow:
   artifacts_path: artifacts
