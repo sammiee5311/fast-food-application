@@ -133,4 +133,5 @@ def get_prediction(data: JsonPayload) -> JsonPayload:
             error_message = {}
             for err in error.args[0]:
                 error_message[err._loc] = str(err.exc)
+
         return dict(expected_schema=get_schema(), error=error_message)

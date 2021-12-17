@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  load_dataset:
+    cmd: python src/load_dataset.py
+    deps:
+    - path: src/get_dataset.py
+      md5: c1a4ea48d9ed8ef0bdbc6f3ddbd5962c
+      size: 1484
+    - path: src/load_dataset.py
+      md5: 77fec1a808a2263b9099f6a2e07f2455
+      size: 509
+    outs:
+    - path: config/encoder.pickle
+      md5: ca76073097e24be654a8ae4fa25706d7
+      size: 533
+    - path: data/raw/delivery_time.csv
+      md5: bba0a61682543d72d0efcbfed6ce00ad
+      size: 233571
+  split_dataset:
+    cmd: python src/split_dataset.py
+    deps:
+    - path: data/raw/delivery_time.csv
+      md5: bba0a61682543d72d0efcbfed6ce00ad
+      size: 233571
+    - path: src/split_dataset.py
+      md5: 6da52d53a91cb11782de5bfde226f07e
+      size: 1428
+    outs:
+    - path: data/processed/test_delivery_time.csv
+      md5: 35c8544b3afbf983c9ab73951cfad799
+      size: 46796
+    - path: data/processed/train_delivery_time.csv
+      md5: 46ce58e96f49be0e661c1418680592bc
+      size: 186843
+  train_and_evaluate:
+    cmd: python src/train_and_evaluate.py
+    deps:
+    - path: data/processed/test_delivery_time.csv
+      md5: 35c8544b3afbf983c9ab73951cfad799
+      size: 46796
+    - path: data/processed/train_delivery_time.csv
+      md5: 46ce58e96f49be0e661c1418680592bc
+      size: 186843
+    - path: src/train_and_evaluate.py
+      md5: 26ef1bab9edf0463b6f838782c05cb41
+      size: 1406
