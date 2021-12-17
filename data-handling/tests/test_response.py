@@ -4,7 +4,7 @@ from utils import get_schema
 
 
 def get_data() -> List[str]:
-    feature_data = "1,2,summer,4,sunny"
+    feature_data = "1,2,sunny,4,summer"
     data = list(map(lambda feature: feature.strip(), feature_data.split(",")))
 
     return data
@@ -24,5 +24,7 @@ def test_predict_error(app, client):
     payload = {key: val for key, val in zip(list(get_schema().keys())[:-1], data)}
 
     response = client.post("/predict", json=payload)
+
+    print(response.json)
 
     assert "error" in response.json

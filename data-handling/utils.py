@@ -2,7 +2,7 @@ import json
 import os
 import pickle
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import joblib
 import numpy as np
@@ -60,7 +60,8 @@ def load_encoder() -> OneHotEncoder:
     return encoder
 
 
-def get_features_payload(data: List[str] | JsonPayload, server=False) -> JsonPayload:
+def get_features_payload(data: Union[List[str], JsonPayload], server=False) -> JsonPayload:
+    distance = current_time = weather = traffic = season = None
     if isinstance(data, list):
         distance, current_time, weather, traffic, season = data
     else:
