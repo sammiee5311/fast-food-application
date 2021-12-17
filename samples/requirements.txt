@@ -1,0 +1,7 @@
+kafka-python
+black
+Faker
+faust
+backoff
+mpu
+uszipcode

@@ -30,7 +30,7 @@ else
 endif
 
 install:
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r samples/requirements.txt
 
 run-docker-compose:
 	docker-compose -f kafka/docker-compose.yml up -d --build
@@ -55,7 +55,11 @@ test-flask:
 		$(PYTHON) -m pytest
 
 test-run-samples:
-	$(PYTHON) tests/test_run_samples.py
+	( \
+		$(PIP) install -r tests/requirements.txt; \
+		$(PYTHON) tests/test_run_samples.py; \
+	)
+	
 
 test-django:
 	cd django &&\
