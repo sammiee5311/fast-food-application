@@ -6,7 +6,6 @@ stages:
       - src/load_dataset.py
     outs:
       - data/raw/delivery_time.csv
-      - config/encoder.pickle
 
   split_dataset:
     cmd: python src/split_dataset.py
