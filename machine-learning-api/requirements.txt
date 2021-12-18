@@ -2,3 +2,6 @@ kafka-python
 black
 mpu
 uszipcode
+pytest
+pytest-cov
+tox

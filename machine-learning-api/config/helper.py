@@ -12,6 +12,18 @@ JasonObject = Dict[str, Dict[str, Any]]
 HOST = "localhost:8080"
 
 
+class DistanceError(Exception):
+    def __init__(self, message="an error while calculating distance"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class WeatherError(Exception):
+    def __init__(self, message="an error while getting weather info"):
+        self.message = message
+        super().__init__(self.message)
+
+
 def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> Tuple[int, int]:
     """
     input : features that need to be trained
@@ -43,15 +55,13 @@ def get_distance(data: JasonObject) -> float:
         restaurant_location.set_lat_and_long()
 
         if user_location.get_lat_and_long() == (None, None) or restaurant_location.get_lat_and_long() == (None, None):
-            return 0
+            raise DistanceError()
 
         distance = haversine_distance(user_location.get_lat_and_long(), restaurant_location.get_lat_and_long())
         return distance
 
-    except KeyError as error:
-        logger.warning(f"An error occured : {error}")
-
-        return 0
+    except KeyError:
+        raise DistanceError()
 
 
 def get_current_time(time: struct_time) -> int:
@@ -68,7 +78,12 @@ def get_weather() -> str:  # Need to implement
     """
     A function for getting the current weather ('cloudy', 'sunny', 'rainy', 'windy')
     """
-    return "sunny"
+    try:
+        """do function"""
+
+        return "sunny"
+    except:
+        raise WeatherError()
 
 
 def get_traffic() -> int:  # Need to implement

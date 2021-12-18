@@ -1,10 +1,9 @@
 import json
 import socket
 import time
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, Tuple
 
-from kafka import KafkaConsumer
-
+from config.consumer import get_consumer
 from config.helper import (
     get_current_time,
     get_distance,
@@ -16,10 +15,10 @@ from config.helper import (
 from config.log import logger
 
 IP_ADDRESS = socket.gethostbyname(socket.gethostname())
-
+PORT = 9092
+TOPIC = "fast-food-order"
 
 JasonObject = Dict[str, Dict[str, Any]]
-Features = List[Union[float, int, str, Tuple[int, int]]]
 
 
 def predict(data: JasonObject) -> Tuple[int, int]:
@@ -45,12 +44,8 @@ def predict(data: JasonObject) -> Tuple[int, int]:
 
 
 if __name__ == "__main__":
-    consumer = KafkaConsumer(
-        "fast-food-order",
-        security_protocol="PLAINTEXT",
-        bootstrap_servers=f"{IP_ADDRESS}:9092",
-        auto_offset_reset="earliest",
-    )
+    consumer = get_consumer(TOPIC, IP_ADDRESS, PORT)
+
     logger.info("Starting the comsumer")
 
     for msg in consumer:
