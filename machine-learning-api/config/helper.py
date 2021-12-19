@@ -1,15 +1,17 @@
+import os
 from time import struct_time
 from typing import Any, Dict, Tuple
 
 import requests
 from mpu import haversine_distance
+from requests.exceptions import ConnectionError
 
 from config.location import Location
 from config.log import logger
 
 JasonObject = Dict[str, Dict[str, Any]]
 
-HOST = "localhost:8080"
+URL = os.environ["ML_API_URL"]
 
 
 class DistanceError(Exception):
@@ -24,20 +26,29 @@ class WeatherError(Exception):
         super().__init__(self.message)
 
 
+class APIConnectionError(Exception):
+    def __init__(self, message="machine learning api cannot be connected"):
+        self.message = message
+        super().__init__(self.message)
+
+
 def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> Tuple[int, int]:
     """
     input : features that need to be trained
     output : predicted estimate time in tuple (hour, minutes)
     """
-    payload = dict(distance=distance, current_time=current_time, weather=weather, traffic=traffic, season=season)
-    logger.info(f"Querying host {HOST} with data: {payload}")
-    response_data = requests.post(url=HOST, json=payload)
+    try:
+        payload = dict(distance=distance, current_time=current_time, weather=weather, traffic=traffic, season=season)
+        logger.info(f"Querying host {URL} with data: {payload}")
+        response_data = requests.post(url=URL, json=payload).json()
 
-    predicted_time = response_data["prediction"]
+        predicted_time = response_data["prediction"]
 
-    hour, min = predicted_time // 60, predicted_time % 60
+        hour, min = predicted_time // 60, predicted_time % 60
 
-    return hour, min
+        return hour, min
+    except ConnectionError:
+        raise APIConnectionError()
 
 
 def get_distance(data: JasonObject) -> float:

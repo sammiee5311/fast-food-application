@@ -36,9 +36,9 @@ def predict(data: JasonObject) -> Tuple[int, int]:
         traffic = get_traffic()
         season = get_season()
         estimate_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
-    except Exception as error:  # Need to modify
+    except Exception as error:  # TODO Need to modify
         logger.warning(f"An error occured : {error}")
-        return 0
+        return (0, 0)
 
     return estimate_time
 
