@@ -36,3 +36,7 @@
 - kafka-manager: `9000`
 - django: `8000`
 - data-handling: `8080`
+
+## reference
+
+- [docker-elk](https://github.com/deviantony/docker-elk)

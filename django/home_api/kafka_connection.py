@@ -2,7 +2,10 @@ import json
 import socket
 from typing import Any, Dict, Union
 
+import kafka
 from kafka import KafkaProducer
+
+KAFKA_ERRORS = (kafka.errors.NoBrokersAvailable, kafka.errors.UnrecognizedBrokerVersion)
 
 IP_ADDRESS = socket.gethostbyname(socket.gethostname())
 JsonObject = Dict[str, Dict[str, Any]]
@@ -31,7 +34,7 @@ def conntect_kafka() -> Union[KafkaProducer, TemporaryData]:
             retry_backoff_ms=1000,
         )
 
-    except Exception:
+    except KAFKA_ERRORS:
         producer = TemporaryData()
 
     return producer

@@ -7,6 +7,12 @@ class Order(models.Model):
     user = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="order", null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     menu = models.ManyToManyField(Menu, through="OrderMenu")
+    estimated_delivery_time = models.IntegerField(
+        null=True, blank=True
+    )  # TODO: create delivery time model and make it foreign key ?
+    delivery_time = models.IntegerField(
+        null=True, blank=True
+    )  # TODO: create a function that calculates time difference
     restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT, null=False)
 
     class Meta:
@@ -21,7 +27,7 @@ class Order(models.Model):
 
     @property
     def user_zipcode(self):
-        return self.user.address.zipcode  # need to create custom user model
+        return self.user.address.zipcode
 
     @property
     def restaurant_name(self):

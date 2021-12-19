@@ -46,6 +46,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "restaurant",
             "restaurant_zipcode",
             "restaurant_name",
+            "estimated_delivery_time",
+            "delivery_time",
         )
 
     def validate(self, data):
