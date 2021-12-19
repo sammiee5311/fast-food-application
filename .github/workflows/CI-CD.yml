@@ -39,8 +39,8 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Pytest Flask
-        run: make pytest
+      - name: Test deployment
+        run: make deployment
 
   kafka-django-test:
     timeout-minutes: 15
@@ -67,7 +67,7 @@ jobs:
       # - name: Unittest Django
       #   env:
       #     DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-      #   run: make unittest
+      #   run: make backend-server
 
       - name: Stop docker compose
         if: always()
@@ -87,6 +87,23 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "data-handling"
+
+  machine-learning-api-test:
+    runs-on: ubuntu-latest
+    needs: api-server-deployment
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Test machine learning api
+        env:
+          ML_API_URL: ${{ secrets.ML_API_URL }}
+        run: make machine-learning-api
 
       - name: Slack notify
         if: always()

@@ -38,7 +38,7 @@ run-docker-compose:
 stop-docker-compose:
 	docker-compose -f kafka/docker-compose.yml down
 
-set-up-django:
+set-up-backend:
 	( \
 		cd django; \
 		$(PIP) install -r requirements.txt; \
@@ -46,11 +46,11 @@ set-up-django:
 		$(PYTHON) manage.py migrate; \
 	)
 
-set-up-flask:
+set-up-development:
 	cd data-handling &&\
 		$(PIP) install -r requirements.txt; \
 
-test-flask:
+test-development:
 	cd data-handling &&\
 		$(PYTHON) -m pytest
 
@@ -59,18 +59,27 @@ test-run-samples:
 		$(PIP) install -r tests/requirements.txt; \
 		$(PYTHON) tests/test_run_samples.py; \
 	)
-	
 
-test-django:
+set-up-machine-learning-api:
+	cd machine-learning-api &&\
+		$(PIP) install -r requirements.txt; \
+
+test-machine-learning-api:
+	cd machine-learning-api &&\
+		$(PYTHON) -m pytest	
+
+test-backend:
 	cd django &&\
 		coverage run manage.py test
 
 dependency: install
 
-unittest: set-up-django test-django
+backend-server: set-up-backend test-backend
 
-pytest: set-up-flask test-flask
+deployment: set-up-development test-development
+
+machine-learning-api: set-up-machine-learning-api test-machine-learning-api
 
 kafka-docker: run-docker-compose test-run-samples stop-docker-compose
 
-all: dependency unittest kafka-docker
+all: dependency backend-server kafka-docker
