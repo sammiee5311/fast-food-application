@@ -28,7 +28,7 @@ json_obect3 = {
 }
 
 
-@pytest.mark.parametrize("input, expected", [(json_obect1, (-1.0, 53)), (json_obect2, (0, 0)), (json_obect3, (0, 0))])
+@pytest.mark.parametrize("input, expected", [(json_obect1, (0, 0)), (json_obect2, (0, 0)), (json_obect3, (0, 0))])
 def test_predict(input, expected):
     data = input
     result = predict(data)
