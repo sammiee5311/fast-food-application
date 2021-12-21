@@ -4,21 +4,17 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .kafka_connection import conntect_kafka
-from .serializers import OrderMenuCheckSerializer, OrderMenuSerializer, OrderSerializer
+from .serializers import (
+    OrderMenuCheckSerializer,
+    OrderMenuSerializer,
+    OrderSerializer,
+    validate_or_create_menu,
+)
 
 producer = conntect_kafka()
 
 
 class OrderList(APIView):
-    def validate_or_create_menu(self, menus, serializer, order_id=None) -> None:
-        for menu in menus:
-            if order_id:
-                menu["order"] = order_id
-                data = serializer.run_validation(menu)
-                serializer.create(data)
-            else:
-                serializer.run_validation(menu)
-
     def get(self, request, **kwargs) -> Response:
         order_id = kwargs.get("pk", None)
 
@@ -41,9 +37,9 @@ class OrderList(APIView):
 
         if order_serializer.is_valid():
             menus = request.data.get("menus", None)
-            self.validate_or_create_menu(menus, order_menu_check_serializer)
+            validate_or_create_menu(menus, order_menu_check_serializer)  # TODO: need to refactor
             order_res = order_serializer.save()
-            self.validate_or_create_menu(menus, order_menu_serializer, order_res.id)
+            validate_or_create_menu(menus, order_menu_serializer, order_res.id)
 
             producer.send("fast-food-order", order_serializer.data)
 

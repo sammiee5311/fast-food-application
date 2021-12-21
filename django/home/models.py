@@ -49,7 +49,7 @@ class Restaurant(models.Model):
     type = models.ForeignKey(RestaurantType, on_delete=models.PROTECT, default=1)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=250)
-    zipcode = models.IntegerField(null=False)
+    zipcode = models.CharField(max_length=6, null=False)
     phone_number = PhoneNumberField(null=True, blank=True)
     slug = models.SlugField(max_length=100, unique_for_date="updated", blank=True)
     updated = models.DateTimeField(default=timezone.now)

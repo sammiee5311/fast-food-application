@@ -1,4 +1,6 @@
-from home.models import Menu, Restaurant
+from typing import Optional, Union
+
+from home.models import Restaurant
 from order.models import Order, OrderMenu
 from rest_framework import serializers
 
@@ -17,7 +19,7 @@ class OrderMenuSerializer(serializers.ModelSerializer):
         fields = ("id", "menu", "order", "quantity")
 
 
-#  Need To Find Out How To Validate Fields Without Using Two Serializers
+#  TODO: Need To Find Out How To Validate Fields Without Using Two Serializers
 
 
 class OrderMenuCheckSerializer(serializers.ModelSerializer):
@@ -60,3 +62,19 @@ class OrderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Invalid data. Need {missing_values}.")
 
         return data
+
+
+OrderMenuSerializers = Union[OrderMenuSerializer, OrderMenuCheckSerializer]
+
+
+def validate_or_create_menu(menus, serializer: OrderMenuSerializers, order_id: Optional[str] = None) -> None:
+    try:
+        for menu in menus:
+            if order_id:
+                menu["order"] = order_id
+                data = serializer.run_validation(menu)
+                serializer.create(data)
+            else:
+                serializer.run_validation(menu)
+    except (ValueError, KeyError, TypeError):
+        raise serializers.ValidationError(f"Invalid menu data.")
