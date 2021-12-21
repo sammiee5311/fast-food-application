@@ -4,7 +4,7 @@ import Input from '../../../UI/Input'
 
 
 const isQuantityIsValid = (quantity) => {
-    return (quantity !== 0 || quantity >= 0)
+    return (quantity !== 0 || quantity > 0)
 }
 
 const hasDifferentRestarauntMenu = (cartRestaurantId, inputRestaurantId) => {
@@ -50,9 +50,9 @@ const RestaurantMenuItemForm = (props) => {
             input={{
                 id: "quantity",
                 type: "number",
-                min: '0',
+                min: '1',
                 step: '1',
-                defaultValue: '0'
+                defaultValue: '1'
             }}
             />
             <button type="submit">Add</button>

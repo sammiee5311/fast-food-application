@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 
 import Line from '../../UI/Line'
 import CartContext from '../../store/cart-context'
-import CartItem from './CartItem'
+import CartItem from './Cart/CartItem'
 import CartPayment from './CartPayment'
 import classes from './CartPage.module.css'
 
@@ -39,7 +39,7 @@ const Cart = () => {
         setError(null)
         try {
             const restaurantID = cartCtx.currentRestaurantId
-            const user = 1
+            const user = 1  // TODO: Need to create authentication
             const menus = cartCtx.items.map((item) => {
                 return {
                     menu: item.id,
@@ -86,7 +86,7 @@ const Cart = () => {
         setError(null)
         try {
             if (cartCtx.items.length === 0) {
-                throw new Error("Order cannot be proccessed with no items in Cart.")
+                throw new Error("Order cannot be proccessed without items in cart.")
             }
             setIsOrderButtonClicked(true)
         } catch (error) {
