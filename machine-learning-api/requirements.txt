@@ -5,3 +5,4 @@ uszipcode
 pytest
 pytest-cov
 tox
+python-dotenv

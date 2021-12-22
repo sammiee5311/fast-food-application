@@ -1,38 +1,25 @@
 import os
 from time import struct_time
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 
 import requests
 from mpu import haversine_distance
 from requests.exceptions import ConnectionError
 
+from config.env import load_env
+from config.errors import APIConnectionError, DistanceError, WeatherError
 from config.location import Location
 from config.log import logger
 
 JasonObject = Dict[str, Dict[str, Any]]
 
+if "ML_API_URL" not in os.environ:
+    load_env()
+
 URL = os.environ["ML_API_URL"]
 
 
-class DistanceError(Exception):
-    def __init__(self, message="an error while calculating distance"):
-        self.message = message
-        super().__init__(self.message)
-
-
-class WeatherError(Exception):
-    def __init__(self, message="an error while getting weather info"):
-        self.message = message
-        super().__init__(self.message)
-
-
-class APIConnectionError(Exception):
-    def __init__(self, message="machine learning api cannot be connected"):
-        self.message = message
-        super().__init__(self.message)
-
-
-def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> Tuple[int, int]:
+def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> int:
     """
     input : features that need to be trained
     output : predicted estimate time in tuple (hour, minutes)
@@ -44,16 +31,14 @@ def some_machine_leanring_function(distance, current_time, weather, traffic, sea
 
         predicted_time = response_data["prediction"]
 
-        hour, min = predicted_time // 60, predicted_time % 60
-
-        return hour, min
+        return predicted_time
     except ConnectionError:
         raise APIConnectionError()
 
 
 def get_distance(data: JasonObject) -> float:
     """
-    input : A jason object from web server
+    input : A json object from web server
     output : distance from restaurant location to user location in km
     """
     try:
@@ -85,26 +70,24 @@ def get_current_time(time: struct_time) -> int:
     return current_time
 
 
-def get_weather() -> str:  # Need to implement
+def get_weather() -> str:  # TODO: Need to implement
     """
     A function for getting the current weather ('cloudy', 'sunny', 'rainy', 'windy')
     """
     try:
-        """do function"""
-
         return "sunny"
-    except:
+    except (ValueError, KeyError, TypeError):
         raise WeatherError()
 
 
-def get_traffic() -> int:  # Need to implement
+def get_traffic() -> int:  # TODO: Need to implement
     """
     A function to get current traffic (1 ~ 100)
     """
     return 10
 
 
-def get_season() -> str:  # Need to implement
+def get_season() -> str:  # TODO: Need to implement
     """
     A function to get current season ('spring', 'summer', 'fall', 'winter')
     """

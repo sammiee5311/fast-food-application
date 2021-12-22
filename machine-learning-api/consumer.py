@@ -1,7 +1,9 @@
 from kafka import KafkaConsumer
+from config.log import logger
 
 
 def get_consumer(topic: str, ip_address: str, port: int) -> KafkaConsumer:
+    logger.info("Starting the comsumer")
     consumer = KafkaConsumer(
         topic,
         security_protocol="PLAINTEXT",
