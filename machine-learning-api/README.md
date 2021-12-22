@@ -1,6 +1,8 @@
 # Machine-Learning API
 
-post a prediction result (estimated delivery time)
+[![Coverage Status](./reports/coverage-badge.svg?dummy=8484743)](./reports/index.html)
+
+Api server for a prediction result (estimated delivery time)
 
 ## expected BPMN
 
