@@ -1,132 +1,147 @@
-import React, { Fragment, useContext, useState } from 'react'
-import Cookies from 'js-cookie'
-import { Link } from 'react-router-dom'
-import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
+import React, { Fragment, useState } from "react";
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 // import {v4 as uuidv4} from 'uuid'
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
-import Line from '../../UI/Line'
-import CartContext from '../../store/cart-context'
-import CartItem from './Cart/CartItem'
-import CartPayment from './CartPayment'
-import classes from './CartPage.module.css'
+import CartItem from "./Cart/CartItem";
+import CartPayment from "./CartPayment";
+import { cartActions } from "../../store/cart";
+import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import Line from "../../UI/Line";
+
+import classes from "./CartPage.module.css";
 
 const Cart = () => {
-    const cartCtx = useContext(CartContext)
-    const [error, setError] = useState(null)
-    const [isOrderButtonClicked, setIsOrderButtonClicked] = useState(false)
+  const [error, setError] = useState(null);
+  const [isOrderButtonClicked, setIsOrderButtonClicked] = useState(false);
 
-    let navigate = useNavigate()
+  const dispatch = useDispatch();
+  const cartItemsSelector = useSelector((state) => state.cart.items);
+  const restaurantId = useSelector((state) => state.cart.currentRestaurantId);
+  const totalPriceSelector = useSelector((state) => state.cart.totalPrice);
 
-    const totalPrice = `${cartCtx.totalPrice.toFixed(2)} $`
+  let navigate = useNavigate();
 
-    const cartItemRemoveHandler = id => {
-        cartCtx.removeItem(id)
+  const totalPrice = `${totalPriceSelector.toFixed(2)} $`;
+
+  const cartItemRemoveHandler = (id) => {
+    dispatch(cartActions.removeItem(id));
+  };
+
+  const cartItems = cartItemsSelector.map((item, index) => (
+    <CartItem
+      key={index}
+      name={item.name}
+      quantity={item.quantity}
+      price={item.price}
+      onRemove={cartItemRemoveHandler.bind(null, item.id)}
+    />
+  ));
+
+  const orderConfirmHandler = async () => {
+    setError(null);
+    try {
+      const user = 1; // TODO: Need to create authentication
+      const menus = cartItemsSelector.map((item) => {
+        return {
+          menu: item.id,
+          quantity: item.quantity,
+        };
+      });
+
+      const payload = {
+        restaurant: restaurantId,
+        user: user,
+        menus: menus,
+      };
+
+      const response = await fetch("/api/orders/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+      });
+
+      response
+        .json()
+        .then((result) => result)
+        .then((data) => {
+          const result_data = JSON.stringify(data);
+          if (response.status !== 201) {
+            throw new Error(result_data);
+          }
+          dispatch(cartActions.clearCart());
+          navigate(`/order/${data.id}`);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    } catch (error) {
+      setError(error.message);
     }
+    setIsOrderButtonClicked(false);
+  };
 
-    const cartItems = 
-        cartCtx.items.map((item, index) => 
-            <CartItem 
-                key={index} 
-                name={item.name}
-                quantity={item.quantity}
-                price={item.price}
-                onRemove={cartItemRemoveHandler.bind(null, item.id)}
-            />
-        )
-    
-    const orderConfirmHandler = async() => {
-        setError(null)
-        try {
-            const restaurantID = cartCtx.currentRestaurantId
-            const user = 1  // TODO: Need to create authentication
-            const menus = cartCtx.items.map((item) => {
-                return {
-                    menu: item.id,
-                    quantity: item.quantity
-                }
-            })
-
-            const payload = 
-                {
-                    "restaurant": restaurantID,
-                    "user": user,
-                    "menus": menus
-                }
-
-            const response = await fetch('/api/orders/', {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': Cookies.get('csrftoken')
-                }
-            })
-        
-            response.json()
-            .then((result) => result)
-            .then((data) => {
-                const result_data = JSON.stringify(data)
-                if (response.status !== 201) {
-                    throw new Error(result_data)
-                }
-                cartCtx.clearCart()
-                navigate(`/order/${data.id}`)
-            }).catch(error => {
-                setError(error.message)
-            })
-            
-        } catch (error) {
-            setError(error.message)
-        }
-        setIsOrderButtonClicked(false)
+  const orderClickedHandler = () => {
+    setError(null);
+    try {
+      if (cartItemsSelector.length === 0) {
+        throw new Error("Order cannot be proccessed without items in cart.");
+      }
+      setIsOrderButtonClicked(true);
+    } catch (error) {
+      setError(error.message);
     }
+  };
 
-    const orderClickedHandler = () => {
-        setError(null)
-        try {
-            if (cartCtx.items.length === 0) {
-                throw new Error("Order cannot be proccessed without items in cart.")
-            }
-            setIsOrderButtonClicked(true)
-        } catch (error) {
-            setError(error.message)
-        }
-    }
+  const cancelOrderHandler = () => {
+    setIsOrderButtonClicked(false);
+  };
 
-    const cancelOrderHandler = () => {
-        setIsOrderButtonClicked(false)
-    }
-    
-    const isCartEmpty = cartItems.length === 0
-    
-    let items = <p> Cart is Empty </p>
+  const isCartEmpty = cartItems.length === 0;
 
-    if (!isCartEmpty) {
-        items = <Fragment> <Line /> {cartItems} </Fragment>
-    }
+  let items = <p> Cart is Empty </p>;
 
-    const cartOrder = 
+  if (!isCartEmpty) {
+    items = (
+      <Fragment>
+        <Line /> {cartItems}
+      </Fragment>
+    );
+  }
+
+  const cartOrder = (
     <Fragment>
-        <p> - Menu - </p>
-        {items}
-        <div className={classes.padding}>
-            Total Price: {totalPrice}
-        </div>
-        <div className={classes.padding}>
-            <button onClick={orderClickedHandler}>Order</button>
-        </div>
+      <p> - Menu - </p>
+      {items}
+      <div className={classes.padding}>Total Price: {totalPrice}</div>
+      <div className={classes.padding}>
+        <button onClick={orderClickedHandler}>Order</button>
+      </div>
     </Fragment>
+  );
 
-    return (
-        <Fragment>
-            <h2> Cart </h2>
-            <Link to="/"> <BACK /> </Link>
-            {!isOrderButtonClicked && cartOrder}
-            {!error && isOrderButtonClicked && <CartPayment onCancel={cancelOrderHandler} onConfrim={orderConfirmHandler} totalPrice={totalPrice}/>}
-            <p>{error}</p>
-        </Fragment>
-    )
-}
+  return (
+    <Fragment>
+      <h2> Cart </h2>
+      <Link to="/">
+        <BACK />
+      </Link>
+      {!isOrderButtonClicked && cartOrder}
+      {!error && isOrderButtonClicked && (
+        <CartPayment
+          onCancel={cancelOrderHandler}
+          onConfrim={orderConfirmHandler}
+          totalPrice={totalPrice}
+        />
+      )}
+      <p>{error}</p>
+    </Fragment>
+  );
+};
 
-export default Cart
+export default Cart;
