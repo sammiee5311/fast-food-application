@@ -1,57 +1,59 @@
-import React, {useEffect, useState, useCallback, Fragment} from 'react'
-import { ReactComponent as BACK } from '../../assets/chevron-left.svg'
-import { useParams, Link } from 'react-router-dom'
-import Restaurant from './Restaurant/Restaurant'
+import React, { useEffect, useState, useCallback, Fragment } from "react";
+import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import { useParams, Link } from "react-router-dom";
+import Restaurant from "./Restaurant/Restaurant";
 
 const RestaurantDetailPage = () => {
-    const restaurantId = useParams().id
-    const [restaurant, setRestaurant] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState(null)
+  const restaurantId = useParams().id;
+  const [restaurant, setRestaurant] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    let content = <p> No restaurant found. </p>
+  let content = <p> No restaurant found. </p>;
 
-    const getRestaurantDetail = useCallback(async () => {
-        setIsLoading(true)
-        setError(null)
-        try {
-            const response = await fetch(`/api/restaurants/${restaurantId}/`)
-            
-            if (!response.ok) {
-                throw new Error("Something went wrong.")
-            }
+  const getRestaurantDetail = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/restaurants/${restaurantId}/`);
 
-            const data = await response.json()
-            setRestaurant(data)
-        } catch (error) {
-            setError(error)
-        }
-        setIsLoading(false)
-    }, [restaurantId])
+      if (!response.ok) {
+        throw new Error("Something went wrong.");
+      }
 
-    useEffect(() => {
-        getRestaurantDetail()
-    }, [getRestaurantDetail])
-
-    if (restaurant?.name !== undefined) {
-        content = <Restaurant restaurant={restaurant}/>
+      const data = await response.json();
+      setRestaurant(data);
+    } catch (error) {
+      setError(error);
     }
+    setIsLoading(false);
+  }, [restaurantId]);
 
-    if (error) {
-        content = <p>{error}</p>
-    }
+  useEffect(() => {
+    getRestaurantDetail();
+  }, [getRestaurantDetail]);
 
-    if (isLoading) {
-        content = <p>Loading...</p>
-    }
+  if (restaurant?.name !== undefined) {
+    content = <Restaurant restaurant={restaurant} />;
+  }
 
-    return (
-        <Fragment>
-            <h2>Restaurant Detail </h2>
-            <Link to="/restaurants"> <BACK /> </Link>
-            {content}
-        </Fragment>
-    )
-}
+  if (error) {
+    content = <p>{error}</p>;
+  }
 
-export default RestaurantDetailPage
+  if (isLoading) {
+    content = <p>Loading...</p>;
+  }
+
+  return (
+    <Fragment>
+      <h2>Restaurant Detail </h2>
+      <Link to="/restaurants">
+        <BACK />
+      </Link>
+      {content}
+    </Fragment>
+  );
+};
+
+export default RestaurantDetailPage;

@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Line = () => {
-    return <p> ======================== </p>
-}
+  return <p> ======================== </p>;
+};
 
-export default Line
+export default Line;
