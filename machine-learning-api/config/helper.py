@@ -27,7 +27,10 @@ def some_machine_leanring_function(distance, current_time, weather, traffic, sea
     try:
         payload = dict(distance=distance, current_time=current_time, weather=weather, traffic=traffic, season=season)
         logger.info(f"Querying host {URL} with data: {payload}")
-        response_data = requests.post(url=URL, json=payload).json()
+        response_data = requests.post(url=URL, json=payload)
+
+        if response_data.status_code != 200:
+            raise APIConnectionError()
 
         predicted_time = response_data["prediction"]
 

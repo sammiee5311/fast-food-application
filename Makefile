@@ -48,7 +48,7 @@ set-up-backend:
 
 set-up-development:
 	cd data-handling &&\
-		$(PIP) install -r requirements.txt; \
+		$(PIP) install -r requirements.txt
 
 test-development:
 	cd data-handling &&\
@@ -62,7 +62,7 @@ test-run-samples:
 
 set-up-machine-learning-api:
 	cd machine-learning-api &&\
-		$(PIP) install -r requirements.txt; \
+		$(PIP) install -r requirements.txt
 
 test-machine-learning-api:
 	cd machine-learning-api &&\

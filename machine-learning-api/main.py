@@ -4,7 +4,7 @@ import socket
 import time
 from typing import Any, Dict
 
-from config.db import update_estimated_delivery_time
+from config.db import SqlLite3, update_estimated_delivery_time
 from config.env import load_env
 from config.helper import (
     get_current_time,
@@ -22,6 +22,7 @@ load_env()
 IP_ADDRESS = socket.gethostbyname(socket.gethostname())
 PORT = os.environ["KAFKA_PORT"]
 TOPIC = os.environ["KAFKA_TOPIC"]
+DATABASE = SqlLite3
 
 
 JasonObject = Dict[str, Dict[str, Any]]
@@ -42,7 +43,7 @@ def predict(data: JasonObject) -> int:
         traffic = get_traffic()
         season = get_season()
         estimate_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
-        update_estimated_delivery_time(data["id"], estimate_time)
+        update_estimated_delivery_time(DATABASE, data["id"], estimate_time)  # TODO: Need to seperate
     except Exception as error:  # TODO: Need to modify
         logger.warning(f"An error occured : {error}")
         return 0

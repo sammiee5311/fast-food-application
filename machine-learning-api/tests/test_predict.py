@@ -1,8 +1,10 @@
 import time
 
 import pytest
+
+# from config.db import SqlLite3, update_estimated_delivery_time  # TODO: Need to implement to use database rather than sqlite3
+from config.errors import APIConnectionError, DistanceError
 from config.helper import (
-    DistanceError,
     get_current_time,
     get_distance,
     get_season,
@@ -50,24 +52,15 @@ json_object4 = {
     "estimated_delivery_time": None,
 }
 
-# @pytest.mark.parametrize(
-#     "input, expected", [
-#         (json_object1, 0.0)
-#     ]
-# )
-# def test_predict_success(input, expected):
-#     distance = get_distance(input)
-#     current_time = get_current_time(time.localtime())
-#     weather = get_weather()
-#     traffic = get_traffic()
-#     season = get_season()
-
-#     estimate_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
-#     assert estimate_time * 0 == expected
-
 
 @pytest.mark.parametrize(
-    "input, expected", [(json_object2, DistanceError), (json_object3, DistanceError), (json_object4, DistanceError)]
+    "input, expected",
+    [
+        (json_object1, APIConnectionError),
+        (json_object2, DistanceError),
+        (json_object3, DistanceError),
+        (json_object4, DistanceError),
+    ],
 )
 def test_predict_fail(input, expected):
     with pytest.raises(expected):

@@ -1,5 +1,7 @@
 import os
 import sqlite3
+from sqlite3 import Cursor
+from typing import Protocol
 
 from config.env import load_env
 from config.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
@@ -10,11 +12,22 @@ DB_FILE = os.environ["DB_FILE"]
 TABLE = os.environ["DB_TABLE"]
 
 
-class Database:
+class Database(Protocol):
+    def __init__(self, file: str):
+        ...
+
+    def __enter__(self) -> Cursor:
+        ...
+
+    def __exit__(self, type, value, traceback):
+        ...
+
+
+class SqlLite3:
     def __init__(self, file: str):
         self.file = file
 
-    def __enter__(self):
+    def __enter__(self) -> Cursor:
         self.conn = sqlite3.connect(self.file)
         return self.conn.cursor()
 
@@ -25,8 +38,8 @@ class Database:
         self.conn.close()
 
 
-def update_estimated_delivery_time(order_id: str, estimated_delivery_time: int) -> None:
-    with Database(DB_FILE) as cursor:
+def update_estimated_delivery_time(database: Database, order_id: str, estimated_delivery_time: int) -> None:
+    with database(DB_FILE) as cursor:
         cursor.execute(f"SELECT estimated_delivery_time FROM {TABLE} WHERE id = {order_id}")
         result = cursor.fetchone()
 
@@ -40,4 +53,4 @@ def update_estimated_delivery_time(order_id: str, estimated_delivery_time: int) 
 
 
 if __name__ == "__main__":
-    update_estimated_delivery_time(order_id=2, estimated_delivery_time=2)
+    update_estimated_delivery_time(SqlLite3, order_id=2, estimated_delivery_time=2)
