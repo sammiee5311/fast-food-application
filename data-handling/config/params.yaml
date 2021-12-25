@@ -22,12 +22,12 @@ model:
 
   ElasticNet:
     params:
-      l1_ratio: 0.97
-      alpha: 0.5
+      l1_ratio: 0.5
+      alpha: 0.99
 
 mlflow:
   artifacts_path: artifacts
-  experiment_name: fast-food-experiment
-  run_name: fast-food-run
-  registered_model_name: fast-food-model
+  experiment_name: fastFoodExperiment
+  run_name: fastFoodRun
+  registered_model_name: fastFoodModel
   remote_server_uri: http://0.0.0.0:1234

@@ -69,6 +69,10 @@ instance/
 # faust stuff:
 sameples/faust/myapp-data/
 
+# data
+**/artifacts/*
+mlflow.db
+
 # Scrapy stuff:
 .scrapy
 

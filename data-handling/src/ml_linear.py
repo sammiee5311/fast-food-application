@@ -16,8 +16,6 @@ def get_elastic_net_model(config: ConfigYaml) -> ElasticNet:
 
 
 def get_linear_regression(config: ConfigYaml) -> LinearRegression:
-    random_state = config["data"]["train"]["random_state"]
-
-    linear_regression = LinearRegression(random_state=random_state)
+    linear_regression = LinearRegression()
 
     return linear_regression

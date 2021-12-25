@@ -1,17 +1,28 @@
 import os
+from dataclasses import dataclass
+from typing import Tuple
+from urllib.parse import urlparse
 
-import joblib
+import mlflow
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-from get_dataset import read_params
+from get_dataset import ConfigYaml, read_params
 from ml_linear import get_elastic_net_model
 
 CONFIG_PATH = os.path.join("config", "params.yaml")
 
 
-def eval_metrics(actual: pd.DataFrame, pred: np.array):
+@dataclass
+class Data:
+    train_x: pd.DataFrame
+    train_y: pd.DataFrame
+    test_x: pd.DataFrame
+    test_y: pd.DataFrame
+
+
+def eval_metrics(actual: pd.DataFrame, pred: np.array) -> Tuple[float, float, float]:
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
     r2 = r2_score(actual, pred)
@@ -19,11 +30,41 @@ def eval_metrics(actual: pd.DataFrame, pred: np.array):
     return rmse, mae, r2
 
 
+def has_file_store_in_already(mlflow_uri: str) -> bool:
+    tracking_uri_type_store = urlparse(mlflow_uri).scheme
+
+    return tracking_uri_type_store != "file"
+
+
+def run_mlflow(config: ConfigYaml, data: Data) -> None:
+    remote_server = config["mlflow"]["remote_server_uri"]
+    experiment_name = config["mlflow"]["experiment_name"]
+    run_name = config["mlflow"]["run_name"]
+    registered_model_name = config["mlflow"]["registered_model_name"]
+
+    mlflow.set_tracking_uri(remote_server)
+    mlflow.set_experiment(experiment_name)
+
+    with mlflow.start_run(run_name=run_name):
+        lr = get_elastic_net_model(config)
+        lr.fit(data.train_x, data.train_y)
+
+        predicted_delivery_time = lr.predict(data.test_x)
+        rmse, mae, r2 = eval_metrics(data.test_y, predicted_delivery_time)
+
+        mlflow.log_params(dict(alpha=lr.alpha, l1_ratio=lr.l1_ratio))
+        mlflow.log_metrics(dict(rmse=rmse, mae=mae, r2=r2))
+
+        if has_file_store_in_already(mlflow.get_artifact_uri()):
+            mlflow.sklearn.log_model(lr, "model", registered_model_name=registered_model_name)
+        else:
+            mlflow.sklearn.load_model(lr, "model")
+
+
 def train_and_evaluate():
     config = read_params(CONFIG_PATH)
     train_data_path = config["data"]["train"]["path"]
     test_data_path = config["data"]["test"]["path"]
-    model_dir = config["model"]["path"]
 
     target = [config["data"]["train"]["target"]]
 
@@ -36,21 +77,9 @@ def train_and_evaluate():
     train_x = train.drop(target, axis=1)
     test_x = test.drop(target, axis=1)
 
-    lr = get_elastic_net_model(config)
+    data = Data(train_x, train_y, test_x, test_y)
 
-    lr.fit(train_x, train_y)
-
-    predicted_delivery_time = lr.predict(test_x)
-
-    rmse, mae, r2 = eval_metrics(test_y, predicted_delivery_time)
-
-    print("  RMSE: %s" % rmse)
-    print("  MAE: %s" % mae)
-    print("  R2: %s" % r2)
-
-    model_path = os.path.join(model_dir, "model.joblib")
-
-    joblib.dump(lr, model_path)
+    run_mlflow(config, data)
 
 
 if __name__ == "__main__":

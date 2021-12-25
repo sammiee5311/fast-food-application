@@ -62,7 +62,7 @@ def load_encoder() -> OneHotEncoder:
 
 def get_features_payload(data: Union[List[str], JsonPayload], server=False) -> JsonPayload:
     distance = current_time = weather = traffic = season = None
-    if isinstance(data, list):
+    if isinstance(data, list):  # TODO: need to refactor
         distance, current_time, weather, traffic, season = data
     else:
         for key, val in data.items():
