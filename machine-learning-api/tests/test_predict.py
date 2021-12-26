@@ -56,7 +56,6 @@ json_object4 = {
 @pytest.mark.parametrize(
     "input, expected",
     [
-        (json_object1, APIConnectionError),
         (json_object2, DistanceError),
         (json_object3, DistanceError),
         (json_object4, DistanceError),
@@ -71,3 +70,17 @@ def test_predict_fail(input, expected):
         season = get_season()
 
         some_machine_leanring_function(distance, current_time, weather, traffic, season)
+
+
+def test_prediect_success():
+    data = json_object1
+
+    distance = get_distance(data)
+    current_time = get_current_time(time.localtime())
+    weather = get_weather()
+    traffic = get_traffic()
+    season = get_season()
+
+    predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+
+    assert predicted_delivery_time * 0 == 0

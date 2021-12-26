@@ -61,7 +61,7 @@ def run_mlflow(config: ConfigYaml, data: Data) -> None:
             mlflow.sklearn.load_model(lr, "model")
 
 
-def train_and_evaluate():
+def train_and_evaluate() -> None:
     config = read_params(CONFIG_PATH)
     train_data_path = config["data"]["train"]["path"]
     test_data_path = config["data"]["test"]["path"]

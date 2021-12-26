@@ -32,6 +32,7 @@ def some_machine_leanring_function(distance, current_time, weather, traffic, sea
         if response_data.status_code != 200:
             raise APIConnectionError()
 
+        response_data = response_data.json()
         predicted_time = response_data["prediction"]
 
         return predicted_time

@@ -31,3 +31,4 @@ mlflow:
   run_name: fastFoodRun
   registered_model_name: fastFoodModel
   remote_server_uri: http://0.0.0.0:1234
+  experiment_ids: "2"
