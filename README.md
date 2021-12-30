@@ -20,6 +20,7 @@
 - [log](https://github.com/sammiee5311/fast-food-application/tree/main/log)
 - [data-handling](https://github.com/sammiee5311/fast-food-application/tree/main/data-handling)
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
+- [tracking](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
 - [restaurant(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
 
 ## sample test
@@ -36,6 +37,9 @@
 - kafka-manager: `9000`
 - django: `8000`
 - data-handling: `8080`
+- tracking: `3001`
+- react: `3000`
+- mlflow: `1234`
 
 ## reference
 
