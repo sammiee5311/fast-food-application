@@ -6,10 +6,10 @@ import requests
 from mpu import haversine_distance
 from requests.exceptions import ConnectionError
 
-from config.env import load_env
-from config.errors import APIConnectionError, DistanceError, WeatherError
-from config.location import Location
-from config.log import logger
+from utils.env import load_env
+from utils.errors import APIConnectionError, DistanceError, WeatherError
+from utils.location import Location
+from utils.log import logger
 
 JasonObject = Dict[str, Dict[str, Any]]
 

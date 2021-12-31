@@ -3,8 +3,8 @@ import time
 import pytest
 
 # from config.db import SqlLite3, update_estimated_delivery_time  # TODO: Need to implement to use database rather than sqlite3
-from config.errors import APIConnectionError, DistanceError
-from config.helper import (
+from utils.errors import APIConnectionError, DistanceError
+from utils.helper import (
     get_current_time,
     get_distance,
     get_season,

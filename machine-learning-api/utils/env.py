@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-ENV_PATH = os.path.join("config", ".env")
+ENV_PATH = os.path.join("utils", ".env")
 
 
 def load_env():  # TODO: Need to refactor

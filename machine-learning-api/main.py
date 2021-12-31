@@ -4,9 +4,10 @@ import socket
 import time
 from typing import Any, Dict
 
-from config.db import SqlLite3, update_estimated_delivery_time
-from config.env import load_env
-from config.helper import (
+from consumer import get_consumer
+from utils.db import SqlLite3, update_estimated_delivery_time
+from utils.env import load_env
+from utils.helper import (
     get_current_time,
     get_distance,
     get_season,
@@ -14,8 +15,7 @@ from config.helper import (
     get_weather,
     some_machine_leanring_function,
 )
-from config.log import logger
-from consumer import get_consumer
+from utils.log import logger
 
 load_env()
 

@@ -1,5 +1,6 @@
 from kafka import KafkaConsumer
-from config.log import logger
+
+from utils.log import logger
 
 
 def get_consumer(topic: str, ip_address: str, port: int) -> KafkaConsumer:

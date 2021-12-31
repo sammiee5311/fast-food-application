@@ -3,8 +3,8 @@ import sqlite3
 from sqlite3 import Cursor
 from typing import Protocol
 
-from config.env import load_env
-from config.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
+from utils.env import load_env
+from utils.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
 
 load_env()
 
