@@ -21,6 +21,7 @@
 - [data-handling](https://github.com/sammiee5311/fast-food-application/tree/main/data-handling)
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
 - [tracking](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
+- [id-generator](https://github.com/sammiee5311/fast-food-application/tree/main/id-generator)
 - [restaurant(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
 
 ## sample test
