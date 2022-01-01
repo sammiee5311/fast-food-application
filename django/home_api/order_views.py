@@ -1,5 +1,5 @@
 from order.models import Order
-from rest_framework import status
+from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,7 +15,7 @@ producer = conntect_kafka()
 
 
 class OrderList(APIView):
-    def get(self, request, **kwargs) -> Response:
+    def get(self, request: request.Request, **kwargs) -> Response:
         order_id = kwargs.get("pk", None)
 
         if order_id is None:
@@ -30,7 +30,7 @@ class OrderList(APIView):
             except Order.DoesNotExist:
                 return Response("Order does not exist.", status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request) -> Response:
+    def post(self, request: request.Request) -> Response:
         order_serializer = OrderSerializer(data=request.data)
         order_menu_serializer = OrderMenuSerializer()
         order_menu_check_serializer = OrderMenuCheckSerializer()

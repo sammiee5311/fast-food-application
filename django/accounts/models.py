@@ -29,25 +29,24 @@ class CustomAccountManager(BaseUserManager):
         except ValidationError:
             raise EmailError("Email is invalid")
 
+    def check_email_validation(self, email: str):
+        if email:
+            email = self.normalize_email(email)
+            self._validate_email(email)
+        else:
+            raise EmailError()
+
     def create_superuser(self, email, username, password, **fields):
         fields.setdefault("is_staff", True)
         fields.setdefault("is_superuser", True)
         fields.setdefault("is_active", True)
 
-        if email:
-            email = self.normalize_email(email)
-            self._validate_email(email)
-        else:
-            raise EmailError()
+        self.check_email_validation(email)
 
         return self.create_user(email, username, password, **fields)
 
     def create_user(self, email, username, password, **fields):
-        if email:
-            email = self.normalize_email(email)
-            self._validate_email(email)
-        else:
-            raise EmailError()
+        self.check_email_validation(email)
 
         user = self.model(email=email, username=username, **fields)
         user.set_password(password)

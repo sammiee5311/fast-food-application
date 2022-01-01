@@ -1,8 +1,7 @@
 from typing import Dict
 
-import rest_framework
 from home.models import Restaurant
-from rest_framework import status
+from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,9 +9,7 @@ from .serializers import RestaurantSerializer
 
 
 class RestaurantList(APIView):
-    def add_fields_if_not_in_request(
-        self, restaruant: Restaurant, request: rest_framework.request.Request
-    ) -> Dict[str, str]:
+    def add_fields_if_not_in_request(self, restaruant: Restaurant, request: request.Request) -> Dict[str, str]:
         data = {}
 
         for key, val in request.data.items():
@@ -26,7 +23,7 @@ class RestaurantList(APIView):
 
         return data
 
-    def post(self, request) -> Response:
+    def post(self, request: request.Request) -> Response:
         restaurant_serializer = RestaurantSerializer(data=request.data)
 
         if restaurant_serializer.is_valid():
@@ -35,7 +32,7 @@ class RestaurantList(APIView):
         else:
             return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, **kwargs) -> Response:
+    def get(self, request: request.Request, **kwargs) -> Response:
         restaurant_id = kwargs.get("pk", None)
 
         if restaurant_id is None:
@@ -49,7 +46,7 @@ class RestaurantList(APIView):
             except Restaurant.DoesNotExist:
                 return Response("Restaurant does not exist.", status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs) -> Response:
+    def delete(self, request: request.Request, **kwargs) -> Response:
         restaurant_id = kwargs.get("pk", None)
 
         if restaurant_id is None:
@@ -62,7 +59,7 @@ class RestaurantList(APIView):
             except Restaurant.DoesNotExist:
                 return Response("Restaurant does not exist.", status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs) -> Response:
+    def patch(self, request: request.Request, **kwargs) -> Response:
         restaurant_id = kwargs.get("pk", None)
 
         if restaurant_id is None:

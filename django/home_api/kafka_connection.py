@@ -8,6 +8,7 @@ from kafka import KafkaProducer
 KAFKA_ERRORS = (kafka.errors.NoBrokersAvailable, kafka.errors.UnrecognizedBrokerVersion)
 
 IP_ADDRESS = socket.gethostbyname(socket.gethostname())
+
 JsonObject = Dict[str, Dict[str, Any]]
 
 
