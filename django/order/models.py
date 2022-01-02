@@ -2,8 +2,11 @@ from accounts.models import Client
 from django.db import models
 from home.models import Menu, Restaurant
 
+from order.id_generator import get_uuid
+
 
 class Order(models.Model):
+    id = models.UUIDField(primary_key=True, default=get_uuid, editable=False)
     user = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="order", null=False)
     created_on = models.DateTimeField(auto_now_add=True)
     menu = models.ManyToManyField(Menu, through="OrderMenu")

@@ -11,14 +11,15 @@ from .serializers import RestaurantSerializer
 class RestaurantList(APIView):
     def add_fields_if_not_in_request(self, restaruant: Restaurant, request: request.Request) -> Dict[str, str]:
         data = {}
+        payload = request.data.keys()
 
         for key, val in request.data.items():
             data[key] = val
-        if "owner" not in request.data.keys():
+        if "owner" not in payload:
             data["owner"] = restaruant.owner.id
-        if "address" not in request.data.keys():
+        if "address" not in payload:
             data["address"] = restaruant.address
-        if "zipcode" not in request.data.keys():
+        if "zipcode" not in payload:
             data["zipcode"] = restaruant.zipcode
 
         return data
