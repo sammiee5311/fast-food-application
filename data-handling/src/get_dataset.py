@@ -29,9 +29,7 @@ def get_one_hot_encoded_data_frame(df: pd.DataFrame, encoder_path: str) -> pd.Da
 
     save_encoder(encoder_path, encoder)
 
-    df = df.join(encoded_df).drop(columns=["weather", "season"])
-
-    return df
+    return df.join(encoded_df).drop(columns=["weather", "season"])
 
 
 def get_dataset(config_path: str = os.path.join("config", "params.yaml")) -> pd.DataFrame:

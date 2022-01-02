@@ -47,5 +47,14 @@
     "weather",
     "traffic",
     "season"
+  ],
+  "example": [
+    {
+      "distance": 3.5,
+      "current_time": 245,
+      "weather": "sunny",
+      "traffic": 34,
+      "season": "summer"
+    }
   ]
 }
