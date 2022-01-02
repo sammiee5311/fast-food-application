@@ -1,6 +1,7 @@
-from random import random
+import uuid
 
 
 def generate_id() -> str:
-    _id = random()
-    return str(_id)
+    _uuid = uuid.uuid4()
+
+    return _uuid.hex
