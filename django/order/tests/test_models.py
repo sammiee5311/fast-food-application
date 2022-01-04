@@ -1,3 +1,5 @@
+import uuid
+
 from accounts.models import Client
 from django.test import TestCase
 from django.utils import timezone
@@ -25,7 +27,7 @@ class TestOrderModels(TestCase):
         self.menu = Menu.objects.create(name="bulgogi-burger", price=5.99, restaurant=self.restaurant)
         self.menu.food_items.set([self.food_item])
         self.restaurant.menu.set([self.menu])
-        self.order = Order.objects.create(id=1, user=self.user, restaurant=self.restaurant)
+        self.order = Order.objects.create(id=uuid.uuid4(), user=self.user, restaurant=self.restaurant)
         self.order_menu1 = OrderMenu.objects.create(id=1, menu=self.menu, order=self.order, quantity=1)
         self.order_menu2 = OrderMenu.objects.create(id=2, menu=self.menu, order=self.order, quantity=2)
 

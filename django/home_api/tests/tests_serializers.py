@@ -1,3 +1,5 @@
+import uuid
+
 from accounts.models import Client
 from django.urls import reverse
 from django.utils import timezone
@@ -6,6 +8,8 @@ from order.models import Order, OrderMenu
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient, APITestCase
+
+TEST_UUID = uuid.uuid4()
 
 
 def create_restaurant(user: Client, client: APIClient) -> Response:
@@ -39,7 +43,7 @@ def create_menu(restaurant: Restaurant) -> Menu:
 def create_order(user, client: APIClient, restaurant: Restaurant) -> None:
     client.force_login(user)
     menu = create_menu(restaurant)
-    order = Order.objects.create(id=1, user=user, restaurant=restaurant)
+    order = Order.objects.create(id=TEST_UUID, user=user, restaurant=restaurant)
     OrderMenu.objects.create(id=1, menu=menu, order=order, quantity=1)
 
 
@@ -148,8 +152,8 @@ class TestViewOrder(APITestCase):
         restaurant = Restaurant.objects.get(id=1)
         create_order(self.user, client, restaurant)
 
-        url = reverse("home_api:order_detail", kwargs={"pk": 1})
-        url_id_does_not_exist = reverse("home_api:order_detail", kwargs={"pk": 123})
+        url = reverse("home_api:order_detail", kwargs={"pk": TEST_UUID})
+        url_id_does_not_exist = reverse("home_api:order_detail", kwargs={"pk": uuid.uuid4()})
 
         response = client.get(url, format="json")
         response_id_does_not_exist = client.get(url_id_does_not_exist, format="json")
