@@ -1,44 +1,19 @@
-import React, { useEffect, useState, useCallback, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
+import useFetch from "../../hooks/useFetch";
 import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
 import { useParams, Link } from "react-router-dom";
 
 import OrderDetailItem from "./Order/OrderDetailItem";
 
-const OrderDetailPage = () => {
-  const orderId = useParams().id;
-  const [order, setOrder] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+const getProperContent = (order, isLoading, error) => {
   let content = "";
 
-  const getOrder = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    const response = await fetch(`/api/orders/${orderId}/`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error("Something went wrong.");
-    }
-
-    setOrder(data);
-    setIsLoading(false);
-  }, [orderId]);
-
-  useEffect(() => {
-    getOrder().catch((error) => {
-      setError(error.message);
-      setIsLoading(false);
-    });
-  }, [getOrder]);
-
   if (error) {
-    content = error;
+    content = <p>{error}</p>;
   }
 
   if (isLoading) {
-    content = "Loading...";
+    content = <p>Loading...</p>;
   }
 
   if (order) {
@@ -53,6 +28,17 @@ const OrderDetailPage = () => {
       />
     );
   }
+  return content;
+};
+
+const OrderDetailPage = () => {
+  const orderId = useParams().id;
+  const { data: order, isLoading, error, sendRequest } = useFetch();
+  const content = getProperContent(order, isLoading, error);
+
+  useEffect(() => {
+    sendRequest({ url: `/api/orders/${orderId}/` });
+  }, [orderId, sendRequest]);
 
   return (
     <Fragment>

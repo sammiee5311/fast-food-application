@@ -1,36 +1,13 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import OrderListItem from "./Order/OrderListItem";
+import useFetch from "../../hooks/useFetch";
 import { Link } from "react-router-dom";
 import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
 
-const OrderListPage = () => {
-  const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+const getProperContent = (orders, isLoading, error) => {
   let content = <p> No order found. </p>;
 
-  const getOrders = async () => {
-    setIsLoading(true);
-    setError(null);
-    const response = await fetch("/api/orders/");
-
-    if (!response.ok) {
-      throw Error("Something went wrong.");
-    }
-    const data = await response.json();
-    setIsLoading(false);
-    setOrders(data);
-  };
-
-  useEffect(() => {
-    getOrders().catch((error) => {
-      setError(error.message);
-      setIsLoading(false);
-    });
-  }, []);
-
-  if (orders.length > 0) {
+  if (orders && orders.length > 0) {
     content = (
       <div className="order-list">
         {orders.map((order, index) => (
@@ -47,6 +24,18 @@ const OrderListPage = () => {
   if (isLoading) {
     content = <p>Loading...</p>;
   }
+
+  return content;
+};
+
+const OrderListPage = () => {
+  const { data: orders, isLoading, error, sendRequest } = useFetch();
+  const content = getProperContent(orders, isLoading, error);
+
+  // TODO: Need to refactor (reason: load 4 times)
+  useEffect(() => {
+    sendRequest({ url: "/api/orders/" });
+  }, [sendRequest]);
 
   return (
     <Fragment>

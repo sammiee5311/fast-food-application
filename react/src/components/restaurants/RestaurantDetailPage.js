@@ -1,39 +1,13 @@
-import React, { useEffect, useState, useCallback, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
+import useFetch from "../../hooks/useFetch";
 import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
 import { useParams, Link } from "react-router-dom";
 import Restaurant from "./Restaurant/Restaurant";
 
-const RestaurantDetailPage = () => {
-  const restaurantId = useParams().id;
-  const [restaurant, setRestaurant] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+const getProperContent = (restaurant, isLoading, error) => {
   let content = <p> No restaurant found. </p>;
 
-  const getRestaurantDetail = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/restaurants/${restaurantId}/`);
-
-      if (!response.ok) {
-        throw new Error("Something went wrong.");
-      }
-
-      const data = await response.json();
-      setRestaurant(data);
-    } catch (error) {
-      setError(error);
-    }
-    setIsLoading(false);
-  }, [restaurantId]);
-
-  useEffect(() => {
-    getRestaurantDetail();
-  }, [getRestaurantDetail]);
-
-  if (restaurant?.name !== undefined) {
+  if (restaurant) {
     content = <Restaurant restaurant={restaurant} />;
   }
 
@@ -44,6 +18,20 @@ const RestaurantDetailPage = () => {
   if (isLoading) {
     content = <p>Loading...</p>;
   }
+
+  return content;
+};
+
+const RestaurantDetailPage = () => {
+  const restaurantId = useParams().id;
+  const { data: restaurants, isLoading, error, sendRequest } = useFetch();
+  const content = getProperContent(restaurants, isLoading, error);
+
+  useEffect(() => {
+    sendRequest({
+      url: `/api/restaurants/${restaurantId}/`,
+    });
+  }, [sendRequest, restaurantId]);
 
   return (
     <Fragment>
