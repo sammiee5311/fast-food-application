@@ -6,3 +6,4 @@ pytest
 pytest-cov
 tox
 python-dotenv
+python-Levenshtein
