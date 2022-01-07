@@ -90,9 +90,24 @@ jobs:
         if: always()
         run: make stop-docker-compose
 
-  api-server-deployment:
+  tracking-server-test:
     runs-on: ubuntu-latest
     needs: [kafka-django-test, api-server-test, machine-learning-api-test]
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 12.x
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: 12.x
+
+      - name: Test Tracking server
+        run: make tracking
+
+  api-server-deployment:
+    runs-on: ubuntu-latest
+    needs: tracking-server-test
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2

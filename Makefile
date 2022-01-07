@@ -46,13 +46,21 @@ set-up-backend:
 		$(PYTHON) manage.py migrate; \
 	)
 
-set-up-development:
+set-up-deployment:
 	cd data-handling &&\
 		$(PIP) install -r requirements.txt
 
-test-development:
+test-deployment:
 	cd data-handling &&\
 		$(PYTHON) -m pytest
+
+set-up-tracking:
+	cd tracking &&\
+		npm install
+
+test-tracking:
+	cd tracking &&\
+		npm test
 
 test-run-samples:
 	( \
@@ -76,7 +84,9 @@ dependency: install
 
 backend-server: set-up-backend test-backend
 
-deployment: set-up-development test-development
+deployment: set-up-deployment test-deployment
+
+tracking: set-up-tracking test-tracking
 
 machine-learning-api: set-up-machine-learning-api test-machine-learning-api
 
