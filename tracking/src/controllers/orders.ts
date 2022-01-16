@@ -14,6 +14,30 @@ import {
 } from "./utils";
 
 export const getOrders: RequestHandler = (_1, res, _2) => {
+  // const kafka = new Kafka({
+  //   clientId: 'fast-food-order',
+  //   brokers: ['localhost:9092'],
+  // });
+
+  // const consumer = kafka.consumer({
+  //   groupId: 'fast-food-order'
+  // })
+
+  // consumer.connect();
+
+  // consumer.subscribe({
+  //   topic: 'fast-food-order',
+  //   fromBeginning: true
+  // })
+
+  // consumer.run({
+  //   eachMessage: async ({ message }) => {
+  //     console.log('Received message', {
+  //       value: JSON.parse(message.value!.toString()),
+  //     })
+  //   }
+  // })
+
   res.status(200).json({
     kafkaFromDjangoTopic: kafkaFromDjangoTopic,
     kafkaFromRestaurantTopic: kafkaFromRestaurantTopic,

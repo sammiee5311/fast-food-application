@@ -19,19 +19,28 @@ describe("CreateOrder", () => {
   it("return 201 status code", () => {
     return request(server)
       .post("/orders")
-      .send(payload)
+      .set("Origin", "http://localhost:3000")
       .set("Accept", "application/json")
+      .send(payload)
       .expect(201);
   });
 
   it("return 200 status code", () => {
-    return request(server).get("/orders").expect(200);
+    return request(server)
+      .get("/orders")
+      .set("Origin", "http://localhost:3000")
+      .expect(200);
+  });
+
+  it("return 500 status code", () => {
+    return request(server).get("/orders").expect(500);
   });
 
   it("payload.menus === menus", () => {
     return request(server)
       .get("/orders/consume")
       .set("Accept", "application/json")
+      .set("Origin", "http://localhost:3000")
       .expect((res: request.Response) => {
         const resJson = JSON.parse(res.text);
         return resJson.kafkaToRestaurantTopic[0].menus === payload.menus;
@@ -39,6 +48,9 @@ describe("CreateOrder", () => {
   });
 
   it("return 200", () => {
-    return request(server).get("/orders/check").expect(200);
+    return request(server)
+      .get("/orders/check")
+      .set("Origin", "http://localhost:3000")
+      .expect(200);
   });
 });
