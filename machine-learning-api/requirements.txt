@@ -7,3 +7,4 @@ pytest-cov
 tox
 python-dotenv
 python-Levenshtein
+psycopg2-binary

@@ -5,7 +5,7 @@ import time
 from typing import Any, Dict
 
 from consumer import get_consumer
-from utils.db import SqlLite3, update_estimated_delivery_time
+from utils.db import PostgreSQL, SqlLite3, update_estimated_delivery_time
 from utils.env import load_env
 from utils.helper import (
     get_current_time,
@@ -22,7 +22,7 @@ load_env()
 IP_ADDRESS = socket.gethostbyname(socket.gethostname())
 PORT = os.environ["KAFKA_PORT"]
 TOPIC = os.environ["KAFKA_TOPIC"]
-DATABASE = SqlLite3
+DATABASE = PostgreSQL
 
 
 JasonObject = Dict[str, Dict[str, Any]]
