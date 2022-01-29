@@ -41,6 +41,7 @@
 - tracking: `3001`
 - react: `3000`
 - mlflow: `1234`
+- postgres: `5432`
 
 ## reference
 
