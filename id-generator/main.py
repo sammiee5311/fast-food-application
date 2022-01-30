@@ -1,18 +1,25 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from database import UUID_HEX, get_uuid
+
+from config.env import load_dotenv
+from database import UUIDRedis
+
+load_dotenv()
 
 app = FastAPI()
+uuid_redis = UUIDRedis()
 
-HOST = "0.0.0.0"
-PORT = 8008
+HOST = os.environ["SERVER_HOST"]
+PORT = os.environ["SERVER_PORT"]
 
 
 class UUID(BaseModel):
-    uuid: UUID_HEX
+    uuid: str
 
 
 @app.get("/")
@@ -22,7 +29,7 @@ async def read_root():
 
 @app.get("/id")
 async def read_uuid() -> JSONResponse:
-    _uuid = UUID(uuid=get_uuid())
+    _uuid = UUID(uuid=uuid_redis.get_uuid())
     payload = jsonable_encoder(_uuid)
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=payload)

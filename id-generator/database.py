@@ -1,40 +1,41 @@
+import os
 import uuid
 from typing import List
 
-UUID_HEX = str
-UuidQueue = List[UUID_HEX]
-uuid_queue: UuidQueue = []
+import redis
 
-# TODO: Need to use redis instead of txt file.
+from config.env import load_env
 
+load_env()
 
-def generate_ids_in_redis() -> None:
-    """generate ids in redis once a week"""
-    with open("./uuids.txt", "w") as file:
-        for _ in range(1000):
-            _uuid = uuid.uuid4()
-            file.writelines(f"{_uuid.hex}\n")
+REDIS_HOST = os.environ["REDIS_HOST"]
+REDIS_PORT = os.environ["REDIS_PORT"]
+REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
+REDIS_QUEUE = "UUID"
 
 
-def load_uuids_from_redis() -> UuidQueue:
-    """load uuids from redis"""
-    with open("./uuids.txt", "r") as files:
-        uuids = files.readlines()
-        uuids = [uuid.strip() for uuid in uuids]
+class UUIDRedis:
+    def __init__(self):
+        self.client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
 
-    return uuids
+    def generate_ids(self) -> None:
+        """generate ids in redis once a week"""
+        for _ in range(1, 1000):
+            _uuid = uuid.uuid4().hex
 
+            while self.client.exists(_uuid):
+                _uuid = uuid.uuid4().hex
 
-def get_uuid() -> str:
-    global uuid_queue
-    """get uuid from queue which is already generated"""
-    if not uuid_queue:
-        uuid_queue = load_uuids_from_redis()
+            self.client.lpush(REDIS_QUEUE, _uuid)
 
-    uuid = uuid_queue.pop()
-    return uuid
+    def get_uuid(self) -> str:
+        """get uuid from queue which is already generated"""
+        _uuid: bytes = self.client.rpop(REDIS_QUEUE)
+
+        return _uuid.decode("utf-8")
 
 
 if __name__ == "__main__":
-    generate_ids_in_redis()
-    print(get_uuid())
+    _redis = UUIDRedis()
+    # _redis.generate_ids()
+    _redis.get_uuid()
