@@ -1,6 +1,5 @@
 import os
 import uuid
-from typing import List
 
 import redis
 
@@ -30,12 +29,15 @@ class UUIDRedis:
 
     def get_uuid(self) -> str:
         """get uuid from queue which is already generated"""
-        _uuid: bytes = self.client.rpop(REDIS_QUEUE)
+        try:
+            _uuid: bytes = self.client.rpop(REDIS_QUEUE)
+        except AttributeError:
+            self.generate_ids()
 
         return _uuid.decode("utf-8")
 
 
 if __name__ == "__main__":
     _redis = UUIDRedis()
-    # _redis.generate_ids()
+    _redis.generate_ids()
     _redis.get_uuid()
