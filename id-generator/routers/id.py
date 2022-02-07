@@ -21,4 +21,4 @@ async def read_uuid() -> JSONResponse:
     _uuid = UUID(uuid=uuid_redis.get_uuid())
     payload = jsonable_encoder(_uuid)
 
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=payload)
+    return JSONResponse(status_code=status.HTTP_200_OK, content=payload)

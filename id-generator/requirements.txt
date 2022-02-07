@@ -3,3 +3,9 @@ uvicorn[standard]
 redis
 python-dotenv
 black
+pytest
+pytest-asyncio
+pytest-cov
+httpx
+trio
+requests
