@@ -15,3 +15,19 @@ def test_get_id():
     response = client.get("/id/")
     assert response.status_code == status.HTTP_200_OK
     assert "uuid" in response.json()
+
+
+def test_generate_id():
+    response = client.get("/id-generator/")
+    assert response.status_code == status.HTTP_200_OK
+    assert "success" in response.json()["message"]
+
+
+def test_404_page():
+    response = client.get("/404/")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_id_404_page():
+    response = client.get("/id/404/")
+    assert response.status_code == status.HTTP_404_NOT_FOUND

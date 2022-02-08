@@ -20,3 +20,25 @@ async def test_get_id():
         response = await ac.get("/id/")
         assert response.status_code == status.HTTP_200_OK
         assert "uuid" in response.json()
+
+
+@pytest.mark.anyio
+async def test_generate_id():
+    async with AsyncClient(app=app, base_url=URL) as ac:
+        response = await ac.get("/id-generator/")
+        assert response.status_code == status.HTTP_200_OK
+        assert "success" in response.json()["message"]
+
+
+@pytest.mark.anyio
+async def test_404_page():
+    async with AsyncClient(app=app, base_url=URL) as ac:
+        response = await ac.get("/404")
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.anyio
+async def test_id_404_page():
+    async with AsyncClient(app=app, base_url=URL) as ac:
+        response = await ac.get("/id/404")
+        assert response.status_code == status.HTTP_404_NOT_FOUND

@@ -19,7 +19,7 @@ class UUIDRedis:
 
     def generate_ids(self) -> None:
         """generate ids in redis once a week"""
-        for _ in range(1, 1000):
+        for _ in range(1, 10):
             _uuid = uuid.uuid4().hex
 
             while self.client.exists(_uuid):
