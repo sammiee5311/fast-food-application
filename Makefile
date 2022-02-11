@@ -38,10 +38,10 @@ run-docker-compose:
 stop-docker-compose:
 	docker-compose -f kafka/docker-compose.yml down
 
-run-data-base:
+run-database:
 	docker-compose -f django/docker-compose.yml up -d
 
-stop-data-base:
+stop-database:
 	docker-compose -f django/docker-compose.yml down
 
 set-up-backend:

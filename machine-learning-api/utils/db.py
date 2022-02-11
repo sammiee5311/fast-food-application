@@ -4,9 +4,8 @@ from sqlite3 import Cursor
 from typing import Protocol, Union
 
 import psycopg2
-
-from utils.env import load_env
-from utils.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
+from config.env import load_env
+from config.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
 
 load_env()
 

@@ -3,15 +3,16 @@ from time import struct_time
 from typing import Any, Dict
 
 import requests
+from config.env import load_env
+from config.errors import APIConnectionError, DistanceError, WeatherError
 from mpu import haversine_distance
 from requests.exceptions import ConnectionError
 
-from utils.env import load_env
-from utils.errors import APIConnectionError, DistanceError, WeatherError
 from utils.location import Location
 from utils.log import logger
 
 JasonObject = Dict[str, Dict[str, Any]]
+
 
 if "ML_API_URL" not in os.environ:
     load_env()

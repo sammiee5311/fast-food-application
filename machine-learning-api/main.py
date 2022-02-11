@@ -4,9 +4,9 @@ import socket
 import time
 from typing import Any, Dict
 
+from config.env import load_env
 from consumer import get_consumer
-from utils.db import PostgreSQL, SqlLite3, update_estimated_delivery_time
-from utils.env import load_env
+from utils.db import PostgreSQL, update_estimated_delivery_time
 from utils.helper import (
     get_current_time,
     get_distance,
