@@ -1,5 +1,6 @@
 kafka-python
 black
+httpx
 mpu
 uszipcode
 pytest

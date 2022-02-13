@@ -1,9 +1,9 @@
 import time
 
 import pytest
-
-# from config.db import SqlLite3, update_estimated_delivery_time  # TODO: Need to implement to use database rather than sqlite3
+from config.env import load_env
 from config.errors import APIConnectionError, DistanceError
+from utils.db import PostgreSQL, SqlLite3, update_estimated_delivery_time
 from utils.helper import (
     get_current_time,
     get_distance,
@@ -13,8 +13,10 @@ from utils.helper import (
     some_machine_leanring_function,
 )
 
+load_env()
+
 json_object1 = {
-    "id": 1,
+    "id": "f455d3304fa14dd790486a2f5475f54f",
     "username": "test",
     "user_zipcode": "10014",
     "created_on_str": "2021-12-19 08:06",
@@ -72,6 +74,16 @@ def test_predict_fail(input, expected):
         some_machine_leanring_function(distance, current_time, weather, traffic, season)
 
 
+def test_production_database():
+    with PostgreSQL() as cursor:
+        assert cursor is not None
+
+
+def test_mock_database():
+    with SqlLite3() as cursor:
+        assert cursor is not None
+
+
 def test_prediect_success():
     data = json_object1
 
@@ -82,5 +94,6 @@ def test_prediect_success():
     season = get_season()
 
     predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+    update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
     assert predicted_delivery_time * 0 == 0
