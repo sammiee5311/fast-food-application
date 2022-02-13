@@ -3,23 +3,8 @@ name: CI-CD
 on: [push, pull_request]
 
 jobs:
-  build-and-install-dependencies:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source repo
-        uses: actions/checkout@v2
-
-      - name: Set up python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
-      - name: Install Dependencies
-        run: make install
-
   machine-learning-api-test:
     runs-on: ubuntu-latest
-    needs: build-and-install-dependencies
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2
@@ -27,16 +12,21 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Test machine learning api
         env:
           ML_API_URL: ${{ secrets.ML_API_URL }}
+          DB_FILE: ${{ secrets.ML_DB_FILE }}
+          DB_TABLE: ${{ secrets.ML_DB_TABLE }}
+          DB_NAME: ${{ secrets.ML_DB_NAME }}
+          DB_HOST: ${{ secrets.ML_DB_HOST }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: make machine-learning-api
 
   api-server-test:
     runs-on: ubuntu-latest
-    needs: build-and-install-dependencies
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2
@@ -44,7 +34,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Test deployment
         run: make deployment
@@ -52,7 +42,6 @@ jobs:
   kafka-django-test:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    needs: build-and-install-dependencies
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2
@@ -60,25 +49,22 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
-      - name: Install Dependencies
-        run: make install
+      # - name: Install Dependencies
+      #   run: make install
 
-      - name: Run docker compose
-        run: make run-docker-compose
-
-      # - name: Test samples
-      #   run: make test-run-samples
+      # - name: Run docker compose
+      #   run: make run-docker-compose
 
       # - name: Unittest Django
       #   env:
       #     DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       #   run: make backend-server
 
-      - name: Stop docker compose
-        if: always()
-        run: make stop-docker-compose
+      # - name: Stop docker compose
+      #   if: always()
+      #   run: make stop-docker-compose
 
   tracking-server-test:
     runs-on: ubuntu-latest

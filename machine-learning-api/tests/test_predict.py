@@ -74,11 +74,6 @@ def test_predict_fail(input, expected):
         some_machine_leanring_function(distance, current_time, weather, traffic, season)
 
 
-def test_production_database():
-    with PostgreSQL() as cursor:
-        assert cursor is not None
-
-
 def test_mock_database():
     with SqlLite3() as cursor:
         assert cursor is not None
