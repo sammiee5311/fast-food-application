@@ -2,8 +2,13 @@ import time
 
 import pytest
 from config.env import load_env
-from config.errors import APIConnectionError, DistanceError
-from utils.db import PostgreSQL, SqlLite3, update_estimated_delivery_time
+from config.errors import (
+    APIConnectionError,
+    DistanceError,
+    EstimatedDeliveryTimeAlreadyExist,
+    OrderNotFound,
+)
+from utils.db import SqlLite3, update_estimated_delivery_time
 from utils.helper import (
     get_current_time,
     get_distance,
@@ -53,6 +58,16 @@ json_object4 = {
     "restaurant_name": "domino's pizza",
     "estimated_delivery_time": None,
 }
+json_object5 = {
+    "id": "f455d3304fa14dd790486a2f5475f5f",
+    "username": "test",
+    "user_zipcode": "10014",
+    "created_on_str": "2021-12-19 08:06",
+    "menus": ["pizza"],
+    "restaurant_name": "domino's pizza",
+    "restaurant_zipcode": "10009",
+    "estimated_delivery_time": None,
+}
 
 
 @pytest.mark.parametrize(
@@ -79,7 +94,8 @@ def test_mock_database():
         assert cursor is not None
 
 
-def test_prediect_success():
+@pytest.mark.parametrize("order_id", ["f455d3304fa14dd790486a2f5475f54f"])
+def test_prediect_success(clear_database):
     data = json_object1
 
     distance = get_distance(data)
@@ -92,3 +108,33 @@ def test_prediect_success():
     update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
     assert predicted_delivery_time * 0 == 0
+
+
+def test_database_with_wrong_order_id():
+    with pytest.raises(OrderNotFound):
+        data = json_object5
+
+        distance = get_distance(data)
+        current_time = get_current_time(time.localtime())
+        weather = get_weather()
+        traffic = get_traffic()
+        season = get_season()
+
+        predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+
+        update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
+
+
+def test_database_with_exist_EDT():
+    with pytest.raises(EstimatedDeliveryTimeAlreadyExist):
+        data = json_object1
+
+        distance = get_distance(data)
+        current_time = get_current_time(time.localtime())
+        weather = get_weather()
+        traffic = get_traffic()
+        season = get_season()
+
+        predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+
+        update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
