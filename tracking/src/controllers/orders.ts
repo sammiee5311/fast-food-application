@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { RequestHandler } from "express";
 import { Kafka } from "kafkajs";
+import { connection } from "../models/database";
 import { Menu, ToRestaurantPayload } from "../models/order";
 
 import {
@@ -84,4 +85,19 @@ export const getCheck: RequestHandler = (_1, res, _2) => {
   checkRestaurantAvailable();
 
   res.status(200).json({ message: "Checked.", orders: orders });
+};
+
+export const connectDatabase: RequestHandler = async (_1, res, _2) => {
+  try {
+    const client = await connection.connect();
+
+    const sql = "SELECT * FROM order_order";
+    const { rows } = await client.query(sql);
+
+    client.release();
+
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(400).json(error);
+  }
 };

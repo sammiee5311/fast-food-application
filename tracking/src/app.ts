@@ -5,9 +5,13 @@ import cors from "cors";
 import orderRoutes from "./routes/orders";
 import corsOptions from "./uilts/cors";
 
+const isTest = process.env.NODE_ENV === "test" ? true : false;
+
 const app = express();
 
-app.use(cors(corsOptions));
+if (isTest) {
+  app.use(cors(corsOptions));
+}
 
 app.use(json());
 

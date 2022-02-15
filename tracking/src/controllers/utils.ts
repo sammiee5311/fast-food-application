@@ -22,7 +22,7 @@ export const createPayloadFromRestaurant = (orderId: string) => {
 };
 
 export const createOrder = (orderId: string, restaurantId: string) => {
-  // TODO(maybe): try to generate vid ID gererator api server.
+  // TODO(maybe): try to generate via ID gererator api server.
 
   const orderFromUser = new Order(orderId, restaurantId, false);
   orders.push(orderFromUser);
