@@ -11,6 +11,8 @@ services:
       - POSTGRES_DB=fast-food-restaurant
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=root
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   pgadmin:
     container_name: pgadmin4
@@ -22,3 +24,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
      - "5050:80"
+
+volumes: 
+  pgdata:
