@@ -4,6 +4,7 @@ import uuid
 import redis
 
 from config.env import load_env
+from utils.log import logger
 
 load_env()
 
@@ -11,6 +12,7 @@ REDIS_HOST = os.environ["REDIS_HOST"]
 REDIS_PORT = os.environ["REDIS_PORT"]
 REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
 REDIS_QUEUE = "UUID"
+GEN_UUIDS = 100_000
 
 
 class UUIDRedis:
@@ -19,7 +21,8 @@ class UUIDRedis:
 
     def generate_ids(self) -> None:
         """generate ids in redis once a week"""
-        for _ in range(1, 10):
+        logger.info("Generating uuids.")
+        for _ in range(GEN_UUIDS):
             _uuid = uuid.uuid4().hex
 
             while self.client.exists(_uuid):
@@ -31,6 +34,7 @@ class UUIDRedis:
         """get uuid from queue which is already generated"""
         try:
             _uuid: bytes = self.client.rpop(REDIS_QUEUE)
+            logger.info("Getting an uuid from cache.")
         except AttributeError:
             self.generate_ids()
 

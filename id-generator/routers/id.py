@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from utils.log import logger
 
 router = APIRouter(
     tags=["id"],
@@ -32,4 +33,5 @@ async def generate_uuid() -> JSONResponse:
         uuid_redis.generate_ids()
         return JSONResponse(status_code=status.HTTP_200_OK, content={"message": message % "success"})
     except:
+        logger.warn("Fail to generate uuids.")
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"message": message % "fail"})
