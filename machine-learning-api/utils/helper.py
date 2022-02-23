@@ -10,6 +10,7 @@ from requests.exceptions import ConnectionError
 
 from utils.location import Location
 from utils.log import logger
+from utils.weather import WeatherApi
 
 JasonObject = Dict[str, Dict[str, Any]]
 
@@ -18,6 +19,8 @@ if "ML_API_URL" not in os.environ:
     load_env()
 
 URL = os.environ["ML_API_URL"]
+
+weather_api = WeatherApi()
 
 
 def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> int:
@@ -80,7 +83,13 @@ def get_weather() -> str:  # TODO: Need to implement
     A function for getting the current weather ('cloudy', 'sunny', 'rainy', 'windy')
     """
     try:
-        return "sunny"
+        weather = weather_api.get_current_weather().lower()
+
+        # TODO: Need to change to fit the ML model.
+        if weather == "clouds":
+            weather = "cloudy"
+
+        return weather
     except (ValueError, KeyError, TypeError):
         raise WeatherError()
 

@@ -23,6 +23,7 @@ jobs:
           DB_HOST: ${{ secrets.ML_DB_HOST }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
         run: make machine-learning-api
 
   api-server-test:
