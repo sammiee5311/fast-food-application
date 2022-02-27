@@ -10,10 +10,10 @@ from utils.db import PostgreSQL, update_estimated_delivery_time
 from utils.helper import (
     get_current_time,
     get_distance,
+    get_estimated_delivery_time_result,
     get_season,
     get_traffic,
     get_weather,
-    some_machine_leanring_function,
 )
 from utils.log import logger
 
@@ -42,7 +42,7 @@ def predict(data: JasonObject) -> int:
         weather = get_weather()
         traffic = get_traffic()
         season = get_season()
-        estimate_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+        estimate_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
         update_estimated_delivery_time(DATABASE, data["id"], estimate_time)  # TODO: Need to seperate
     except Exception as error:  # TODO: Need to modify
         logger.warning(f"An error occured : {error}")

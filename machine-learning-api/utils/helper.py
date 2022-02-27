@@ -1,5 +1,6 @@
 import os
-from time import struct_time
+import random
+from time import localtime, struct_time
 from typing import Any, Dict
 
 import requests
@@ -23,7 +24,7 @@ URL = os.environ["ML_API_URL"]
 weather_api = WeatherApi()
 
 
-def some_machine_leanring_function(distance, current_time, weather, traffic, season) -> int:
+def get_estimated_delivery_time_result(distance, current_time, weather, traffic, season) -> int:
     """
     input : features that need to be trained
     output : predicted estimate time in tuple (hour, minutes)
@@ -78,18 +79,21 @@ def get_current_time(time: struct_time) -> int:
     return current_time
 
 
-def get_weather() -> str:  # TODO: Need to implement
+def get_weather() -> str:
     """
     A function for getting the current weather ('cloudy', 'sunny', 'rainy', 'windy')
     """
     try:
         weather = weather_api.get_current_weather().lower()
 
-        # TODO: Need to change to fit the ML model.
-        if weather == "clouds":
-            weather = "cloudy"
+        if weather in weather_api.cloudy:
+            return "cloudy"
+        elif weather in weather_api.rainy:
+            return "rainy"
+        elif weather in weather_api.windy:
+            return "windy"
 
-        return weather
+        return "sunny"
     except (ValueError, KeyError, TypeError):
         raise WeatherError()
 
@@ -98,11 +102,20 @@ def get_traffic() -> int:  # TODO: Need to implement
     """
     A function to get current traffic (1 ~ 100)
     """
-    return 10
+    return random.randint(1, 100)
 
 
-def get_season() -> str:  # TODO: Need to implement
+def get_season() -> str:
     """
     A function to get current season ('spring', 'summer', 'fall', 'winter')
     """
-    return "summer"
+    current_month = localtime().tm_mon
+
+    if 3 <= current_month <= 5:
+        return "spring"
+    elif 6 <= current_month <= 8:
+        return "summer"
+    elif 9 <= current_month <= 11:
+        return "fall"
+
+    return "winter"

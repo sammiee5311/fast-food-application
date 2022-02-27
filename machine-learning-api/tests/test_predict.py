@@ -12,10 +12,10 @@ from utils.db import SqlLite3, update_estimated_delivery_time
 from utils.helper import (
     get_current_time,
     get_distance,
+    get_estimated_delivery_time_result,
     get_season,
     get_traffic,
     get_weather,
-    some_machine_leanring_function,
 )
 
 load_env()
@@ -86,7 +86,7 @@ def test_predict_fail(input, expected):
         traffic = get_traffic()
         season = get_season()
 
-        some_machine_leanring_function(distance, current_time, weather, traffic, season)
+        get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
 
 
 def test_mock_database():
@@ -104,7 +104,7 @@ def test_prediect_success(clear_database):
     traffic = get_traffic()
     season = get_season()
 
-    predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+    predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
     update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
     assert predicted_delivery_time * 0 == 0
@@ -120,7 +120,7 @@ def test_database_with_wrong_order_id():
         traffic = get_traffic()
         season = get_season()
 
-        predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+        predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
 
         update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
@@ -135,6 +135,6 @@ def test_database_with_exist_EDT():
         traffic = get_traffic()
         season = get_season()
 
-        predicted_delivery_time = some_machine_leanring_function(distance, current_time, weather, traffic, season)
+        predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
 
         update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)

@@ -13,6 +13,10 @@ class WeatherApi:
     def __init__(self):
         self.apikey = os.environ["WEATHER_API_KEY"]
         self.cities = self.get_cities()
+        self.cloudy = {"clouds", "mist", "smoke", "haze", "dust", "fog", "sand", "ash"}
+        self.rainy = {"thunderstorm", "drizzle", "rain", "snow"}
+        self.windy = {"tornado", "squall", "wind"}
+        self.sunny = {"clear"}
 
     def get_cities(self) -> List[str]:
         """
@@ -35,4 +39,5 @@ class WeatherApi:
         url = endpoint.format(key=self.apikey)
         res = requests.get(url)
         data = json.loads(res.text)
+
         return data["weather"][0]["main"]
