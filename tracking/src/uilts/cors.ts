@@ -1,4 +1,4 @@
-import cors, { CorsOptions } from "cors";
+import { CorsOptions } from "cors";
 
 const WHITELIST = ["http://localhost:3000"];
 

@@ -2,7 +2,7 @@ import { Pool, PoolConfig } from "pg";
 import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config({ path: path.join(__dirname, "../config/.env") });
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const config: PoolConfig = {
   max: 20,
