@@ -24,7 +24,7 @@ describe("CreateOrder", () => {
 
   it("return 200", () => {
     return request(server)
-      .get("/orders/check")
+      .get("/orders/mockDatabase")
       .set("Origin", "http://localhost:3000")
       .expect(200);
   });

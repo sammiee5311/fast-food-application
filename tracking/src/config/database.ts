@@ -2,7 +2,12 @@ import { Pool, PoolConfig } from "pg";
 import path from "path";
 import dotenv from "dotenv";
 
+import PgMock2 from "pgmock2";
+import { rows } from "./mockData";
+
 dotenv.config({ path: path.join(__dirname, ".env") });
+
+const isTest = process.env.NODE_ENV === "test" ? true : false;
 
 const config: PoolConfig = {
   max: 20,
@@ -14,4 +19,16 @@ const config: PoolConfig = {
   idleTimeoutMillis: 30000,
 };
 
-export const connection = new Pool(config);
+let connection: PgMock2 | Pool;
+
+if (isTest) {
+  connection = new PgMock2();
+  connection.add("SELECT * FROM order_order", [], {
+    rowCount: rows.length,
+    rows: rows,
+  });
+} else {
+  connection = new Pool(config);
+}
+
+export default connection;

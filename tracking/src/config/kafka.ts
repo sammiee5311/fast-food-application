@@ -3,6 +3,7 @@ import { KafkaOrderMessage } from "../types/index";
 import { isRestaurantAvailable } from "../uilts/helper";
 import orders from "../models/orders";
 
+/* istanbul ignore file */
 const BROKER = "localhost:9092";
 
 const startConsumOrders = async () => {

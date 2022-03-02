@@ -37,6 +37,7 @@
     "kafkajs": "^1.15.0",
     "npm-hook-receiver": "^1.0.0",
     "pg": "^8.7.3",
+    "pgmock2": "^2.1.2",
     "typeorm": "^0.2.41"
   }
 }
