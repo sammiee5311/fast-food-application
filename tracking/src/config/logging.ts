@@ -13,8 +13,6 @@ interface TransformableInfo {
 
 const LOG_DIR = process.env.LOG_DIR;
 
-console.log(LOG_DIR);
-
 const logger = createLogger({
   transports: [
     new winstonDaily({

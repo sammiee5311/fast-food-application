@@ -3,7 +3,7 @@ import { json } from "body-parser";
 import cors from "cors";
 
 import orderRoutes from "./routes/orders";
-import corsOptions from "./uilts/cors";
+import corsOptions from "./middlewares/cors";
 import logger from "./config/logging";
 
 const isTest = process.env.NODE_ENV === "test" ? true : false;

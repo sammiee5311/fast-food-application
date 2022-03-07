@@ -80,6 +80,8 @@ jobs:
           node-version: "16"
 
       - name: Test Tracking server
+        env:
+          LOG_DIR: ${{ secrets.LOG_DIR }}
         run: make tracking
 
   api-server-deployment:
