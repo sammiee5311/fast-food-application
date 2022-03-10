@@ -10,6 +10,14 @@ export interface Order {
   restaurant: number;
 }
 
+export interface Ingredient {
+  [ingredient: string]: string;
+}
+
+export interface Recipe {
+  [menu: string]: Ingredient[];
+}
+
 export interface KafkaOrderMessage {
   id: string;
   username: string;

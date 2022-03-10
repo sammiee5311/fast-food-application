@@ -9,13 +9,13 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 
 const isTest = process.env.NODE_ENV === "test" ? true : false;
 
-const config: PoolConfig = {
+const postgreConfig: PoolConfig = {
   max: 20,
   user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: +process.env.DB_PORT!,
+  port: +process.env.DB_PG_PORT!,
   idleTimeoutMillis: 30000,
 };
 
@@ -28,7 +28,7 @@ if (isTest) {
     rows: rows,
   });
 } else {
-  connection = new Pool(config);
+  connection = new Pool(postgreConfig);
 }
 
 export default connection;

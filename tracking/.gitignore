@@ -4,6 +4,9 @@
 .pnp.js
 package-lock.json
 
+# database
+/data
+
 # config
 /src/config/.env
 

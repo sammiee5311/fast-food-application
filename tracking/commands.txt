@@ -1,0 +1,7 @@
+CREATE MONGODB CONTAINER
+docker run \
+    -v $PWD/data:/data/db \
+    -p 27017:27017 \
+    -e MONGO_INITDB_ROOT_USERNAME=admin \
+    -e MONGO_INITDB_ROOT_PASSWORD=root \
+    -d mongo

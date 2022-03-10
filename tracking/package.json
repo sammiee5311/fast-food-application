@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --coverage --detectOpenHandles",
     "test:watch": "jest --watch",
     "premake-badge": "jest --coverage",
     "make-badge": "coverage-badges",
@@ -35,6 +35,8 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "kafkajs": "^1.15.0",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.2.5",
     "npm-hook-receiver": "^1.0.0",
     "pg": "^8.7.3",
     "pgmock2": "^2.1.2",
