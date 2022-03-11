@@ -37,5 +37,4 @@ class PostgreDb {
   }
 }
 
-/* istanbul ignore next */
 export default new PostgreDb();

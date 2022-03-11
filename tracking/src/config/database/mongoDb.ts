@@ -1,10 +1,14 @@
 import path from "path";
 import dotenv from "dotenv";
 import { MongoClient, Collection } from "mongodb";
+// @ts-ignore
+import { MongoClient as MongoMockClient } from "mongo-mock";
 
 /* istanbul ignore file */
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
+
+const isTest = process.env.NODE_ENV === "test" ? true : false;
 
 const mongoConfig = {
   user: process.env.DB_USER,
@@ -16,7 +20,9 @@ const mongoConfig = {
 const mongoURL = `mongodb://${mongoConfig.user}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/`;
 
 class MongoDb {
-  public client: MongoClient = new MongoClient(mongoURL);
+  public client: MongoClient | MongoMockClient = isTest
+    ? new MongoMockClient(mongoURL)
+    : new MongoClient(mongoURL);
 
   constructor() {}
 
