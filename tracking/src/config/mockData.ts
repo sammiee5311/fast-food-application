@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import PgMock2 from "pgmock2";
 
 export const rows = [
   {
@@ -42,3 +43,12 @@ export const rows = [
     user_id: 5,
   },
 ];
+
+const connection = new PgMock2();
+
+connection.add("SELECT * FROM order_order", [], {
+  rowCount: rows.length,
+  rows: rows,
+});
+
+export default connection;

@@ -2,16 +2,22 @@ import { Router } from "express";
 
 import {
   getOrders,
-  connectDatabase,
-  connectMockDatabase,
+  connectPostgreDB,
+  connectMongoDB,
+  connectMockDB,
 } from "../controllers/orders";
+import log from "../middlewares/log";
 
 const router = Router();
 
+router.use(log);
+
 router.get("/", getOrders);
 
-router.get("/database", connectDatabase);
+router.get("/postgre", connectPostgreDB);
 
-router.get("/mockDatabase", connectMockDatabase);
+router.get("/mongo", connectMongoDB);
+
+router.get("/mockData", connectMockDB);
 
 export default router;

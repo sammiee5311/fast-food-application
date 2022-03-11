@@ -2,38 +2,38 @@ import path from "path";
 import dotenv from "dotenv";
 import { MongoClient, Collection } from "mongodb";
 
-dotenv.config({ path: path.join(__dirname, ".env") });
+/* istanbul ignore file */
 
-const MONGO_CONFIG = {
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
+const mongoConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
   port: +process.env.DB_MG_PORT!,
 };
 
+const mongoURL = `mongodb://${mongoConfig.user}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/`;
+
 class MongoDb {
-  public client: any = null;
-  public config: any = MONGO_CONFIG;
+  public client: MongoClient = new MongoClient(mongoURL);
 
   constructor() {}
 
-  connect() {
-    const mongoURI = `mongodb://${this.config.user}:${this.config.password}@${this.config.host}:${this.config.port}/`;
-    const client = new MongoClient(mongoURI);
-    this.client = client;
+  async connect() {
+    await this.client.connect();
   }
 
   async disconnect() {
     await this.client.close();
   }
 
-  async getCollection() {
-    await this.client.connect();
-
+  async getResult() {
     const database = this.client.db("database");
     const collection = <Collection>database.collection("restaurants");
+    const counts = await collection.countDocuments();
 
-    return collection;
+    return counts;
   }
 }
 
