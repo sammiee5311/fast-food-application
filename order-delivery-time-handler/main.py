@@ -19,7 +19,7 @@ from utils.log import logger
 
 load_env()
 
-IP_ADDRESS = socket.gethostbyname(socket.gethostname())
+IP_ADDRESS = "localhost"
 PORT = os.environ["KAFKA_PORT"]
 TOPIC = os.environ["KAFKA_TOPIC"]
 DATABASE = PostgreSQL

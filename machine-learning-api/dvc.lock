@@ -35,6 +35,9 @@ stages:
   train_and_evaluate:
     cmd: python src/train_and_evaluate.py
     deps:
+    - path: config/params.yaml
+      md5: f6f005aadccae83d1d9d0a7f089a81aa
+      size: 646
     - path: data/processed/test_delivery_time.csv
       md5: 35c8544b3afbf983c9ab73951cfad799
       size: 46796
@@ -42,5 +45,11 @@ stages:
       md5: 46ce58e96f49be0e661c1418680592bc
       size: 186843
     - path: src/train_and_evaluate.py
-      md5: 26ef1bab9edf0463b6f838782c05cb41
-      size: 1406
+      md5: f31d0125f6a712173550329de4cc07fd
+      size: 2504
+  log_production_model:
+    cmd: python src/log_production_model.py
+    deps:
+    - path: src/log_production_model.py
+      md5: 242a7f5941c2d93eb6b6896de24780d0
+      size: 1606

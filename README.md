@@ -18,7 +18,7 @@
 - [react](https://github.com/sammiee5311/fast-food-application/tree/main/react)
 - [kafka](https://github.com/sammiee5311/fast-food-application/tree/main/kafka)
 - [log](https://github.com/sammiee5311/fast-food-application/tree/main/log)
-- [data-handling](https://github.com/sammiee5311/fast-food-application/tree/main/data-handling)
+- [order-delivery-time-handler](https://github.com/sammiee5311/fast-food-application/tree/main/order-delivery-time-handler)
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
 - [tracking](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
 - [id-generator](https://github.com/sammiee5311/fast-food-application/tree/main/id-generator)
@@ -37,7 +37,7 @@
 - kafka: `9092`
 - kafka-manager: `9000`
 - django: `8000`
-- data-handling: `8080`
+- order-delivery-time-handler: `8080`
 - tracking: `3001`
 - react: `3000`
 - mlflow: `1234`

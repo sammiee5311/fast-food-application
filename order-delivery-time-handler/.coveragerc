@@ -1,0 +1,10 @@
+[run]
+omit = 
+    consumer.py
+
+[report]
+omit = 
+    tests/*
+exclude_lines =
+    if __name__ == .__main__.:
+    class PostgreSQL:

@@ -9,7 +9,7 @@ from .errors import FeatureDataError
 class Weather(str, Enum):
     CLOUDY = "cloudy"
     SUNNY = "sunny"
-    RAINNY = "rainny"
+    RAINY = "rainy"
     WINDY = "windy"
 
     @classmethod

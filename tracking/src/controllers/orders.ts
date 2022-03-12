@@ -34,7 +34,6 @@ export const connectPostgreDB: RequestHandler = async (_, res, _2) => {
   }
 };
 
-/* istanbul ignore next */
 export const connectMongoDB: RequestHandler = async (_1, res, _2) => {
   try {
     mongoDb.connect();

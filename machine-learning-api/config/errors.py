@@ -1,28 +1,22 @@
-class DistanceError(Exception):
-    def __init__(self, message="an error while calculating distance"):
+class DataNotExist(AttributeError):
+    def __init__(self, message="Data does not exist. Please Check your data."):
         self.message = message
         super().__init__(self.message)
 
 
-class WeatherError(Exception):
-    def __init__(self, message="an error while getting weather info"):
+class FeaturesNotSame(Exception):
+    def __init__(self, message="Input is not same as expected model features."):
         self.message = message
         super().__init__(self.message)
 
 
-class APIConnectionError(Exception):
-    def __init__(self, message="machine learning api cannot be connected"):
+class FeaturesNotIncluded(Exception):
+    def __init__(self, message="Input is included features that are not in expected model features."):
         self.message = message
         super().__init__(self.message)
 
 
-class OrderNotFound(Exception):
-    def __init__(self, message: str = "Order is not found."):
-        self.message = message
-        super().__init__(self.message)
-
-
-class EstimatedDeliveryTimeAlreadyExist(Exception):
-    def __init__(self, message: str = "Estimated delivery time is already calcuated."):
+class FeatureDataError(Exception):
+    def __init__(self, message="Feature Data Error"):
         self.message = message
         super().__init__(self.message)

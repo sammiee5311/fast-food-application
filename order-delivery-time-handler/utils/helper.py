@@ -30,7 +30,7 @@ def get_estimated_delivery_time_result(distance, current_time, weather, traffic,
     output : predicted estimate time in tuple (hour, minutes)
     """
     try:
-        payload = dict(distance=distance, current_time=current_time, weather=weather, traffic=traffic, season=season)
+        payload = dict(distance=10, current_time=current_time, weather=weather, traffic=traffic, season=season)
         logger.info(f"Querying host {URL} with data: {payload}")
         response_data = requests.post(url=URL, json=payload)
 

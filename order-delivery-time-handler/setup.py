@@ -1,9 +1,9 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="api-server",
+    name="delivery-time-server",
     version="0.0.1",
-    description="It is an api server.",
+    description="delivery time server.",
     author="sammiee5311",
     packages=find_packages(),
     license="MIT",

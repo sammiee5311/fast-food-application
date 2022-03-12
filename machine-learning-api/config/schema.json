@@ -19,7 +19,7 @@
       "enum": [
         "cloudy",
         "sunny",
-        "rainny",
+        "rainy",
         "winndy"
       ],
       "type": "string"

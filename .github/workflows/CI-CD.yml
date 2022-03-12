@@ -3,7 +3,7 @@ name: CI-CD
 on: [push, pull_request]
 
 jobs:
-  machine-learning-api-test:
+  order-delivery-time-handler-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source repo
@@ -24,7 +24,7 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-        run: make machine-learning-api
+        run: make order-delivery-time-handler
 
   api-server-test:
     runs-on: ubuntu-latest
@@ -69,7 +69,8 @@ jobs:
 
   tracking-server-test:
     runs-on: ubuntu-latest
-    needs: [kafka-django-test, api-server-test, machine-learning-api-test]
+    needs:
+      [kafka-django-test, api-server-test, order-delivery-time-handler-test]
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2
@@ -97,7 +98,7 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: "data-handling"
+          appdir: "machine-learning-api"
 
       - name: Slack notify
         if: always()

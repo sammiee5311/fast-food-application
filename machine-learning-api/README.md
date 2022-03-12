@@ -1,9 +1,19 @@
-# Machine-Learning API
+# Machine Learning API (Heroku)
 
-[![Coverage Status](./reports/coverage-badge.svg?dummy=8484743)]()
+An api server for a prediction result (estimated delivery time)
 
-Api server for a prediction result (estimated delivery time)
+## run mlfow command
 
-## expected BPMN
+- mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts --host 0.0.0.0 -p 1234
 
-in progress
+## endpoint
+
+- `/predict`
+  - request payload
+    - `distance` : `float (0 ~ 10)`
+    - `current_time` : `int (0 ~ 60 * 24)`
+    - `weather` : `string (cloudy, sunny, rainy, windy)`
+    - `traffic` : `int (1 ~ 100)`
+    - `season` : `string (spring, summer, fall, winter)`
+  - response payload
+    - `prediction` : `float`

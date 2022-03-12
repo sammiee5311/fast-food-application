@@ -53,11 +53,11 @@ set-up-backend:
 	)
 
 set-up-deployment:
-	cd data-handling &&\
+	cd machine-learning-api &&\
 		$(PIP) install -r requirements.txt
 
 test-deployment:
-	cd data-handling &&\
+	cd machine-learning-api &&\
 		$(PYTHON) -m pytest
 
 set-up-tracking:
@@ -74,12 +74,12 @@ test-run-samples:
 		$(PYTHON) tests/test_run_samples.py; \
 	)
 
-set-up-machine-learning-api:
-	cd machine-learning-api &&\
+set-up-order-delivery-time-handler:
+	cd order-delivery-time-handler &&\
 		$(PIP) install -r requirements.txt
 
-test-machine-learning-api:
-	cd machine-learning-api &&\
+test-order-delivery-time-handler:
+	cd order-delivery-time-handler &&\
 		$(PYTHON) -m pytest	
 
 test-backend:
@@ -94,7 +94,7 @@ deployment: set-up-deployment test-deployment
 
 tracking: set-up-tracking test-tracking
 
-machine-learning-api: set-up-machine-learning-api test-machine-learning-api
+order-delivery-time-handler: set-up-order-delivery-time-handler test-order-delivery-time-handler
 
 kafka-docker: run-docker-compose test-run-samples stop-docker-compose
 
