@@ -86,8 +86,6 @@ test-backend:
 	cd django &&\
 		coverage run manage.py test
 
-dependency: install
-
 backend-server: set-up-backend test-backend
 
 deployment: set-up-deployment test-deployment
@@ -97,5 +95,3 @@ tracking: set-up-tracking test-tracking
 order-delivery-time-handler: set-up-order-delivery-time-handler test-order-delivery-time-handler
 
 kafka-docker: run-docker-compose test-run-samples stop-docker-compose
-
-all: dependency backend-server kafka-docker

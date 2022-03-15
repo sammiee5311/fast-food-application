@@ -24,10 +24,6 @@
 - [id-generator](https://github.com/sammiee5311/fast-food-application/tree/main/id-generator)
 - [restaurant(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
 
-## sample test
-
-- `make all`
-
 ## ports
 
 - logstash: `5501`

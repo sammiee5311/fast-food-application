@@ -1,4 +1,0 @@
-textblob
-tweepy
-pandas
-python-dotenv
