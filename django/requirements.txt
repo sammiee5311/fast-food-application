@@ -6,6 +6,6 @@ coverage
 django-cors-headers
 pytz
 django_extensions
-# kafka-python
+kafka-python
 requests
 psycopg2-binary

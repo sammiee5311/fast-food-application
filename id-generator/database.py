@@ -12,7 +12,7 @@ REDIS_HOST = os.environ["REDIS_HOST"]
 REDIS_PORT = os.environ["REDIS_PORT"]
 REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
 REDIS_QUEUE = "UUID"
-GEN_UUIDS = 100_000
+GEN_UUIDS = 100
 
 
 class UUIDRedis:
@@ -32,11 +32,11 @@ class UUIDRedis:
 
     def get_uuid(self) -> str:
         """get uuid from queue which is already generated"""
-        try:
-            _uuid: bytes = self.client.rpop(REDIS_QUEUE)
-            logger.info("Getting an uuid from cache.")
-        except AttributeError:
+        _uuid: bytes = self.client.rpop(REDIS_QUEUE)
+        logger.info("Getting an uuid from cache.")
+        if not _uuid:
             self.generate_ids()
+            _uuid: bytes = self.client.rpop(REDIS_QUEUE)
 
         return _uuid.decode("utf-8")
 

@@ -10,8 +10,8 @@ from routers.id import router as id_router
 load_dotenv()
 
 HOST = os.environ["SERVER_HOST"]
-PORT = os.environ["SERVER_PORT"]
-ORIGINS = ["http://localhost:8000"]
+PORT = int(os.environ["SERVER_PORT"])
+ORIGINS = ["django-backend:8000"]
 
 app = FastAPI()
 

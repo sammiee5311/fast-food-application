@@ -16,8 +16,6 @@ services:
       - "9300:9300"
     environment:
       discovery.type: single-node
-    networks:
-      - union-kafka
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.15.2
@@ -35,8 +33,6 @@ services:
       - "5501:5501/tcp"
       - "5501:5501/udp"
       - "9600:9600"
-    networks:
-      - union-kafka
     depends_on:
       - elasticsearch
 
@@ -49,8 +45,6 @@ services:
         read_only: true
     ports:
       - "5601:5601"
-    networks:
-      - union-kafka
     depends_on:
       - elasticsearch
 
@@ -62,8 +56,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - union-kafka
 
   kafka:
     container_name: kafka
@@ -82,8 +74,6 @@ services:
       KAFKA_CREATE_TOPICS: "fast-food-order:2:1" # "twitter:2:1" if you want to try with twitter samples
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - union-kafka
 
   kafka_manager:
     container_name: kafka-manager
@@ -95,12 +85,11 @@ services:
       ZK_HOSTS: zookeeper:2181
       APPLICATION_SECRET: random-secret
     command: -Dpidfile.path=/dev/null
-    networks:
-      - union-kafka
 
 networks:
-  union-kafka:
-    driver: bridge
+  default:
+    external:
+      name: fast-food-application
 
 volumes:
   elasticsearch: null

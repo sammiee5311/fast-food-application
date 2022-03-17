@@ -105,11 +105,11 @@ if "test" in sys.argv:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "ENGINE": "django.db.backends.postgresql",
             "NAME": "fast-food-restaurant",
             "USER": "admin",
             "PASSWORD": "root",
-            "HOST": "127.0.0.1",
+            "HOST": "postgres",
             "PORT": "5432",
             "TEST": {
                 "NAME": "test-postgres",
