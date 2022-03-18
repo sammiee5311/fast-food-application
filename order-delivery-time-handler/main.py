@@ -19,7 +19,7 @@ from utils.log import logger
 
 load_env()
 
-IP_ADDRESS = "localhost"
+IP_ADDRESS = "kafka"
 PORT = os.environ["KAFKA_PORT"]
 TOPIC = os.environ["KAFKA_TOPIC"]
 DATABASE = PostgreSQL
@@ -56,5 +56,6 @@ if __name__ == "__main__":
 
     for msg in consumer:
         data = json.loads(msg.value)
-        result = predict(data)
-        logger.info(f"Result : {result}")
+        print(data)
+        # result = predict(data)
+        # logger.info(f"Result : {result}")

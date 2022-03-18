@@ -51,8 +51,51 @@ services:
     command: ["python", "main.py"]
     depends_on:
       - redis
+  
+  frontend-react:
+    container_name: frontend-react
+    build: ./react
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./react/node_modules
+      - ./react:/app
+    command: ["npm", "start"]
 
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    depends_on:
+      - django-backend
+    
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+    depends_on:
+      - mongo
 
+  tracking:
+    container_name: tracking
+    build: ./tracking
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./tracking:/app
+    command: ["npm", "start"]
+    depends_on:
+      - mongo
 
 networks:
   default:
@@ -61,3 +104,4 @@ networks:
 
 volumes: 
   pgdata:
+  mongodata:

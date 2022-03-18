@@ -7,7 +7,7 @@ from kafka import KafkaProducer
 
 KAFKA_ERRORS = (kafka.errors.NoBrokersAvailable, kafka.errors.UnrecognizedBrokerVersion)
 
-IP_ADDRESS = socket.gethostbyname(socket.gethostname())
+IP_ADDRESS = "kafka"
 
 JsonObject = Dict[str, Dict[str, Any]]
 
@@ -29,7 +29,7 @@ def conntect_kafka() -> Union[KafkaProducer, TemporaryData]:
     try:
         producer = KafkaProducer(
             security_protocol="PLAINTEXT",
-            bootstrap_servers=[f"{IP_ADDRESS}:9092"],
+            bootstrap_servers=[f"{IP_ADDRESS}:29092"],
             value_serializer=json_serializer,
             retries=10,
             retry_backoff_ms=1000,

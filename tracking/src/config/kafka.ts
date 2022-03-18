@@ -4,7 +4,7 @@ import { isRestaurantAvailable } from "../uilts/helper";
 import orders from "../models/orders";
 
 /* istanbul ignore file */
-const BROKER = "localhost:9092";
+const BROKER = "kafka:29092";
 
 const startConsumOrders = async () => {
   const kafka = new Kafka({
