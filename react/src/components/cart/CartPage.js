@@ -90,7 +90,7 @@ const Cart = () => {
     setError(null);
     try {
       if (cartItemsSelector.length === 0) {
-        throw new Error("Order cannot be proccessed without items in cart.");
+        throw new Error("Order cannot be processed without items in cart.");
       }
       setIsOrderButtonClicked(true);
     } catch (error) {

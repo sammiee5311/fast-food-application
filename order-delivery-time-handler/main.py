@@ -56,6 +56,5 @@ if __name__ == "__main__":
 
     for msg in consumer:
         data = json.loads(msg.value)
-        print(data)
-        # result = predict(data)
-        # logger.info(f"Result : {result}")
+        result = predict(data)
+        logger.info(f"Result : {result}")

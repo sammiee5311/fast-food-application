@@ -6,9 +6,9 @@ services:
     image: postgres
     restart: always
     environment: 
-      - POSTGRES_DB=fast-food-restaurant
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=root
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -17,8 +17,8 @@ services:
     image: dpage/pgadmin4
     restart: always
     environment: 
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com 
-      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     ports:
      - "5050:80"
 
@@ -68,8 +68,8 @@ services:
     volumes:
       - mongodata:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: ${MG_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MG_PASSWORD}
     depends_on:
       - django-backend
     
@@ -79,9 +79,9 @@ services:
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: ${MG_EXPRESS_SERVER}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MG_EXPRESS_ADMIN_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MG_EXPRESS_ADMIN_PASSWORD}
       ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
     depends_on:
       - mongo
@@ -96,6 +96,15 @@ services:
     command: ["npm", "start"]
     depends_on:
       - mongo
+  
+  order-delivery-time-handler:
+    container_name: order-delivery-time-handler
+    build: ./order-delivery-time-handler
+    volumes:
+      - ./order-delivery-time-handler:/app
+    command: ["python", "main.py"]
+    depends_on:
+      - django-backend
 
 networks:
   default:
