@@ -10,12 +10,16 @@ export interface Order {
   restaurant: number;
 }
 
-export interface Ingredient {
+export interface IngredientsInRecipe {
   [ingredient: string]: string;
 }
 
-export interface Recipe {
-  [menu: string]: Ingredient[];
+export interface Ingredients {
+  [ingredient: string]: number;
+}
+
+export interface Recipes {
+  [recipe: string]: IngredientsInRecipe;
 }
 
 export interface KafkaOrderMessage {

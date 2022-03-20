@@ -35,7 +35,7 @@ const startConsumOrders = async () => {
         restaurant,
       });
 
-      if (isRestaurantAvailable(id, menus, restaurant)) {
+      if (await isRestaurantAvailable(menus, restaurant)) {
         orders.addNewOrder(id, menus, restaurant);
       }
     },

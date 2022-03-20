@@ -1,9 +1,9 @@
-import { OrderMenu, Recipe } from "../types";
+import { OrderMenu, Recipes } from "../types";
 
 class Restaurant {
   id: number;
-  recipes: Recipe[];
-  constructor(id: number, recipes: Recipe[]) {
+  recipes: Recipes[];
+  constructor(id: number, recipes: Recipes[]) {
     this.id = id;
     this.recipes = recipes;
   }

@@ -1,6 +1,6 @@
 import path from "path";
 import dotenv from "dotenv";
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, ObjectId } from "mongodb";
 // @ts-ignore
 import { MongoClient as MongoMockClient } from "mongo-mock";
 
@@ -40,6 +40,15 @@ class MongoDb {
     const counts = await collection.countDocuments();
 
     return counts;
+  }
+
+  async getRestaurantRecipes(restaurantId: number) {
+    const database = this.client.db("database");
+    const collection = <Collection>database.collection("restaurants");
+    const query = { _id: restaurantId };
+    const restaruant = await collection.findOne(query);
+
+    return restaruant;
   }
 }
 
