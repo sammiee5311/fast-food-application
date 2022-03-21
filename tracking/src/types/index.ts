@@ -10,6 +10,13 @@ export interface Order {
   restaurant: number;
 }
 
+export interface Restaurant {
+  _id: number;
+  name: string;
+  recipes: Recipes;
+  ingredients: Ingredients;
+}
+
 export interface IngredientsInRecipe {
   [ingredient: string]: string;
 }

@@ -1,8 +1,9 @@
 import path from "path";
 import dotenv from "dotenv";
-import { MongoClient, Collection, ObjectId } from "mongodb";
+import { MongoClient, Collection } from "mongodb";
 // @ts-ignore
 import { MongoClient as MongoMockClient } from "mongo-mock";
+import { Ingredients, Restaurant } from "../../types";
 
 /* istanbul ignore file */
 
@@ -48,7 +49,19 @@ class MongoDb {
     const query = { _id: restaurantId };
     const restaruant = await collection.findOne(query);
 
-    return restaruant;
+    return restaruant!;
+  }
+
+  async updateRestaurantIngredientsQuantity(
+    restaurantId: number,
+    ingredients: Ingredients
+  ) {
+    const database = this.client.db("database");
+    const collection = <Collection>database.collection("restaurants");
+    const query = { _id: restaurantId };
+    await collection.updateOne(query, {
+      $set: { ingredients: ingredients },
+    });
   }
 }
 

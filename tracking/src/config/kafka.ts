@@ -1,7 +1,8 @@
 import { Kafka } from "kafkajs";
-import { KafkaOrderMessage } from "../types/index";
-import { isRestaurantAvailable } from "../uilts/helper";
+import { KafkaOrderMessage, OrderMenu, Restaurant } from "../types/index";
+import { getCaculatedRestaurantIngredients } from "../uilts/helper";
 import orders from "../models/orders";
+import mongoDb from "./database/mongoDb";
 
 /* istanbul ignore file */
 const BROKER = "kafka:29092";
@@ -35,11 +36,40 @@ const startConsumOrders = async () => {
         restaurant,
       });
 
-      if (await isRestaurantAvailable(menus, restaurant)) {
+      if (await isRestaurantAvailable(restaurant, menus)) {
         orders.addNewOrder(id, menus, restaurant);
       }
     },
   });
+};
+
+const isRestaurantAvailable = async (
+  restaurantId: number,
+  menus: OrderMenu[]
+) => {
+  try {
+    await mongoDb.connect();
+    const restaurant = (await mongoDb.getRestaurantRecipes(
+      restaurantId
+    )) as unknown as Restaurant;
+
+    const ingredients = await getCaculatedRestaurantIngredients(
+      menus,
+      restaurant
+    );
+
+    await mongoDb.updateRestaurantIngredientsQuantity(
+      restaurantId,
+      ingredients
+    );
+
+    mongoDb.disconnect();
+
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
 };
 
 export default startConsumOrders;
