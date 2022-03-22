@@ -34,20 +34,6 @@ export const connectPostgreDB: RequestHandler = async (_, res, _2) => {
   }
 };
 
-export const connectMongoDB: RequestHandler = async (_1, res, _2) => {
-  try {
-    mongoDb.connect();
-
-    const counts = await mongoDb.getResult();
-
-    res.status(200).json({ counts: counts });
-  } catch (error) {
-    res.status(500).json(error);
-  } finally {
-    await mongoDb.disconnect();
-  }
-};
-
 export const connectMockDB: RequestHandler = async (_1, res, _2) => {
   let client: IPGClient | null = null;
   try {

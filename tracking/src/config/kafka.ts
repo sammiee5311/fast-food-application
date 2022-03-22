@@ -53,10 +53,12 @@ const isRestaurantAvailable = async (
       restaurantId
     )) as unknown as Restaurant;
 
-    const ingredients = await getCaculatedRestaurantIngredients(
+    const { ingredients, possible } = getCaculatedRestaurantIngredients(
       menus,
       restaurant
     );
+
+    if (!possible) return false;
 
     await mongoDb.updateRestaurantIngredientsQuantity(
       restaurantId,

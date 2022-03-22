@@ -33,22 +33,28 @@ const setTotalIngredientsNeed = (
   }
 };
 
-export const getCaculatedRestaurantIngredients = async (
+export const getCaculatedRestaurantIngredients = (
   menus: OrderMenu[],
   restaruant: Restaurant
 ) => {
   const recipes = <Recipes>restaruant!.recipes;
   const ingredients = <Ingredients>restaruant!.ingredients;
   const totalIngredientsNeed: Ingredients = {};
+  let possible = true;
 
   for (const menu of menus) {
     setTotalIngredientsNeed(menu, totalIngredientsNeed, recipes);
   }
 
-  Object.entries(totalIngredientsNeed).forEach(([ingredientNeed, quantity]) => {
-    if (ingredients[ingredientNeed] < quantity) return false;
+  for (const [ingredientNeed, quantity] of Object.entries(
+    totalIngredientsNeed
+  )) {
+    if (ingredients[ingredientNeed] < quantity) {
+      possible = false;
+      break;
+    }
     ingredients[ingredientNeed] -= quantity;
-  });
+  }
 
-  return ingredients;
+  return { ingredients, possible };
 };
