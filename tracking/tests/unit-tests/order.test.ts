@@ -22,13 +22,6 @@ describe("Server api test", () => {
   it("return 500 status code", () => {
     return request(server).get("/orders").expect(500);
   });
-
-  it("return 200 from mockData", () => {
-    return request(server)
-      .get("/orders/mockData")
-      .set("Origin", ORIGIN)
-      .expect(200);
-  });
 });
 
 describe("Restaurant ingredients test", () => {
@@ -72,7 +65,7 @@ describe("Restaurant ingredients test", () => {
     expect(possible).toEqual(false);
   });
 
-  it("Order 2 kind of menuㄴ and 1 quantity and less than ingredients restaurant have", () => {
+  it("Order 2 kind of menu and 1 quantity and less than ingredients restaurant have", () => {
     const menus: OrderMenu[] = [{ name: "test3", price: 5.99, quantity: 1 }];
     const testRestaurant = JSON.parse(JSON.stringify(restaruant));
 

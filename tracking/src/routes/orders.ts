@@ -1,10 +1,6 @@
 import { Router } from "express";
 
-import {
-  getOrders,
-  connectPostgreDB,
-  connectMockDB,
-} from "../controllers/orders";
+import { getOrders } from "../controllers/orders";
 import log from "../middlewares/log";
 
 const router = Router();
@@ -12,9 +8,5 @@ const router = Router();
 router.use(log);
 
 router.get("/", getOrders);
-
-router.get("/postgre", connectPostgreDB);
-
-router.get("/mockData", connectMockDB);
 
 export default router;
