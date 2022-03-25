@@ -1,14 +1,20 @@
 import "jest";
 import express from "express";
 import request from "supertest";
-import { getCaculatedRestaurantIngredients } from "../../src/uilts/helper";
 
 import app from "../../src/app";
+import initCustomTestSettings, {
+  ORIGIN_URL,
+  ResponseText,
+} from "./customSettings";
+import orders from "../../src/models/orders";
+import { getCaculatedRestaurantIngredients } from "../../src/uilts/helper";
+
 import { OrderMenu, Restaurant } from "../../src/types";
 
 let server: express.Application;
 
-const ORIGIN = "http://localhost:3000";
+initCustomTestSettings();
 
 describe("Server api test", () => {
   beforeAll(() => {
@@ -16,11 +22,27 @@ describe("Server api test", () => {
   });
 
   it("return 200 status code", () => {
-    return request(server).get("/orders").set("Origin", ORIGIN).expect(200);
+    return request(server).get("/orders").set("Origin", ORIGIN_URL).expect(200);
   });
 
   it("return 500 status code", () => {
     return request(server).get("/orders").expect(500);
+  });
+
+  it("Add 1 order and Get order from api response", async () => {
+    const menus: OrderMenu[] = [{ name: "test", price: 5.99, quantity: 1 }];
+    const id = "1";
+    const restaruant = 1;
+    orders.addNewOrder(id, menus, restaruant);
+
+    const res: request.Response = await request(server)
+      .get("/orders")
+      .set("Origin", ORIGIN_URL);
+
+    const resJson = <ResponseText>JSON.parse(res.text);
+
+    expect(resJson).toHasProperty("orders");
+    expect(resJson.orders!.orders[0].restaurant).toEqual(1);
   });
 });
 
