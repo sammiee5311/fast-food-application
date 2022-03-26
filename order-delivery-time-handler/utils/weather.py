@@ -1,6 +1,8 @@
 import json
 import os
-from typing import List
+from collections import defaultdict
+from dataclasses import dataclass, field
+from typing import Any, Dict, List
 
 import requests
 from config.env import load_env
@@ -8,15 +10,35 @@ from config.env import load_env
 if "WEATHER_API_KEY" not in os.environ:
     load_env()
 
+CONDITIONS = {
+    "cloudy": ["clouds", "mist", "smoke", "haze", "dust", "fog", "sand", "ash"],
+    "rainy": ["thunderstorm", "drizzle", "rain", "snow"],
+    "windy": ["tornado", "squall", "wind"],
+    "sunny": ["clear"],
+}
 
+
+def get_weather_conditions() -> Dict[str, str]:
+    """
+    Get fitted conditions for a pre-trained model.
+    """
+    weather_conditions = defaultdict(str)
+
+    for target_condition, conditions in CONDITIONS.items():
+        for condition in conditions:
+            weather_conditions[condition] = target_condition
+
+    return weather_conditions
+
+
+@dataclass
 class WeatherApi:
-    def __init__(self):
-        self.apikey = os.environ["WEATHER_API_KEY"]
+    api_key: str = os.environ["WEATHER_API_KEY"]
+    cities: List[str] = field(init=False, repr=False)
+    conditions: Dict[str, str] = field(init=False, default_factory=get_weather_conditions)
+
+    def __post_init__(self) -> None:
         self.cities = self.get_cities()
-        self.cloudy = {"clouds", "mist", "smoke", "haze", "dust", "fog", "sand", "ash"}
-        self.rainy = {"thunderstorm", "drizzle", "rain", "snow"}
-        self.windy = {"tornado", "squall", "wind"}
-        self.sunny = {"clear"}
 
     def get_cities(self) -> List[str]:
         """
@@ -35,9 +57,9 @@ class WeatherApi:
         """
         Get current weather via openweathermap api.
         """
-        endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={self.apikey}"
-        url = endpoint.format(key=self.apikey)
+        endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={self.api_key}"
+        url = endpoint.format(key=self.api_key)
         res = requests.get(url)
-        data = json.loads(res.text)
+        data: Dict[str, List[str, str]] = json.loads(res.text)
 
-        return data["weather"][0]["main"]
+        return self.conditions[data["weather"][0]["main"].lower()]

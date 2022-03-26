@@ -84,16 +84,7 @@ def get_weather() -> str:
     A function for getting the current weather ('cloudy', 'sunny', 'rainy', 'windy')
     """
     try:
-        weather = weather_api.get_current_weather().lower()
-
-        if weather in weather_api.cloudy:
-            return "cloudy"
-        elif weather in weather_api.rainy:
-            return "rainy"
-        elif weather in weather_api.windy:
-            return "windy"
-
-        return "sunny"
+        return weather_api.get_current_weather()
     except (ValueError, KeyError, TypeError):
         raise WeatherError()
 
