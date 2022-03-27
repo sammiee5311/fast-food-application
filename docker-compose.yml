@@ -25,8 +25,6 @@ services:
   django-backend:
     container_name: django-backend
     build: ./django
-    ports:
-      - "8000:8000"
     volumes:
       - ./django:/app
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
@@ -44,8 +42,6 @@ services:
   id-generator:
     container_name: id-generator
     build: ./id-generator
-    ports: 
-      - "8008:8008"
     volumes:
       - ./id-generator:/app
     command: ["python", "main.py"]
@@ -55,8 +51,6 @@ services:
   frontend-react:
     container_name: frontend-react
     build: ./react
-    ports:
-      - "3000:3000"
     volumes:
       - ./react/node_modules
       - ./react:/app
@@ -89,11 +83,18 @@ services:
   tracking:
     container_name: tracking
     build: ./tracking
-    ports:
-      - "3001:3001"
     volumes:
       - ./tracking:/app
     command: ["npm", "start"]
+    depends_on:
+      - mongo
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
     depends_on:
       - mongo
   
