@@ -12,6 +12,53 @@
 
 ## system design
 
+## Tech Stacks
+<details>
+<summary>See</summary>
+
+### Back-end
+ - flask
+ - django
+ - fast-api
+ - node.js
+
+### Front-end
+ - react
+
+### Database
+ - postgres
+ - sqlite
+ - mongodb
+ - redis 
+
+### Message
+ - kafka 
+
+### Log
+ - elasticsearch
+ - logstash
+ - kibana 
+
+### Machine Learning
+ - mlflow 
+
+### Languages
+ - python
+ - javascript
+ - typescript   
+
+### Build 
+ - docker
+
+### Proxy
+ - nginx
+ 
+### CI / CD
+ - gitHub actions  
+ - heroku 
+ 
+</details> 
+
 ## servers
 
 - [django](https://github.com/sammiee5311/fast-food-application/tree/main/django)
