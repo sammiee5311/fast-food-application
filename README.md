@@ -12,7 +12,7 @@
 
 ## system design
 
-## Tech Stacks
+## tech stacks
 <details>
 <summary>See</summary>
 

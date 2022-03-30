@@ -68,7 +68,11 @@ instance/
 .webassets-cache
 
 # faust stuff:
-sameples/faust/myapp-data/
+samples/faust/myapp-data/
+
+# nginx stuff:
+nginx/commands.txt
+nginx/local.conf
 
 # data
 **/artifacts/*
