@@ -73,6 +73,8 @@ samples/faust/myapp-data/
 # nginx stuff:
 nginx/commands.txt
 nginx/local.conf
+nginx/local.crt
+nginx/local.key
 
 # data
 **/artifacts/*
