@@ -3,7 +3,7 @@ import RestaurantType from "./Restaurant/RestaurantType";
 import useFetch from "../../hooks/useFetch";
 import RestaurantsList from "./Restaurant/RestaurantList";
 import { Link } from "react-router-dom";
-import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import BACK from "../../assets/chevron-left.svg";
 import classes from "./RestaurantsPage.module.css";
 
 const getProperContent = (restaurants, restaurantType, isLoading, error) => {

@@ -9,3 +9,5 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . /app/
+
+RUN npm run build

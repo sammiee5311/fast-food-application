@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from "react";
 import OrderListItem from "./Order/OrderListItem";
 import useFetch from "../../hooks/useFetch";
 import { Link } from "react-router-dom";
-import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import BACK from "../../assets/chevron-left.svg";
 
 const getProperContent = (orders, isLoading, error) => {
   let content = <p> No order found. </p>;

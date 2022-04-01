@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from "react";
 import useFetch from "../../hooks/useFetch";
-import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import BACK from "../../assets/chevron-left.svg";
 import { useParams, Link } from "react-router-dom";
 
 import OrderDetailItem from "./Order/OrderDetailItem";

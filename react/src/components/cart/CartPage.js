@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import CartItem from "./Cart/CartItem";
 import CartPayment from "./CartPayment";
 import { cartActions } from "../../store/cart";
-import { ReactComponent as BACK } from "../../assets/chevron-left.svg";
+import BACK from "../../assets/chevron-left.svg";
 import Line from "../../UI/Line";
 
 import classes from "./CartPage.module.css";
