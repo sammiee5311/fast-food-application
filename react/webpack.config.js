@@ -2,14 +2,16 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
+const PATH = path.resolve(__dirname + "/build");
+
 module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname + "/build"),
+    path: PATH,
   },
   devServer: {
-    static: path.resolve(__dirname + "/build"),
+    static: PATH,
     compress: true,
     proxy: {
       "*": {
@@ -17,7 +19,8 @@ module.exports = {
         secure: false,
       },
     },
-    hot: true,
+    liveReload: false,
+    hot: false,
     port: 3000,
   },
   mode: "development",

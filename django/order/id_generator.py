@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 import requests
 from requests import Response
 
-HOST = "localhost"
+HOST = "id-generator"
 PORT = 8008
 
 
