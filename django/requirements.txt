@@ -1,11 +1,12 @@
 django
 djangorestframework
 django-phonenumber-field
+rest_framework_simplejwt
+django-cors-headers
+django_extensions
 phonenumbers
 coverage
-django-cors-headers
 pytz
-django_extensions
 kafka-python
 requests
 psycopg2-binary

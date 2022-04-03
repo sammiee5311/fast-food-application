@@ -13,8 +13,9 @@ module.exports = {
   devServer: {
     static: PATH,
     compress: true,
+    historyApiFallback: true,
     proxy: {
-      "*": {
+      "/api/*": {
         target: "http://django-backend:8000",
         secure: false,
       },
