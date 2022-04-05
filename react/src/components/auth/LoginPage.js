@@ -10,19 +10,11 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const authLoginHandler = async (event) => {
-    event.preventDefault();
-
-    const email = event.target.email.value;
-    const password = event.target.password.value;
-
-    const response = await fetch("/api/token/", {
+  const fetchTokens = async (endpoint, payload) => {
+    const response = await fetch(`${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (response.status !== 200) {
@@ -34,6 +26,19 @@ const LoginPage = () => {
     dispatch(authActions.setAuthTokens(data));
     dispatch(authActions.setUser({ access: data.access }));
     localStorage.setItem("authTokens", JSON.stringify(data));
+  };
+
+  const authLoginHandler = async (event) => {
+    event.preventDefault();
+
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+
+    await fetchTokens("/api/token/", {
+      email: email,
+      password: password,
+    });
+
     navigate("/");
   };
 

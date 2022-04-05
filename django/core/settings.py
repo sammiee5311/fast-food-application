@@ -15,6 +15,7 @@ import random
 import string
 import sys
 from pathlib import Path
+
 from .jwt_settings import SIMPLE_JWT
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -197,8 +198,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication"
-    ]
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 SIMPLE_JWT

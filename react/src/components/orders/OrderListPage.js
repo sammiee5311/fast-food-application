@@ -1,7 +1,8 @@
 import React, { useEffect, Fragment } from "react";
+import { Link } from "react-router-dom";
+
 import OrderListItem from "./Order/OrderListItem";
 import useFetch from "../../hooks/useFetch";
-import { Link } from "react-router-dom";
 import BACK from "../../assets/chevron-left.svg";
 
 const getProperContent = (orders, isLoading, error) => {
@@ -34,7 +35,9 @@ const OrderListPage = () => {
 
   // TODO: Need to refactor (reason: load 4 times)
   useEffect(() => {
-    sendRequest({ url: "/api/orders/" });
+    sendRequest({
+      url: "/api/orders/",
+    });
   }, [sendRequest]);
 
   return (

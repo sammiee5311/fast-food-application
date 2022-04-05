@@ -1,4 +1,5 @@
 from order.models import Order
+from accounts.models import Client
 from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,9 +18,10 @@ producer = conntect_kafka()
 class OrderList(APIView):
     def get(self, request: request.Request, **kwargs) -> Response:
         order_id = kwargs.get("pk", None)
+        user: Client = request.user
 
         if order_id is None:
-            queryset = Order.objects.all()
+            queryset = Order.objects.filter(user=user)
             order_serializer = OrderSerializer(queryset, many=True)
             return Response(order_serializer.data, status=status.HTTP_200_OK)
         else:
@@ -28,7 +30,9 @@ class OrderList(APIView):
                 order_serializer = OrderSerializer(order)
                 return Response(order_serializer.data, status=status.HTTP_200_OK)
             except Order.DoesNotExist:
-                return Response("Order does not exist.", status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    "Order does not exist.", status=status.HTTP_400_BAD_REQUEST
+                )
 
     def post(self, request: request.Request) -> Response:
         order_serializer = OrderSerializer(data=request.data)
@@ -37,7 +41,9 @@ class OrderList(APIView):
 
         if order_serializer.is_valid():
             menus = request.data.get("menus", None)
-            validate_or_create_menu(menus, order_menu_check_serializer)  # TODO: need to refactor
+            validate_or_create_menu(
+                menus, order_menu_check_serializer
+            )  # TODO: need to refactor
             order_res = order_serializer.save()
             validate_or_create_menu(menus, order_menu_serializer, order_res.id)
 
