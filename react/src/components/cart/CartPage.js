@@ -21,6 +21,7 @@ const Cart = () => {
   const cartItemsSelector = useSelector((state) => state.cart.items);
   const restaurantId = useSelector((state) => state.cart.currentRestaurantId);
   const totalPriceSelector = useSelector((state) => state.cart.totalPrice);
+  const authTokensSelector = useSelector((state) => state.auth.authTokens);
 
   let navigate = useNavigate();
 
@@ -43,7 +44,6 @@ const Cart = () => {
   const orderConfirmHandler = async () => {
     setError(null);
     try {
-      const user = 1; // TODO: Need to create authentication
       const menus = cartItemsSelector.map((item) => {
         return {
           menu: item.id,
@@ -53,7 +53,6 @@ const Cart = () => {
 
       const payload = {
         restaurant: restaurantId,
-        user: user,
         menus: menus,
       };
 
@@ -63,6 +62,7 @@ const Cart = () => {
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": Cookies.get("csrftoken"),
+          Authorization: `Bearer ${String(authTokensSelector.access)}`,
         },
       });
 

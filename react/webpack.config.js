@@ -16,7 +16,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api/*": {
-        target: "http://djaogo-backend:8000",
+        target: "http://django-backend:8000",
         secure: false,
         changeOrigin: true,
         headers: { Connection: "keep-alive" },

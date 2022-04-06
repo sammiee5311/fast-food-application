@@ -35,6 +35,7 @@ class OrderList(APIView):
                 )
 
     def post(self, request: request.Request) -> Response:
+        request.data["user"] = request.user.id
         order_serializer = OrderSerializer(data=request.data)
         order_menu_serializer = OrderMenuSerializer()
         order_menu_check_serializer = OrderMenuCheckSerializer()

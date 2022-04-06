@@ -43,10 +43,9 @@ const RestaurantsPage = () => {
     setRestaurantType(filteredType);
   };
 
-  // TODO: Need to refactor (reason: load 4 times)
   useEffect(() => {
     sendRequest({ url: "/api/restaurants/" });
-  }, [sendRequest]);
+  }, [sendRequest, isLoading]);
 
   return (
     <Fragment>

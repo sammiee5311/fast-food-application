@@ -33,12 +33,11 @@ const OrderListPage = () => {
   const { data: orders, isLoading, error, sendRequest } = useFetch();
   const content = getProperContent(orders, isLoading, error);
 
-  // TODO: Need to refactor (reason: load 4 times)
   useEffect(() => {
     sendRequest({
       url: "/api/orders/",
     });
-  }, [sendRequest]);
+  }, [sendRequest, isLoading]);
 
   return (
     <Fragment>

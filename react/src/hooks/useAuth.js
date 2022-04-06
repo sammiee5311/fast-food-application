@@ -1,28 +1,21 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
-import { useSelector } from "react-redux";
 
-const useFetch = () => {
-  const [data, setData] = useState(null);
+import { authActions } from "../store/auth";
+
+const useAuth = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const authTokensSelector = useSelector((state) => state.auth.authTokens);
 
   const sendRequest = useCallback(
     async (requestConfig) => {
-      setIsLoading(true);
-      setError(null);
-
-      const headers = {
-        ...{
-          Authorization: `Bearer ${String(authTokensSelector.access)}`,
-        },
-        ...requestConfig.headers,
-      };
-
       try {
         const response = await fetch(requestConfig.url, {
           method: requestConfig.method ? requestConfig.method : "GET",
-          headers: headers,
+          headers: { "Content-Type": "application/json" },
           body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
         });
 
@@ -32,21 +25,23 @@ const useFetch = () => {
 
         const data = await response.json();
 
-        setData(data);
+        dispatch(authActions.setAuthTokens(data));
+        dispatch(authActions.setUser({ access: data.access }));
+        localStorage.setItem("authTokens", JSON.stringify(data));
       } catch (err) {
         setError(err.message);
       }
       setIsLoading(false);
+      navigate("/");
     },
     [isLoading]
   );
 
   return {
-    data,
     isLoading,
     error,
     sendRequest,
   };
 };
 
-export default useFetch;
+export default useAuth;
