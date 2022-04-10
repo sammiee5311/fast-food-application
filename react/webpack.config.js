@@ -18,8 +18,6 @@ module.exports = {
       "/api/*": {
         target: "http://django-backend:8000",
         secure: false,
-        changeOrigin: true,
-        headers: { Connection: "keep-alive" },
       },
     },
     liveReload: false,

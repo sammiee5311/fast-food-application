@@ -27,6 +27,8 @@ services:
     build: ./django
     volumes:
       - ./django:/app
+    environment: 
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     depends_on:
       - postgres
@@ -36,6 +38,8 @@ services:
     build: ./django
     volumes:
       - ./django:/app
+    environment: 
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     command: ["python", "manage.py", "runserver", "0.0.0.0:8001"]
     depends_on:
       - postgres
@@ -45,6 +49,8 @@ services:
     build: ./django
     volumes:
       - ./django:/app
+    environment: 
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
     depends_on:
       - postgres
@@ -76,6 +82,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    restart: always
     volumes:
       - mongodata:/data/db
     environment:

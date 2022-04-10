@@ -37,7 +37,7 @@ const OrderListPage = () => {
     sendRequest({
       url: "/api/orders/",
     });
-  }, [sendRequest, isLoading]);
+  }, [sendRequest]);
 
   return (
     <Fragment>

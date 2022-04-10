@@ -22,13 +22,16 @@ const LoginPage = () => {
       sendRequest({
         url: "/api/token/",
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: {
           email: email,
           password: password,
         },
       });
     }
-  }, [email, password]);
+  }, [email, password, sendRequest]);
 
   return (
     <Fragment>

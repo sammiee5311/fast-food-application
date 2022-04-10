@@ -1,7 +1,7 @@
 django
 djangorestframework
 django-phonenumber-field
-rest_framework_simplejwt
+djangorestframework-simplejwt
 django-cors-headers
 django_extensions
 phonenumbers

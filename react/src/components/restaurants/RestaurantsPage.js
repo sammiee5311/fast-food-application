@@ -45,7 +45,7 @@ const RestaurantsPage = () => {
 
   useEffect(() => {
     sendRequest({ url: "/api/restaurants/" });
-  }, [sendRequest, isLoading]);
+  }, [sendRequest]);
 
   return (
     <Fragment>

@@ -8,7 +8,7 @@ import { authActions } from "../store/auth";
 const Header = () => {
   const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.auth.user);
-  const { isLoading, error, sendRequest } = useAuth();
+  const { error, sendRequest } = useAuth();
   const TIME = 1000 * 60 * 3;
   const authTokensSelector = useSelector((state) => state.auth.authTokens);
 
@@ -16,30 +16,25 @@ const Header = () => {
     dispatch(authActions.logoutUser());
   };
 
-  const refreshTokens = () => {
-    sendRequest({
-      url: "/api/token/refresh/",
-      method: "POST",
-      body: {
-        refresh: authTokensSelector.refresh,
-      },
-    });
-    if (error) {
-      dispatch(authActions.logoutUser());
-    }
-  };
-
   useEffect(() => {
-    if (isLoading) {
-      refreshTokens();
-    }
-
     const interval = setInterval(() => {
-      refreshTokens();
+      sendRequest({
+        url: "/api/token/refresh/",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          refresh: authTokensSelector.refresh,
+        },
+      });
+      if (error) {
+        dispatch(authActions.logoutUser());
+      }
     }, TIME);
 
     return () => clearInterval(interval);
-  }, [isLoading, authTokensSelector]);
+  }, [sendRequest, TIME, error, authTokensSelector, dispatch]);
 
   return (
     <div>

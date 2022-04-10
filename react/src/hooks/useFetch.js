@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const useFetch = () => {
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const authTokensSelector = useSelector((state) => state.auth.authTokens);
 
@@ -14,7 +14,9 @@ const useFetch = () => {
 
       const headers = {
         ...{
-          Authorization: `Bearer ${String(authTokensSelector.access)}`,
+          Authorization: `Bearer ${String(
+            authTokensSelector ? authTokensSelector.access : ""
+          )}`,
         },
         ...requestConfig.headers,
       };
@@ -38,7 +40,7 @@ const useFetch = () => {
       }
       setIsLoading(false);
     },
-    [isLoading]
+    [authTokensSelector]
   );
 
   return {

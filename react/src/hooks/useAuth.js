@@ -1,21 +1,24 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
 
 import { authActions } from "../store/auth";
 
-const useAuth = () => {
+const useFetch = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(
     async (requestConfig) => {
+      setIsLoading(true);
+      setError(null);
+
       try {
         const response = await fetch(requestConfig.url, {
           method: requestConfig.method ? requestConfig.method : "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: requestConfig.headers,
           body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
         });
 
@@ -34,7 +37,7 @@ const useAuth = () => {
       setIsLoading(false);
       navigate("/");
     },
-    [isLoading]
+    [dispatch, navigate]
   );
 
   return {
@@ -44,4 +47,4 @@ const useAuth = () => {
   };
 };
 
-export default useAuth;
+export default useFetch;
