@@ -1,11 +1,23 @@
 from typing import Dict
 
-from home.models import Restaurant
+from accounts.models import Client
+from home.models import Restaurant, RestaurantType
 from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import RestaurantSerializer
+from .serializers import RestaurantSerializer, RestaurantTypesSerializer
+
+
+class RestaurantTypes(APIView):
+    def get(self, request: request.Request, **kwargs) -> Response:
+        queryset = RestaurantType.objects.all()
+        try:
+            restaurant_types_serializer = RestaurantTypesSerializer(queryset, many=True)
+
+            return Response(restaurant_types_serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(restaurant_types_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RestaurantList(APIView):
@@ -25,6 +37,8 @@ class RestaurantList(APIView):
         return data
 
     def post(self, request: request.Request) -> Response:
+        user: Client = request.user
+        request.data["owner"] = user
         restaurant_serializer = RestaurantSerializer(data=request.data)
 
         if restaurant_serializer.is_valid():

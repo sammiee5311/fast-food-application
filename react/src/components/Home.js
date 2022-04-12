@@ -17,6 +17,9 @@ const Home = () => {
       <Link to="/cart">
         <h2> Cart </h2>
       </Link>
+      <Link to="/regrestaurant">
+        <h2> Register Restaurant </h2>
+      </Link>
     </div>
   );
 };

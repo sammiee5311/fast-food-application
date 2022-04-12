@@ -1,8 +1,14 @@
 from typing import Optional, Union
 
-from home.models import Restaurant
+from home.models import Restaurant, RestaurantType
 from order.models import Order, OrderMenu
 from rest_framework import serializers
+
+
+class RestaurantTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RestaurantType
+        fields = ("id", "name")
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
