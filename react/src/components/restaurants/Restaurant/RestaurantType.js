@@ -6,7 +6,7 @@ const RestaurantType = (props) => {
   const { data: types, isLoading, error, sendRequest } = useFetch();
 
   useEffect(() => {
-    sendRequest({ url: "/api/restauratnstypes/" });
+    sendRequest({ url: "/api/restaurantstypes/" });
   }, [sendRequest]);
 
   const filterType = (event) => {

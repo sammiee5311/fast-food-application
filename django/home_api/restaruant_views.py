@@ -38,13 +38,14 @@ class RestaurantList(APIView):
 
     def post(self, request: request.Request) -> Response:
         user: Client = request.user
-        request.data["owner"] = user
+        request.data["owner"] = user.id
         restaurant_serializer = RestaurantSerializer(data=request.data)
-
         if restaurant_serializer.is_valid():
+            print(restaurant_serializer.errors)
             restaurant_serializer.save()
             return Response(restaurant_serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(restaurant_serializer.errors)
             return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request: request.Request, **kwargs) -> Response:
