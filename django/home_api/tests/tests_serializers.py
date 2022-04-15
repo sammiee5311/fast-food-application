@@ -155,6 +155,18 @@ class TestViewRestaurant(APITestCase):
             response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST
         )
 
+    def test_get_all_restaurants_types(self) -> None:
+        client = self.client
+
+        test_type = RestaurantType.objects.create(id=1, name="test")
+
+        url = reverse("home_api:restaurant_type")
+
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()[-1]["name"], test_type.name)
+
 
 class TestViewOrder(APITestCase):
     def setUp(self) -> None:
@@ -231,3 +243,33 @@ class TestViewOrder(APITestCase):
             expect = d.pop("expect")
             response = client.post(url, d, format="json")
             self.assertEqual(response.status_code, expect)
+
+
+class TestViewJWT(APITestCase):
+    def setUp(self) -> None:
+        self.user = Client.objects.create_user(
+            id=0,
+            email="test@test.com",
+            username="username",
+            password="password",
+        )
+
+    def test_get_tokens_and_refresh_token(self) -> None:
+        tokens_url = reverse(
+            "home_api:token_obtain_pair",
+        )
+        refresh_url = reverse(
+            "home_api:token_refresh",
+        )
+
+        user_data = {"email": "test@test.com", "password": "password"}
+        response = self.client.post(tokens_url, user_data, format="json")
+
+        tokens = response.json()
+
+        self.assertIn("refresh", tokens)
+
+        refresh_data = {"refresh": tokens["refresh"]}
+        response = self.client.post(refresh_url, refresh_data, format="json")
+
+        self.assertIn("access", response.json())
