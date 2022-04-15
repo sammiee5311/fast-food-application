@@ -8,12 +8,14 @@ from order.models import Order, OrderMenu
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient, APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 TEST_UUID = uuid.uuid4()
 
 
 def create_restaurant(user: Client, client: APIClient) -> Response:
     client.force_login(user)
+    refresh = RefreshToken.for_user(user)
     restaraunt_type = RestaurantType.objects.create(id=1, name="hamburger")
     data = {
         "type": restaraunt_type.id,
@@ -26,13 +28,16 @@ def create_restaurant(user: Client, client: APIClient) -> Response:
     }
 
     url = reverse("home_api:restaurant")
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
     response = client.post(url, data, format="json")
 
     return response
 
 
 def create_menu(restaurant: Restaurant) -> Menu:
-    food_item = FoodItem.objects.create(id=1, name="burger", description="burger", type=FOOD_TYPES[1])
+    food_item = FoodItem.objects.create(
+        id=1, name="burger", description="burger", type=FOOD_TYPES[1]
+    )
     menu = Menu.objects.create(name="bulgogi-burger", price=5.99, restaurant=restaurant)
     menu.food_items.set([food_item])
     restaurant.menu.set([menu])
@@ -49,7 +54,13 @@ def create_order(user, client: APIClient, restaurant: Restaurant) -> None:
 
 class TestViewRestaurant(APITestCase):
     def setUp(self) -> None:
-        self.user = Client.objects.create(id=0, email="test@test.com", username="username", password="password")
+        self.user = Client.objects.create(
+            id=0, email="test@test.com", username="username", password="password"
+        )
+        self.refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
+        )
 
     def test_get_restaurant_success(self) -> None:
         self.client.force_login(self.user)
@@ -64,18 +75,24 @@ class TestViewRestaurant(APITestCase):
         create_restaurant(self.user, client)
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
-        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
+        url_id_does_not_exist = reverse(
+            "home_api:restaurant_detail", kwargs={"pk": 123}
+        )
         response = client.get(url, format="json")
         response_id_does_not_exist = client.get(url_id_does_not_exist, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST
+        )
 
     def test_get_restaurant_failure(self) -> None:
         url = reverse("home_api:restaurant")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer fail")
+
         response = self.client.get(url, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_restaurant(self) -> None:
         client = self.client
@@ -84,7 +101,9 @@ class TestViewRestaurant(APITestCase):
         invalid_data = {"phone_number": "Invalid data"}
 
         response = create_restaurant(self.user, client)
-        response_invalid_data = client.post(url_invalid_data, invalid_data, format="json")
+        response_invalid_data = client.post(
+            url_invalid_data, invalid_data, format="json"
+        )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.json()["name"], "Happy burger")
@@ -99,7 +118,9 @@ class TestViewRestaurant(APITestCase):
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         url_without_id = "http://localhost:8000/api/restaurants/"
-        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
+        url_id_does_not_exist = reverse(
+            "home_api:restaurant_detail", kwargs={"pk": 123}
+        )
 
         response = client.patch(url, data, format="json")
         response_without_id = client.patch(url_without_id, data, format="json")
@@ -110,7 +131,9 @@ class TestViewRestaurant(APITestCase):
         self.assertEqual(response.json()["name"], "Super happy burger")
         self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response_invalid_data.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST
+        )
 
     def test_delete_restaurant(self) -> None:
         client = self.client
@@ -118,7 +141,9 @@ class TestViewRestaurant(APITestCase):
 
         url = reverse("home_api:restaurant_detail", kwargs={"pk": 1})
         url_without_id = "http://localhost:8000/api/restaurants/"
-        url_id_does_not_exist = reverse("home_api:restaurant_detail", kwargs={"pk": 123})
+        url_id_does_not_exist = reverse(
+            "home_api:restaurant_detail", kwargs={"pk": 123}
+        )
 
         response = client.delete(url, format="json")
         response_without_id = client.delete(url_without_id, format="json")
@@ -126,12 +151,18 @@ class TestViewRestaurant(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response_without_id.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST
+        )
 
 
 class TestViewOrder(APITestCase):
     def setUp(self) -> None:
         self.user = Client.objects.create(username="username", password="password")
+        self.refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
+        )
 
     def test_get_order_success(self) -> None:
         self.client.force_login(self.user)
@@ -142,9 +173,10 @@ class TestViewOrder(APITestCase):
 
     def test_get_order_failure(self) -> None:
         url = reverse("home_api:order")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer fail")
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_particular_order(self) -> None:
         client = self.client
@@ -153,14 +185,18 @@ class TestViewOrder(APITestCase):
         create_order(self.user, client, restaurant)
 
         url = reverse("home_api:order_detail", kwargs={"pk": TEST_UUID})
-        url_id_does_not_exist = reverse("home_api:order_detail", kwargs={"pk": uuid.uuid4()})
+        url_id_does_not_exist = reverse(
+            "home_api:order_detail", kwargs={"pk": uuid.uuid4()}
+        )
 
         response = client.get(url, format="json")
         response_id_does_not_exist = client.get(url_id_does_not_exist, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()["total_price"], 5.99)
-        self.assertEqual(response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response_id_does_not_exist.status_code, status.HTTP_400_BAD_REQUEST
+        )
 
     def test_post_order(self) -> None:
         client = self.client
@@ -184,7 +220,11 @@ class TestViewOrder(APITestCase):
                 "menus": [{"menu": menu.id, "quantity": -1}],
                 "expect": status.HTTP_400_BAD_REQUEST,
             },
-            {"restaurant": restaurant.id, "user": self.user.id, "expect": status.HTTP_400_BAD_REQUEST},
+            {
+                "restaurant": restaurant.id,
+                "user": self.user.id,
+                "expect": status.HTTP_400_BAD_REQUEST,
+            },
         ]
 
         for d in data:
