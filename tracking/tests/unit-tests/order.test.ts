@@ -22,11 +22,14 @@ describe("Server api test", () => {
   });
 
   it("return 200 status code", () => {
-    return request(server).get("/orders").set("Origin", ORIGIN_URL).expect(200);
+    return request(server)
+      .get("/api/orders")
+      .set("Origin", ORIGIN_URL)
+      .expect(200);
   });
 
   it("return 500 status code", () => {
-    return request(server).get("/orders").expect(500);
+    return request(server).get("/api/orders").expect(500);
   });
 
   it("Add 1 order and Get order from api response", async () => {
@@ -36,7 +39,7 @@ describe("Server api test", () => {
     orders.addNewOrder(id, menus, restaruant);
 
     const res: request.Response = await request(server)
-      .get("/orders")
+      .get("/api/orders")
       .set("Origin", ORIGIN_URL);
 
     const resJson = <ResponseText>JSON.parse(res.text);

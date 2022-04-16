@@ -1,6 +1,6 @@
 import path from "path";
 import dotenv from "dotenv";
-import { Pool, PoolConfig, PoolClient } from "pg";
+import { Pool, PoolConfig, PoolClient, QueryResult } from "pg";
 
 /* istanbul ignore file */
 
@@ -26,12 +26,13 @@ class PostgreDb {
     this.client = await this.connection.connect();
   }
 
-  disconnect() {
+  async disconnect() {
     if (this.client) this.client.release();
   }
 
   async getResult(sql: string) {
-    const { rows } = await this.client!.query(sql);
+    const { rows }: QueryResult<{ [name: string]: string }> =
+      await this.client!.query(sql);
 
     return rows;
   }

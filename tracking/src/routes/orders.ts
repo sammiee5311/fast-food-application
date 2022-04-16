@@ -1,12 +1,14 @@
 import { Router } from "express";
 
-import { getOrders } from "../controllers/orders";
+import { getOrders, postIngredientsByMenus } from "../controllers/orders";
 import log from "../middlewares/log";
 
 const router = Router();
 
 router.use(log);
 
-router.get("/", getOrders);
+router.get("/orders", getOrders);
+
+router.post("/ingredients", postIngredientsByMenus);
 
 export default router;

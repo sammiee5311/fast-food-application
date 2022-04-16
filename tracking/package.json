@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "premake-badge": "jest --coverage",
     "make-badge": "coverage-badges",
-    "start": "node ./dist/server.js"
+    "start": "tsc-watch --onSuccess \"node ./dist/server.js\""
   },
   "keywords": [],
   "author": "",
@@ -40,6 +40,7 @@
     "npm-hook-receiver": "^1.0.0",
     "pg": "^8.7.3",
     "pgmock2": "^2.1.2",
+    "tsc-watch": "^5.0.3",
     "winston": "^3.6.0",
     "winston-daily-rotate-file": "^4.6.1"
   }
