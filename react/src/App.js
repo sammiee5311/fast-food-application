@@ -3,7 +3,9 @@ import PrivateRoute from "./utils/PrivateRoute";
 
 import Header from "./components/Header";
 import RestaurantsPage from "./components/restaurants/RestaurantsPage";
-import RegisterRestaurantPage from "./components/restaurants/Register/RegisterRestaurantPage";
+import RestaurantRegisterPage from "./components/restaurants/RestaurantOwner/RestaurantRegisterPage";
+import RestraurantOwnerPage from "./components/restaurants/RestaurantOwner/RestaurantOwnerPage";
+import RestaurantMenuAddPage from "./components/restaurants/RestaurantOwner/RestaurantMenuAddPage";
 import RestaurantDetailPage from "./components/restaurants/RestaurantDetailPage";
 import OrderListPage from "./components/orders/OrderListPage";
 import OrderDetailPage from "./components/orders/OrderDetailPage";
@@ -25,7 +27,12 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/restaurants" element={<RestaurantsPage />} />
-        <Route path="/regrestaurant" element={<RegisterRestaurantPage />} />
+        <Route path="/owner" element={<RestraurantOwnerPage />} />
+        <Route
+          path="/owner/regrestaurant"
+          element={<RestaurantRegisterPage />}
+        />
+        <Route path="/owner/addmenu" element={<RestaurantMenuAddPage />} />
       </Routes>
     </Router>
   );

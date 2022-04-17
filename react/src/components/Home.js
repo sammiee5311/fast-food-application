@@ -18,7 +18,7 @@ const Home = () => {
         <h2> Cart </h2>
       </Link>
       <Link to="/regrestaurant">
-        <h2> Register Restaurant </h2>
+        <h2> Restaurant Owner </h2>
       </Link>
     </div>
   );

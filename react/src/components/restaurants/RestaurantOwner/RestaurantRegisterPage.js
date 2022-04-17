@@ -1,6 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+import BACK from "../../../assets/chevron-left.svg";
+
 import useFetch from "../../../hooks/useFetch";
 
 const phoneNumberValidation = new RegExp("^[+][0-9]{11}$", "g");
@@ -87,6 +90,10 @@ const RegisterRestaurant = () => {
 
   return (
     <Fragment>
+      <h2> Register Restaurant </h2>
+      <Link to="/owner">
+        <BACK />
+      </Link>
       <form onSubmit={registerRestaurantHandler}>
         <div>
           <label htmlFor="name">Restaurant Name : </label>

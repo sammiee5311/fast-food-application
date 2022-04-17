@@ -35,6 +35,7 @@ const LoginPage = () => {
 
   return (
     <Fragment>
+      <h2> Login </h2>
       <form className={classes.grid} onSubmit={authLoginHandler}>
         <input
           className={classes.padding}
