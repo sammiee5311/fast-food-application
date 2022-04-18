@@ -1,7 +1,8 @@
 from functools import partial
-from typing import Dict
+from typing import Dict, Optional
 
 from accounts.models import Client
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
 from home.models import FoodItem, Menu, Restaurant, RestaurantType
 from rest_framework import request, status
@@ -91,6 +92,19 @@ class RestaurantMenus(APIView):
             return Response("Something went wrong", status=status.HTTP_400_BAD_REQUEST)
 
 
+class RestaurantListByOwner(APIView):
+    def get(self, request: request.Request, **kwargs) -> Response:
+        owner: Client = request.user
+
+        queryset: QuerySet = Restaurant.restaurantobjects.filter(owner=owner.id)
+
+        try:
+            restaurant_serializer = RestaurantSerializer(queryset, many=True)
+            return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RestaurantList(APIView):
     def add_fields_if_not_in_request(self, restaruant: Restaurant, request: request.Request) -> Dict[str, str]:
         data = {}
@@ -120,17 +134,18 @@ class RestaurantList(APIView):
 
     def get(self, request: request.Request, **kwargs) -> Response:
         restaurant_id = kwargs.get("pk", None)
+        queryset: Optional[QuerySet]
 
         if restaurant_id is None:
             queryset = Restaurant.restaurantobjects.all()
+        else:
+            queryset = Restaurant.restaurantobjects.get(id=restaurant_id)
+
+        try:
             restaurant_serializer = RestaurantSerializer(queryset, many=True)
             return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
-        else:
-            try:
-                restaurant_serializer = RestaurantSerializer(Restaurant.restaurantobjects.get(id=restaurant_id))
-                return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
-            except Restaurant.DoesNotExist:
-                return Response("Restaurant does not exist.", status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: request.Request, **kwargs) -> Response:
         restaurant_id = kwargs.get("pk", None)
