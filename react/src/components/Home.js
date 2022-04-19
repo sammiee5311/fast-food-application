@@ -17,7 +17,7 @@ const Home = () => {
       <Link to="/cart">
         <h2> Cart </h2>
       </Link>
-      <Link to="/regrestaurant">
+      <Link to="/owner">
         <h2> Restaurant Owner </h2>
       </Link>
     </div>
