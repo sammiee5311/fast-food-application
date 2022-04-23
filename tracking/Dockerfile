@@ -10,5 +10,5 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm install -g typescript
+RUN npm install -g typescript pm2
 RUN tsc

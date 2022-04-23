@@ -1,0 +1,11 @@
+{
+    "apps": [{
+        "name"      : "tracking",
+        "script"    : "npm",
+        "args"      : "start",
+        "watch"     : false,
+        "env" : {
+            "NODE_ENV": "dev"
+        }
+    }]
+}

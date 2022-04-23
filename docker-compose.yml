@@ -109,7 +109,7 @@ services:
     build: ./tracking
     volumes:
       - ./tracking:/app
-    command: ["npm", "start"]
+    command: ["pm2", "start", "pm2.json", "--no-daemon"]
     depends_on:
       - mongo
 
