@@ -3,13 +3,15 @@ import { RequestHandler } from "express";
 import startConsumOrders from "../config/kafka";
 
 import orders from "../models/orders";
+import { Ingredients, Restaurant } from "../types";
+import { setTotalAddedIngredients } from "../uilts/helper";
 
 import mongoDb from "../config/database/mongoDb";
 import postgreDb from "../config/database/postgreDb";
 
-const isTest = process.env.NODE_ENV === "test" ? true : false;
+const isProduction = process.env.NODE_ENV === "production" ? true : false;
 
-if (!isTest) startConsumOrders();
+if (isProduction) startConsumOrders();
 
 export const getOrders: RequestHandler = async (_, res, _2) => {
   res.status(200).json({ message: "Get orders successfully", orders });
@@ -23,8 +25,7 @@ export const postIngredientsByMenus: RequestHandler = async (
   try {
     const restaurantId: string = req.body.restaurantId;
     const menuName: string = req.body.restaurantMenu;
-    const ingredients: { [menu: string]: { ingredient: number } } =
-      req.body.restauranIngredients;
+    const ingredients: Ingredients = req.body.restaurantIngredients;
 
     await Promise.all([postgreDb.connect(), mongoDb.connect()]);
 
@@ -48,9 +49,21 @@ export const postIngredientsByMenus: RequestHandler = async (
       );
     }
 
+    const restaurant = (await mongoDb.getRestaurantRecipes(
+      +restaurantId
+    )) as unknown as Restaurant;
+
+    setTotalAddedIngredients(ingredients, restaurant.ingredients);
+
+    await mongoDb.updateRestaurantIngredientsQuantity(
+      +restaurantId,
+      restaurant.ingredients
+    );
+
     res.status(201).json({
       message: "Add ingredients successfully",
       restaurantMenus,
+      restaurant,
     });
   } catch (error) {
     next(error);

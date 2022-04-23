@@ -33,6 +33,19 @@ const setTotalIngredientsNeed = (
   }
 };
 
+export const setTotalAddedIngredients = (
+  newIngredients: Ingredients,
+  currentIngredients: Ingredients
+) => {
+  Object.entries(newIngredients).forEach(([ingredient, quantity]) => {
+    if (currentIngredients.hasOwnProperty(ingredient)) {
+      currentIngredients[ingredient] += +quantity;
+    } else {
+      currentIngredients[ingredient] = quantity;
+    }
+  });
+};
+
 export const getCaculatedRestaurantIngredients = (
   menus: OrderMenu[],
   restaruant: Restaurant

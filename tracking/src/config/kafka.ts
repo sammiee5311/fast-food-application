@@ -8,39 +8,43 @@ import mongoDb from "./database/mongoDb";
 const BROKER = "kafka:29092";
 
 const startConsumOrders = async () => {
-  const kafka = new Kafka({
-    clientId: "fast-food-order",
-    brokers: [BROKER],
-  });
+  try {
+    const kafka = new Kafka({
+      clientId: "fast-food-order",
+      brokers: [BROKER],
+    });
 
-  const consumer = kafka.consumer({
-    groupId: "fast-food-order",
-  });
+    const consumer = kafka.consumer({
+      groupId: "fast-food-order",
+    });
 
-  consumer.connect();
+    consumer.connect();
 
-  consumer.subscribe({
-    topic: "fast-food-order",
-    fromBeginning: true,
-  });
+    consumer.subscribe({
+      topic: "fast-food-order",
+      fromBeginning: true,
+    });
 
-  consumer.run({
-    eachMessage: async ({ message }) => {
-      const { id, menus, restaurant } = <KafkaOrderMessage>(
-        JSON.parse(message.value!.toString())
-      );
+    consumer.run({
+      eachMessage: async ({ message }) => {
+        const { id, menus, restaurant } = <KafkaOrderMessage>(
+          JSON.parse(message.value!.toString())
+        );
 
-      console.log("Received message", {
-        id,
-        menus,
-        restaurant,
-      });
+        console.log("Received message", {
+          id,
+          menus,
+          restaurant,
+        });
 
-      if (await isRestaurantAvailable(restaurant, menus)) {
-        orders.addNewOrder(id, menus, restaurant);
-      }
-    },
-  });
+        if (await isRestaurantAvailable(restaurant, menus)) {
+          orders.addNewOrder(id, menus, restaurant);
+        }
+      },
+    });
+  } catch (err) {
+    throw new Error("Kafka consumer error.");
+  }
 };
 
 const isRestaurantAvailable = async (
