@@ -3,8 +3,9 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from .jwt_views import MyTokenObtainPairView
 from .order_views import OrderList
-from .restaruant_views import (
-    RestaurantList,
+from .restaruant_views import RestaurantList
+
+from .restaurant_owner_views import (
     RestaurantListByOwner,
     RestaurantMenus,
     RestaurantTypes,
@@ -15,7 +16,11 @@ app_name = "home_api"
 urlpatterns = [
     path("restaurants/<int:pk>/", RestaurantList.as_view(), name="restaurant_detail"),
     path("restaurants/", RestaurantList.as_view(), name="restaurant"),
-    path("restaurantsbyowner/", RestaurantListByOwner.as_view(), name="restaurant_by_owner"),
+    path(
+        "restaurantsbyowner/",
+        RestaurantListByOwner.as_view(),
+        name="restaurant_by_owner",
+    ),
     path("restaurantstypes/", RestaurantTypes.as_view(), name="restaurant_type"),
     path("orders/<str:pk>/", OrderList.as_view(), name="order_detail"),
     path("orders/", OrderList.as_view(), name="order"),
