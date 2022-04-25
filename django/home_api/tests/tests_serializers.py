@@ -18,6 +18,7 @@ def create_restaurant(user: Client, client: APIClient) -> Response:
     refresh = RefreshToken.for_user(user)
     restaraunt_type = RestaurantType.objects.create(id=1, name="hamburger")
     data = {
+        "id": 1,
         "type": restaraunt_type.id,
         "name": "Happy burger",
         "address": "earth",
@@ -50,6 +51,100 @@ def create_order(user, client: APIClient, restaurant: Restaurant) -> None:
     menu = create_menu(restaurant)
     order = Order.objects.create(id=TEST_UUID, user=user, restaurant=restaurant)
     OrderMenu.objects.create(id=1, menu=menu, order=order, quantity=1)
+
+
+class TestOwnerViewRestaurant(APITestCase):
+    def setUp(self) -> None:
+        self.user = Client.objects.create(
+            id=0, email="test@test.com", username="username", password="password"
+        )
+        self.refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
+        )
+
+    def test_get_list_of_restaurants_by_owner(self) -> None:
+        client = self.client
+        client.force_login(self.user)
+        create_restaurant(self.user, client)
+
+        url = reverse("home_api:restaurant_by_owner")
+
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["name"], "Happy burger")
+
+    def test_add_menus_in_restaurant_success(self) -> None:
+        client = self.client
+        client.force_login(self.user)
+        create_restaurant(self.user, client)
+
+        restaurant = Restaurant.objects.get(id=1)
+        create_menu(restaurant)
+
+        data = {
+            "restaurant_id": "1",
+            "menus": [
+                {
+                    "name": "menu",
+                    "food_items": [
+                        {"name": "name", "description": "food", "type": "main"}
+                    ],
+                    "price": 12.99,
+                }
+            ],
+        }
+
+        url = reverse("home_api:menu")
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_menus_in_restaurant_fail(self) -> None:
+        client = self.client
+        client.force_login(self.user)
+        create_restaurant(self.user, client)
+
+        restaurant = Restaurant.objects.get(id=1)
+        create_menu(restaurant)
+
+        invalid_restaurant_id_data = {
+            "restaurant_id": "2",
+            "menus": [
+                {
+                    "name": "menu",
+                    "food_items": [
+                        {"name": "name", "description": "food", "type": "main"}
+                    ],
+                    "price": 12.99,
+                }
+            ],
+        }
+
+        invalid_menu_serializer_data = {
+            "restaurant_id": "1",
+            "menus": [
+                {
+                    "name": "menu",
+                    "food_items": [
+                        {"name": "name", "description": "food", "type": "main"}
+                    ],
+                    "price": "test",
+                }
+            ],
+        }
+
+        url = reverse("home_api:menu")
+        invalid_id_response = self.client.post(
+            url, invalid_restaurant_id_data, format="json"
+        )
+        invalid_menu_response = self.client.post(
+            url, invalid_menu_serializer_data, format="json"
+        )
+
+        self.assertEqual(invalid_id_response.status_code, 400)
+        self.assertEqual(invalid_menu_response.status_code, 400)
 
 
 class TestViewRestaurant(APITestCase):
@@ -97,12 +192,12 @@ class TestViewRestaurant(APITestCase):
     def test_create_restaurant(self) -> None:
         client = self.client
 
-        url_invalid_data = reverse("home_api:restaurant")
+        invalid_data_url = reverse("home_api:restaurant")
         invalid_data = {"phone_number": "Invalid data"}
 
         response = create_restaurant(self.user, client)
         response_invalid_data = client.post(
-            url_invalid_data, invalid_data, format="json"
+            invalid_data_url, invalid_data, format="json"
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -214,8 +309,7 @@ class TestViewOrder(APITestCase):
         client = self.client
         create_restaurant(self.user, client)
         restaurant = Restaurant.objects.get(id=1)
-        create_menu(restaurant)
-        menu = Menu.objects.get(id=1)
+        menu = create_menu(restaurant)
 
         url = reverse("home_api:order")
 
