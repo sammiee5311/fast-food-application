@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "home",
-    "home_api",
+    "api",
     "phonenumber_field",
     "corsheaders",
     "order",
@@ -202,5 +202,6 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
 }
+
 
 SIMPLE_JWT
