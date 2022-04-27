@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from accounts.models import Client
 from django.db.models.query import QuerySet
-from home.models import Restaurant
+from restaurant.models import Restaurant
 from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView

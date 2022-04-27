@@ -54,14 +54,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "home",
-    "api",
-    "phonenumber_field",
-    "corsheaders",
-    "order",
-    "accounts",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "phonenumber_field",
+    "corsheaders",
+    "restaurant",
+    "accounts",
+    "order",
+    "api",
 ]
 
 MIDDLEWARE = [

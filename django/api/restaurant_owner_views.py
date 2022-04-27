@@ -1,7 +1,7 @@
 from accounts.models import Client
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
-from home.models import FoodItem, Restaurant, RestaurantType
+from restaurant.models import FoodItem, Restaurant, RestaurantType
 from rest_framework import request, status
 from rest_framework.response import Response
 from rest_framework.views import APIView

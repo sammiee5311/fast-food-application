@@ -1,13 +1,24 @@
 from accounts.models import Client
 from django.test import TestCase
 from django.utils import timezone
-from home.models import FOOD_TYPES, OPTIONS, FoodItem, Menu, Restaurant, RestaurantType
+from restaurant.models import (
+    FOOD_TYPES,
+    OPTIONS,
+    FoodItem,
+    Menu,
+    Restaurant,
+    RestaurantType,
+)
 
 
 class TestRestaurantsModels(TestCase):
     def setUp(self):
-        self.user = Client.objects.create(username="username", email="test@test.com", password="password")
-        self.food_item = FoodItem.objects.create(id=0, name="burger", description="burger", type=FOOD_TYPES[1])
+        self.user = Client.objects.create(
+            username="username", email="test@test.com", password="password"
+        )
+        self.food_item = FoodItem.objects.create(
+            id=0, name="burger", description="burger", type=FOOD_TYPES[1]
+        )
         self.restaraunt_type = RestaurantType.objects.create(id=0, name="hamburger")
         self.restaurant = Restaurant.objects.create(
             id=0,
@@ -21,8 +32,12 @@ class TestRestaurantsModels(TestCase):
             owner=self.user,
             status=OPTIONS[0],
         )
-        self.menu1 = Menu.objects.create(name="bulgogi-burger", price=5.99, restaurant=self.restaurant)
-        self.menu2 = Menu.objects.create(name="cheese-burger", price=4.99, restaurant=self.restaurant)
+        self.menu1 = Menu.objects.create(
+            name="bulgogi-burger", price=5.99, restaurant=self.restaurant
+        )
+        self.menu2 = Menu.objects.create(
+            name="cheese-burger", price=4.99, restaurant=self.restaurant
+        )
         self.menu1.food_items.set([self.food_item])
         self.menu2.food_items.set([self.food_item])
         self.restaurant.menu.set([self.menu1, self.menu2])

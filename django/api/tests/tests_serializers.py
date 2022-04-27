@@ -3,7 +3,7 @@ import uuid
 from accounts.models import Client
 from django.urls import reverse
 from django.utils import timezone
-from home.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
+from restaurant.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
 from order.models import Order, OrderMenu
 from rest_framework import status
 from rest_framework.response import Response

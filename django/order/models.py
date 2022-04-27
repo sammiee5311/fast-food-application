@@ -1,6 +1,6 @@
 from accounts.models import Client
 from django.db import models
-from home.models import Menu, Restaurant
+from restaurant.models import Menu, Restaurant
 
 from order.id_generator import get_uuid
 
