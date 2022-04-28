@@ -1,13 +1,13 @@
 import { RequestHandler } from "express";
 
-import startConsumOrders from "../config/kafka";
+import startConsumOrders from "./config/kafka";
 
-import orders from "../models/orders";
-import { Ingredients, Restaurant } from "../types";
-import { setTotalAddedIngredients } from "../uilts/helper";
+import orders from "./models/orders";
+import { Ingredients, Restaurant } from "./types";
+import { setTotalAddedIngredients, getSqlQuery } from "./uilts/helper";
 
-import mongoDb from "../config/database/mongoDb";
-import postgreDb from "../config/database/postgreDb";
+import mongoDb from "./config/database/mongoDb";
+import postgreDb from "./config/database/postgreDb";
 
 const isProduction = process.env.NODE_ENV === "production" ? true : false;
 
@@ -29,17 +29,7 @@ export const postIngredientsByMenus: RequestHandler = async (
 
     await Promise.all([postgreDb.connect(), mongoDb.connect()]);
 
-    const sql = `SELECT DISTINCT d.name 
-                 FROM  home_restaurant a, 
-                       home_restaurant_menu b, 
-                       home_menu c, 
-                       home_fooditem d, 
-                       home_menu_food_items e 
-                 WHERE a.id = ${restaurantId} 
-                   AND a.id = b.restaurant_id 
-                   AND c.id = b.menu_id
-                   AND c.id = e.menu_id 
-                   AND d.id = e.fooditem_id`;
+    const sql = getSqlQuery(restaurantId);
 
     const restaurantMenus = await postgreDb.getResult(sql);
 

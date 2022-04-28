@@ -71,3 +71,17 @@ export const getCaculatedRestaurantIngredients = (
 
   return { ingredients, possible };
 };
+
+export const getSqlQuery = (restaurantId: string) => {
+  return `SELECT DISTINCT d.name 
+          FROM  home_restaurant a, 
+                home_restaurant_menu b, 
+                home_menu c, 
+                home_fooditem d, 
+                home_menu_food_items e 
+          WHERE a.id = ${restaurantId} 
+            AND a.id = b.restaurant_id 
+            AND c.id = b.menu_id
+            AND c.id = e.menu_id 
+            AND d.id = e.fooditem_id`;
+};

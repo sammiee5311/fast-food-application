@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { json } from "body-parser";
 import cors from "cors";
 
-import orderRoutes from "./routes/orders";
+import orderRoutes from "./routes.orders";
 import corsOptions from "./middlewares/cors";
 import logger from "./config/logging";
 

@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { getOrders, postIngredientsByMenus } from "../controllers/orders";
-import log from "../middlewares/log";
+import { getOrders, postIngredientsByMenus } from "./controllers.orders";
+import log from "./middlewares/log";
 
 const router = Router();
 
