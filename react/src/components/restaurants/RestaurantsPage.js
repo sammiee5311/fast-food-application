@@ -14,6 +14,7 @@ const getProperContent = (restaurants, restaurantType, isLoading, error) => {
       <RestaurantsList
         restaurants={restaurants}
         restaurantType={restaurantType}
+        url="/restaurant"
       />
     );
   }

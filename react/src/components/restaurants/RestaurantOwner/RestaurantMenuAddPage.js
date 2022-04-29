@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import useFetch from "../../../hooks/useFetch";
 
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import BACK from "../../../assets/chevron-left.svg";
 
 const FOOD_TYPES = [
@@ -10,20 +10,18 @@ const FOOD_TYPES = [
   { id: 2, name: "drinks" },
 ];
 
-const RestaurantMenuAddPage = () => {
-  const [restaurantId, setRestaurantId] = useState("");
+const RestaurantMenuAddPage = (props) => {
+  const restaurantId = useParams().id;
   const [menuName, setMenuName] = useState("");
   const [foodName, setFoodName] = useState("");
   const [foodType, setFoodType] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
-  const { data: restaurants, error, sendRequest } = useFetch();
   const { isLoading: isAddMenuLoading, sendRequest: sendAddMenuRequest } =
     useFetch();
 
   useEffect(() => {
-    sendRequest({ url: "/api/restaurantsbyowner/" });
     if (menuName && foodName && description && price && isAddMenuLoading) {
       sendAddMenuRequest({
         url: "/api/menus/",
@@ -50,7 +48,6 @@ const RestaurantMenuAddPage = () => {
       });
     }
   }, [
-    sendRequest,
     sendAddMenuRequest,
     restaurantId,
     menuName,
@@ -64,7 +61,6 @@ const RestaurantMenuAddPage = () => {
   const addMenusHandler = async (event) => {
     event.preventDefault();
 
-    setRestaurantId(event.target.restaurant.value);
     setMenuName(event.target.menuName.value);
     setFoodName(event.target.foodName.value);
     setFoodType(event.target.foodType.value);
@@ -78,23 +74,6 @@ const RestaurantMenuAddPage = () => {
         <BACK />
       </Link>
       <form onSubmit={addMenusHandler}>
-        <div>
-          <label htmlFor="foodType">Restaurant : </label>
-          <select
-            type="text"
-            id="restaurant"
-            name="restaurant"
-            size="2"
-            required
-          >
-            {restaurants &&
-              restaurants.map((restaurant) => (
-                <option key={restaurant.id} value={restaurant.id}>
-                  {restaurant.name}
-                </option>
-              ))}
-          </select>
-        </div>
         <div>
           <label htmlFor="menuName">Menu Name : </label>
           <input
@@ -148,7 +127,6 @@ const RestaurantMenuAddPage = () => {
         </div>
         <input type="submit" />
       </form>
-      {error && error}
     </Fragment>
   );
 };

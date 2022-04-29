@@ -7,14 +7,22 @@ const RestaurantsList = (props) => {
     return <h2>No restaurant found.</h2>;
   }
 
-  let filteredRestaurants = props.restaurants.filter((restaruant) => {
-    return restaruant.type_name === props.restaurantType;
-  });
+  let filteredRestaurants = props.restaurants;
+
+  if (props.restaurantType) {
+    filteredRestaurants = props.restaurants.filter((restaruant) => {
+      return restaruant.type_name === props.restaurantType;
+    });
+  }
 
   return (
     <Fragment>
       {filteredRestaurants.map((restaurant, index) => (
-        <RestaurantListItem key={index} restaurant={restaurant} />
+        <RestaurantListItem
+          key={index}
+          restaurant={restaurant}
+          url={props.url}
+        />
       ))}
     </Fragment>
   );

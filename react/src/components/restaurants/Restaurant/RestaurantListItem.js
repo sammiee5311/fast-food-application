@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const RestaurantListItem = ({ restaurant }) => {
+const RestaurantListItem = ({ restaurant, url }) => {
   return (
-    <Link to={`/restaurant/${restaurant.id}`}>
+    <Link to={`${url}/${restaurant.id}`}>
       <h3>
         {restaurant.name} - {restaurant.address}
       </h3>
