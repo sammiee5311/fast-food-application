@@ -53,8 +53,8 @@ class RestaurantMenus(APIView):
         restaurant_id = request.data.get("restaurant_id", "")
 
         try:
-            restaurant_menus = []
             restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
+            restaurant_menus = [menu["menu_id"] for menu in restaurant.menus]
 
             for menu in menus:
                 menu_price = menu["price"]
@@ -82,14 +82,14 @@ class RestaurantMenus(APIView):
                 if menu_serializer.is_valid():
                     menu_serializer.save()
 
-                    restaurant_menus.append(menu_serializer.data)
+                    restaurant_menus.append(menu_serializer.data["id"])
                 else:
                     return Response(
                         menu_serializer.errors, status=status.HTTP_400_BAD_REQUEST
                     )
 
             restaurant_serializer = RestaurantSerializer(
-                restaurant, data={"menus": restaurant_menus}, partial=True
+                restaurant, data={"menu": restaurant_menus}, partial=True
             )
 
             if restaurant_serializer.is_valid():

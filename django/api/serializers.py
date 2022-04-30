@@ -14,11 +14,12 @@ class RestaurantTypesSerializer(serializers.ModelSerializer):
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
-    # menus = serializers.ReadOnlyField()
-
     class Meta:
         model = Restaurant
-        fields = ("id", "type_name", "name", "owner", "address", "zipcode", "phone_number", "menus")
+        fields = ("id", "type_name", "name", "owner", "address", "zipcode", "phone_number", "menus", "menu")
+        extra_kwargs = {
+            "menu": {"write_only": True},
+        }
 
 
 class RestaurantFoodItemsSerializer(serializers.ModelSerializer):
@@ -30,7 +31,7 @@ class RestaurantFoodItemsSerializer(serializers.ModelSerializer):
 class RestaurantMenusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
-        fields = ("name", "price", "food_items")
+        fields = ("id", "name", "price", "food_items")
 
 
 # Order
