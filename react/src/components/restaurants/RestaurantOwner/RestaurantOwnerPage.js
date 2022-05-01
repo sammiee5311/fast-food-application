@@ -13,8 +13,21 @@ const RestaurantOwnerPage = () => {
       <Link to="/owner/regrestaurant">
         <h2> Register Restaurant </h2>
       </Link>
-      <Link to="/owner/addmenu">
-        <h2> Add menu </h2>
+      <Link
+        to={{
+          pathname: "/owner/restaurantlist",
+          search: "?url=addmenu",
+        }}
+      >
+        <h2> Add Menu </h2>
+      </Link>
+      <Link
+        to={{
+          pathname: "/owner/restaurantlist",
+          search: "?url=addingredient",
+        }}
+      >
+        <h2> Add Ingredient </h2>
       </Link>
     </div>
   );

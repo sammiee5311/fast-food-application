@@ -7,6 +7,7 @@ import RestaurantRegisterPage from "./components/restaurants/RestaurantOwner/Res
 import RestraurantOwnerPage from "./components/restaurants/RestaurantOwner/RestaurantOwnerPage";
 import RestaurantMenuAddPage from "./components/restaurants/RestaurantOwner/RestaurantMenuAddPage";
 import RestaurantListByOwnerPage from "./components/restaurants/RestaurantOwner/RestaurantListByOwnerPage";
+import RestaurantIngredientAddPage from "./components/restaurants/RestaurantOwner/RestaurantIngredientAddPage";
 import RestaurantDetailPage from "./components/restaurants/RestaurantDetailPage";
 import OrderListPage from "./components/orders/OrderListPage";
 import OrderDetailPage from "./components/orders/OrderDetailPage";
@@ -34,7 +35,14 @@ function App() {
           element={<RestaurantRegisterPage />}
         />
         <Route path="/owner/addmenu/:id" element={<RestaurantMenuAddPage />} />
-        <Route path="/owner/addmenu" element={<RestaurantListByOwnerPage />} />
+        <Route
+          path="/owner/restaurantlist/"
+          element={<RestaurantListByOwnerPage />}
+        />
+        <Route
+          path="/owner/addingredient/:id"
+          element={<RestaurantIngredientAddPage />}
+        />
       </Routes>
     </Router>
   );

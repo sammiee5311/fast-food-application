@@ -10,7 +10,7 @@ const FOOD_TYPES = [
   { id: 2, name: "drinks" },
 ];
 
-const RestaurantMenuAddPage = (props) => {
+const RestaurantMenuAddPage = () => {
   const restaurantId = useParams().id;
   const [menuName, setMenuName] = useState("");
   const [foodName, setFoodName] = useState("");
