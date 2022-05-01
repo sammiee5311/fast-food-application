@@ -17,6 +17,23 @@ export const getOrders: RequestHandler = async (_, res, _2) => {
   res.status(200).json({ message: "Get orders successfully", orders });
 };
 
+export const postRestaurantRecipes: RequestHandler = async (req, res, next) => {
+  try {
+    const restaurantId: string = req.body.restaurantId;
+    await mongoDb.connect();
+
+    const recipes = await mongoDb.getRestaurantRecipes(+restaurantId);
+
+    res
+      .status(200)
+      .json({ message: "Get restaurant recipes successfully", recipes });
+  } catch (error) {
+    next(error);
+  } finally {
+    await mongoDb.disconnect();
+  }
+};
+
 export const postIngredientsByMenus: RequestHandler = async (
   req,
   res,
