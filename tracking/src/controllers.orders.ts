@@ -4,10 +4,9 @@ import startConsumOrders from "./config/kafka";
 
 import orders from "./models/orders";
 import { Ingredients, Restaurant } from "./types";
-import { setTotalAddedIngredients, getSqlQuery } from "./uilts/helper";
+import { setTotalAddedIngredients } from "./uilts/helper";
 
 import mongoDb from "./config/database/mongoDb";
-import postgreDb from "./config/database/postgreDb";
 
 const isProduction = process.env.NODE_ENV === "production" ? true : false;
 
@@ -34,27 +33,12 @@ export const postRestaurantRecipes: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const postIngredientsByMenus: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
+export const postIngredients: RequestHandler = async (req, res, next) => {
   try {
     const restaurantId: string = req.body.restaurantId;
-    const menuName: string = req.body.restaurantMenu;
     const ingredients: Ingredients = req.body.restaurantIngredients;
 
-    await Promise.all([postgreDb.connect(), mongoDb.connect()]);
-
-    const sql = getSqlQuery(restaurantId);
-
-    const restaurantMenus = await postgreDb.getResult(sql);
-
-    if (restaurantMenus.filter((menu) => menu.name === menuName).length === 0) {
-      throw new Error(
-        "Requested menu does not exist. Please, Check restaurants menus again."
-      );
-    }
+    await mongoDb.connect();
 
     const restaurant = (await mongoDb.getRestaurantRecipes(
       +restaurantId
@@ -69,12 +53,11 @@ export const postIngredientsByMenus: RequestHandler = async (
 
     res.status(201).json({
       message: "Add ingredients successfully",
-      restaurantMenus,
       restaurant,
     });
   } catch (error) {
     next(error);
   } finally {
-    await Promise.all([postgreDb.disconnect(), mongoDb.disconnect()]);
+    await mongoDb.disconnect();
   }
 };

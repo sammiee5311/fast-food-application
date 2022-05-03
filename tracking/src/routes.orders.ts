@@ -3,7 +3,7 @@ import { Router } from "express";
 import {
   getOrders,
   postRestaurantRecipes,
-  postIngredientsByMenus,
+  postIngredients,
 } from "./controllers.orders";
 import log from "./middlewares/log";
 
@@ -15,6 +15,6 @@ router.get("/orders", getOrders);
 
 router.post("/recipes", postRestaurantRecipes);
 
-router.post("/ingredients", postIngredientsByMenus);
+router.post("/ingredients", postIngredients);
 
 export default router;
