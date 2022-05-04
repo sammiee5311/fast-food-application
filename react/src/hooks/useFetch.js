@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const useFetch = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,8 +41,9 @@ const useFetch = () => {
         setError(err.message);
       }
       setIsLoading(false);
+      if (requestConfig.navigate) navigate(requestConfig.navigate);
     },
-    [authTokensSelector]
+    [authTokensSelector, navigate]
   );
 
   return {
