@@ -43,3 +43,12 @@ export interface KafkaOrderMessage {
   estimated_delivery_time: null | number;
   delivery_time: null | number;
 }
+
+export interface JwtData {
+  token_type?: string;
+  exp?: number;
+  iat?: number;
+  jti?: string;
+  user_id?: number;
+  username?: string;
+}

@@ -3,6 +3,7 @@ import { json } from "body-parser";
 import cors from "cors";
 
 import orderRoutes from "./routes.orders";
+import { tokenValidation } from "./middlewares/auth";
 import corsOptions from "./middlewares/cors";
 import logger from "./config/logging";
 
@@ -14,6 +15,7 @@ if (isTest) {
   app.use(cors(corsOptions));
 }
 
+app.use(tokenValidation);
 app.use(json());
 
 app.use("/api", orderRoutes);
