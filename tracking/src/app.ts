@@ -15,7 +15,10 @@ if (isTest) {
   app.use(cors(corsOptions));
 }
 
-app.use(tokenValidation);
+if (!isTest) {
+  app.use(tokenValidation);
+}
+
 app.use(json());
 
 app.use("/api", orderRoutes);
