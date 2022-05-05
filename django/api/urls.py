@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .jwt_views import MyTokenObtainPairView
+from .jwt_views import MyTokenObtainPairView, MyTokenValidation
 from .order_views import OrderList
 from .restaruant_views import RestaurantList
 from .restaurant_owner_views import (
@@ -26,4 +26,5 @@ urlpatterns = [
     path("menus/", RestaurantMenus.as_view(), name="menu"),
     path("token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("token/validation/", MyTokenValidation.as_view(), name="token_validation"),
 ]
