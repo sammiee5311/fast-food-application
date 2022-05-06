@@ -15,11 +15,11 @@ module.exports = {
     compress: true,
     historyApiFallback: true,
     proxy: {
-      "/api/recipes": {
+      "/api/v1/*": {
         target: "http://localhost:3001",
         secure: false,
       },
-      "/api/*": {
+      "/api/v0/*": {
         target: "http://django-backend:8000",
         secure: false,
       },

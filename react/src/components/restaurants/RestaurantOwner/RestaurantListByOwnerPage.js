@@ -35,7 +35,7 @@ const RestaurantListByOwner = () => {
   } catch {}
 
   useEffect(() => {
-    sendRequest({ url: "/api/restaurantsbyowner/" });
+    sendRequest({ url: "/api/v0/restaurantsbyowner/" });
   }, [sendRequest]);
 
   return (

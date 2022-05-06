@@ -30,7 +30,7 @@ const RegisterRestaurant = () => {
   } = useFetch();
 
   useEffect(() => {
-    sendTypeRequest({ url: "/api/restaurantstypes/" });
+    sendTypeRequest({ url: "/api/v0/restaurantstypes/" });
 
     if (
       restaurantName &&
@@ -41,7 +41,7 @@ const RegisterRestaurant = () => {
       isLoading
     ) {
       sendResgiterRestaurantRequest({
-        url: "/api/restaurants/",
+        url: "/api/v0/restaurants/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

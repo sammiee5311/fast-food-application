@@ -8,26 +8,28 @@ export const tokenValidation = async (
   res: Response,
   next: NextFunction
 ) => {
-  const requestHeaders = new Headers();
-  requestHeaders.set("Authorization", <string>req.headers["authorization"]);
-
-  const response = await fetch("http://localhost:8000/api/token/validation", {
-    headers: requestHeaders,
-  });
-
-  if (response.status === 500) {
-    res.status(500).send({ message: "Something went wrong" });
-  }
-
   try {
+    const requestHeaders = new Headers();
+    requestHeaders.set("Authorization", <string>req.headers["authorization"]);
+
+    const response = await fetch(
+      "http://localhost:8000/api/v0/token/validation",
+      {
+        headers: requestHeaders,
+      }
+    );
+
+    if (response.status === 500) {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+
     const data: JwtData = await response.json();
 
     if (!("user_id" in data)) {
       throw new Error();
     }
   } catch (err) {
-    res.status(402).send({ message: "Invalid token." });
+    res.status(401).json({ message: "Invalid token." });
   }
-
   next();
 };

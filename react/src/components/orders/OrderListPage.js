@@ -35,7 +35,7 @@ const OrderListPage = () => {
 
   useEffect(() => {
     sendRequest({
-      url: "/api/orders/",
+      url: "/api/v0/orders/",
     });
   }, [sendRequest]);
 

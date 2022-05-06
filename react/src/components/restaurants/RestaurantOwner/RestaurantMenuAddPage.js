@@ -24,7 +24,7 @@ const RestaurantMenuAddPage = () => {
   useEffect(() => {
     if (menuName && foodName && description && price && isAddMenuLoading) {
       sendAddMenuRequest({
-        url: "/api/menus/",
+        url: "/api/v0/menus/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

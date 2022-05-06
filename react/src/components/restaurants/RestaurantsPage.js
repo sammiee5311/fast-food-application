@@ -45,7 +45,7 @@ const RestaurantsPage = () => {
   };
 
   useEffect(() => {
-    sendRequest({ url: "/api/restaurants/" });
+    sendRequest({ url: "/api/v0/restaurants/" });
   }, [sendRequest]);
 
   return (

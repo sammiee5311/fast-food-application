@@ -21,7 +21,7 @@ if (!isTest) {
 
 app.use(json());
 
-app.use("/api", orderRoutes);
+app.use("/api/v1", orderRoutes);
 
 app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   const ip = req.header("x-forwarded-for") || req.socket.remoteAddress;

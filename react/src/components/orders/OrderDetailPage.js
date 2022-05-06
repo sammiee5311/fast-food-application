@@ -37,7 +37,7 @@ const OrderDetailPage = () => {
   const content = getProperContent(order, isLoading, error);
 
   useEffect(() => {
-    sendRequest({ url: `/api/orders/${orderId}/` });
+    sendRequest({ url: `/api/v0/orders/${orderId}/` });
   }, [orderId, sendRequest]);
 
   return (

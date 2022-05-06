@@ -29,7 +29,7 @@ const RestaurantDetailPage = () => {
 
   useEffect(() => {
     sendRequest({
-      url: `/api/restaurants/${restaurantId}/`,
+      url: `/api/v0/restaurants/${restaurantId}/`,
     });
   }, [sendRequest, restaurantId]);
 

@@ -20,7 +20,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (email && password) {
       sendRequest({
-        url: "/api/token/",
+        url: "/api/v0/token/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

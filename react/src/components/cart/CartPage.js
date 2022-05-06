@@ -56,7 +56,7 @@ const Cart = () => {
         menus: menus,
       };
 
-      const response = await fetch("/api/orders/", {
+      const response = await fetch("/api/v0/orders/", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

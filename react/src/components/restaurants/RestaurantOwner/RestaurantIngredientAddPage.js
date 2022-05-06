@@ -67,7 +67,7 @@ const RestaurantIngredientAddPage = () => {
   useEffect(() => {
     if (isLoading) {
       sendRequest({
-        url: "/api/recipes/",
+        url: "/api/v1/recipes/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ const RestaurantIngredientAddPage = () => {
 
     if (isIngredientLoading && Object.keys(ingredients).length > 0) {
       sendIngredientRequest({
-        url: "/api/ingredients/",
+        url: "/api/v1/ingredients/",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const RestaurantIngredientAddPage = () => {
       </Link>
       <form onSubmit={onIngredientSubmit}>
         {content}
-        <input type="submit" />
+        {!error && <input type="submit" />}
       </form>
     </Fragment>
   );
