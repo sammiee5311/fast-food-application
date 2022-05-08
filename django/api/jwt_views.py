@@ -29,7 +29,7 @@ class MyTokenValidation(APIView):
             token = request.META.get("HTTP_AUTHORIZATION", " ").split(" ")[1]
             valid_data = TokenBackend(algorithm="HS256").decode(token, verify=False)
 
-            return Response(valid_data, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(valid_data, status=status.HTTP_401_UNAUTHOHTTP_200_OK)
 
         except ValidationError as err:
             return Response(
