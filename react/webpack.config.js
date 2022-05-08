@@ -16,11 +16,11 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api/v1/*": {
-        target: "http://localhost:3001",
+        target: "https://localhost",
         secure: false,
       },
       "/api/v0/*": {
-        target: "http://django-backend:8000",
+        target: "https://localhost",
         secure: false,
       },
     },

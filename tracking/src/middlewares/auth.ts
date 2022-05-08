@@ -13,7 +13,7 @@ export const tokenValidation = async (
     requestHeaders.set("Authorization", <string>req.headers["authorization"]);
 
     const response = await fetch(
-      "http://localhost:8000/api/v0/token/validation",
+      "https:/nginx-proxy/api/v0/token/validation/",
       {
         headers: requestHeaders,
       }
