@@ -23,7 +23,7 @@ describe("Server api test", () => {
 
   it("return 200 status code", () => {
     return request(server)
-      .get("/api/orders")
+      .get("/api/v1/orders")
       .set("Origin", ORIGIN_URL)
       .expect(200);
   });
@@ -39,7 +39,7 @@ describe("Server api test", () => {
     orders.addNewOrder(id, menus, restaruant);
 
     const res: request.Response = await request(server)
-      .get("/api/orders")
+      .get("/api/v1/orders")
       .set("Origin", ORIGIN_URL);
 
     const resJson = <ResponseText>JSON.parse(res.text);
