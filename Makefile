@@ -32,17 +32,11 @@ endif
 install:
 	$(PIP) install -r samples/requirements.txt
 
-run-docker-compose:
+run-kafka:
 	docker-compose -f kafka/docker-compose.yml up -d --build
 
-stop-docker-compose:
+stop-kafka:
 	docker-compose -f kafka/docker-compose.yml down
-
-run-database:
-	docker-compose -f django/docker-compose.yml up -d
-
-stop-database:
-	docker-compose -f django/docker-compose.yml down
 
 set-up-backend:
 	( \
@@ -94,4 +88,4 @@ tracking: set-up-tracking test-tracking
 
 order-delivery-time-handler: set-up-order-delivery-time-handler test-order-delivery-time-handler
 
-kafka-docker: run-docker-compose test-run-samples stop-docker-compose
+kafka-docker: run-kafka test-run-samples stop-kafka
