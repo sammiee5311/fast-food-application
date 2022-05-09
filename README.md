@@ -7,7 +7,6 @@
 ![](./images/order-bpmn.png)
 
 - [transaction(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
-- [restaraunt(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
 
 ## system design
@@ -67,9 +66,8 @@
 - [log](https://github.com/sammiee5311/fast-food-application/tree/main/log)
 - [order-delivery-time-handler](https://github.com/sammiee5311/fast-food-application/tree/main/order-delivery-time-handler)
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
-- [tracking](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
+- [tracking & restaurant](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
 - [id-generator](https://github.com/sammiee5311/fast-food-application/tree/main/id-generator)
-- [restaurant(todo)](https://github.com/sammiee5311/fast-food-application/tree/main)
 
 ## ports
 
