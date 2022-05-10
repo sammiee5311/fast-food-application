@@ -1,4 +1,6 @@
 import { jest } from "@jest/globals";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoDb from "../../src/config/database/mongoDb";
 
 import { Order } from "../../src/types";
 
@@ -8,6 +10,8 @@ export interface ResponseText {
 }
 
 export const ORIGIN_URL = "http://localhost:3000";
+
+let mongoTestDB: MongoMemoryServer;
 
 const TIMEOUT = 10000;
 
@@ -37,6 +41,23 @@ const initCustomTestSettings = () => {
       }
     },
   });
+};
+
+export const connectTestDB = async () => {
+  mongoTestDB = await MongoMemoryServer.create();
+  const testMongoURL = mongoTestDB.getUri();
+
+  mongoDb.createClient(testMongoURL);
+};
+
+export const disconnectDB = async () => {
+  try {
+    if (mongoTestDB) {
+      await mongoTestDB.stop();
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default initCustomTestSettings;

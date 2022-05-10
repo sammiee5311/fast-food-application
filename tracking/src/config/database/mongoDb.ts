@@ -1,8 +1,8 @@
 import path from "path";
 import dotenv from "dotenv";
 import { MongoClient, Collection } from "mongodb";
-// @ts-ignore
-import { MongoClient as MongoMockClient } from "mongo-mock";
+import { MongoMemoryServer } from "mongodb-memory-server";
+
 import { Ingredients, Restaurant } from "../../types";
 
 /* istanbul ignore file */
@@ -21,22 +21,23 @@ const mongoConfig = {
 const mongoURL = `mongodb://${mongoConfig.user}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/`;
 
 class MongoDb {
-  public client: MongoClient | MongoMockClient = isTest
-    ? new MongoMockClient(mongoURL)
-    : new MongoClient(mongoURL);
-
+  public client: MongoClient | undefined;
   constructor() {}
 
+  createClient(URL: string = mongoURL) {
+    this.client = new MongoClient(URL);
+  }
+
   async connect() {
-    await this.client.connect();
+    await this.client!.connect();
   }
 
   async disconnect() {
-    await this.client.close();
+    await this.client!.close();
   }
 
   async getResult() {
-    const database = this.client.db("database");
+    const database = this.client!.db("database");
     const collection = <Collection>database.collection("restaurants");
     const counts = await collection.countDocuments();
 
@@ -44,7 +45,7 @@ class MongoDb {
   }
 
   async getRestaurantRecipes(restaurantId: number) {
-    const database = this.client.db("database");
+    const database = this.client!.db("database");
     const collection = <Collection>database.collection("restaurants");
     const query = { _id: restaurantId };
     const restaruant = await collection.findOne(query);
@@ -56,7 +57,7 @@ class MongoDb {
     restaurantId: number,
     ingredients: Ingredients
   ) {
-    const database = this.client.db("database");
+    const database = this.client!.db("database");
     const collection = <Collection>database.collection("restaurants");
     const query = { _id: restaurantId };
     await collection.updateOne(query, {

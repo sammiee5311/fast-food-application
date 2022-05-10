@@ -1,9 +1,14 @@
 import "jest";
 import express from "express";
+import request from "supertest";
 
 import app from "../../src/app";
 
-import initCustomTestSettings from "./customSettings";
+import initCustomTestSettings, {
+  ORIGIN_URL,
+  connectTestDB,
+  disconnectDB,
+} from "./customSettings";
 
 import { setTotalAddedIngredients } from "../../src/uilts/helper";
 
@@ -13,8 +18,9 @@ initCustomTestSettings();
 
 // TODO: need to implement with api call
 describe("Add Ingredients", () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     server = app;
+    await connectTestDB();
   });
 
   const ingredients = {
@@ -47,5 +53,22 @@ describe("Add Ingredients", () => {
       bun: 2,
       lettuce: 1,
     });
+  });
+
+  it("Get recipes", async () => {
+    const data = { restaruantId: 1 };
+
+    const res: request.Response = await request(server)
+      .post("/api/v1/recipes")
+      .set("Content-Type", "application/json")
+      .set("Origin", ORIGIN_URL)
+      .send(data);
+
+    const resJson = JSON.parse(res.text);
+
+    expect(resJson).toHasProperty("message");
+  });
+  afterAll(async () => {
+    await disconnectDB();
   });
 });

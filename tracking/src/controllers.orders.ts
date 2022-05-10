@@ -10,7 +10,10 @@ import mongoDb from "./config/database/mongoDb";
 
 const isProduction = process.env.NODE_ENV === "production" ? true : false;
 
-if (isProduction) startConsumOrders();
+if (isProduction) {
+  startConsumOrders();
+  mongoDb.createClient();
+}
 
 export const getOrders: RequestHandler = async (_, res, _2) => {
   res.status(200).json({ message: "Get orders successfully", orders });

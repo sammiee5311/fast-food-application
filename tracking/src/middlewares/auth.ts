@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import fetch, { Headers } from "node-fetch";
 import { JwtData } from "../types/index";
 
+/* istanbul ignore file */
+
 export const tokenValidation = async (
   req: Request,
   res: Response,
