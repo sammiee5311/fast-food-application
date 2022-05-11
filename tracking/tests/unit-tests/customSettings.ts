@@ -10,6 +10,10 @@ export interface ResponseText {
 }
 
 export const ORIGIN_URL = "http://localhost:3000";
+export const mongoCollectionData = {
+  _id: 1,
+  ingredients: { lettuce: 1, tomato: 1 },
+};
 
 let mongoTestDB: MongoMemoryServer;
 
@@ -48,6 +52,13 @@ export const connectTestDB = async () => {
   const testMongoURL = mongoTestDB.getUri();
 
   mongoDb.createClient(testMongoURL);
+};
+
+export const createMongoDBData = async () => {
+  await mongoDb.connect();
+  const database = mongoDb.client!.db("database");
+  const collection = database.collection("restaurants");
+  collection.insertOne(mongoCollectionData as any);
 };
 
 export const disconnectDB = async () => {

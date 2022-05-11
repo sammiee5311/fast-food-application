@@ -8,6 +8,8 @@ import initCustomTestSettings, {
   ORIGIN_URL,
   connectTestDB,
   disconnectDB,
+  createMongoDBData,
+  mongoCollectionData,
 } from "./customSettings";
 
 import { setTotalAddedIngredients } from "../../src/uilts/helper";
@@ -21,6 +23,7 @@ describe("Add Ingredients", () => {
   beforeAll(async () => {
     server = app;
     await connectTestDB();
+    await createMongoDBData();
   });
 
   const ingredients = {
@@ -56,7 +59,7 @@ describe("Add Ingredients", () => {
   });
 
   it("Get recipes", async () => {
-    const data = { restaruantId: 1 };
+    const data = { restaurantId: 1 };
 
     const res: request.Response = await request(server)
       .post("/api/v1/recipes")
@@ -66,8 +69,33 @@ describe("Add Ingredients", () => {
 
     const resJson = JSON.parse(res.text);
 
-    expect(resJson).toHasProperty("message");
+    expect(resJson).toHasProperty("recipes");
+    expect(resJson.recipes).toEqual(mongoCollectionData);
   });
+
+  it("Post ingredients", async () => {
+    const data = {
+      restaurantId: 1,
+      restaurantIngredients: { lettuce: 1, tomato: 1 },
+    };
+
+    const expectedData = mongoCollectionData;
+
+    expectedData.ingredients["lettuce"] += 1;
+    expectedData.ingredients["tomato"] += 1;
+
+    const res: request.Response = await request(server)
+      .post("/api/v1/ingredients")
+      .set("Content-Type", "application/json")
+      .set("Origin", ORIGIN_URL)
+      .send(data);
+
+    const resJson = JSON.parse(res.text);
+
+    expect(resJson).toHasProperty("restaurant");
+    expect(resJson.restaurant).toEqual(expectedData);
+  });
+
   afterAll(async () => {
     await disconnectDB();
   });
