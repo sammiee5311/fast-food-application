@@ -186,7 +186,7 @@ class TestViewRestaurant(APITestCase):
         invalid_data = {"phone_number": "invalid phone number"}
 
         url = reverse("api:restaurant_detail", kwargs={"pk": 1})
-        url_without_id = "http://localhost:8000/api/restaurants/"
+        url_without_id = "http://localhost:8000/api/v0/restaurants/"
         url_id_does_not_exist = reverse("api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.patch(url, data, format="json")
@@ -205,7 +205,7 @@ class TestViewRestaurant(APITestCase):
         create_restaurant(self.user, client)
 
         url = reverse("api:restaurant_detail", kwargs={"pk": 1})
-        url_without_id = "http://localhost:8000/api/restaurants/"
+        url_without_id = "http://localhost:8000/api/v0/restaurants/"
         url_id_does_not_exist = reverse("api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.delete(url, format="json")
@@ -327,3 +327,26 @@ class TestViewJWT(APITestCase):
         response = self.client.post(refresh_url, refresh_data, format="json")
 
         self.assertIn("access", response.json())
+
+    def test_validate_token_success(self) -> None:
+        client = self.client
+        refresh = RefreshToken.for_user(self.user)
+        client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+
+        url = reverse("api:token_validation")
+
+        user_data = {"email": "test@test.com", "password": "password"}
+        response = client.get(url, user_data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_validate_token_fail(self) -> None:
+
+        url = reverse("api:token_validation")
+
+        user_data = {"email": "test@test.com", "password": "password"}
+        response = self.client.get(url, user_data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        
