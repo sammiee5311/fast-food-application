@@ -11,6 +11,8 @@
 
 ## system design
 
+![](./images/system-design.jpg)
+
 ## tech stacks
 <details>
 <summary>See</summary>
