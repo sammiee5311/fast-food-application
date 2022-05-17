@@ -1,5 +1,5 @@
 kafka-python
-black
+black==21.11b1
 Faker
 faust
 backoff
