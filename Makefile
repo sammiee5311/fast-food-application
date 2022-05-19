@@ -42,8 +42,6 @@ set-up-backend:
 	( \
 		cd django; \
 		$(PIP) install -r requirements.txt; \
-		$(PYTHON) manage.py makemigrations; \
-		$(PYTHON) manage.py migrate; \
 	)
 
 set-up-deployment:
