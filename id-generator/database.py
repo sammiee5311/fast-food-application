@@ -1,6 +1,7 @@
 import os
 import uuid
 
+import fakeredis
 import redis
 
 from config.env import load_env
@@ -8,6 +9,7 @@ from utils.log import logger
 
 load_env()
 
+TESTING = os.environ.get("TESTING", False)
 REDIS_HOST = os.environ["REDIS_HOST"]
 REDIS_PORT = os.environ["REDIS_PORT"]
 REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
@@ -17,7 +19,11 @@ GEN_UUIDS = 100
 
 class UUIDRedis:
     def __init__(self):
-        self.client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+        self.client = (
+            redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+            if not TESTING
+            else fakeredis.FakeRedis()
+        )
 
     def generate_ids(self) -> None:
         """generate ids in redis once a week"""

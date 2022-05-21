@@ -40,7 +40,7 @@ jobs:
       - name: Test deployment
         run: make deployment
 
-  kafka-django-test:
+  django-test:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
@@ -62,14 +62,9 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: make backend-server
 
-      # - name: Stop docker compose
-      #   if: always()
-      #   run: make stop-docker-compose
-
   tracking-server-test:
     runs-on: ubuntu-latest
-    needs:
-      [kafka-django-test, api-server-test, order-delivery-time-handler-test]
+    needs: [django-test, api-server-test, order-delivery-time-handler-test]
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2
@@ -84,9 +79,33 @@ jobs:
           LOG_DIR: ${{ secrets.LOG_DIR }}
         run: make tracking
 
-  api-server-deployment:
+  id-generator-test:
     runs-on: ubuntu-latest
     needs: tracking-server-test
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: make set-up-id-generator
+
+      - name: Test id generator
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+        run: make test-id-generator
+
+  api-server-deployment:
+    runs-on: ubuntu-latest
+    needs: id-generator-test
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v2

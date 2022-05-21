@@ -6,6 +6,8 @@ black
 pytest
 pytest-asyncio
 pytest-cov
+pytest-env
 httpx
 trio
 requests
+fakeredis

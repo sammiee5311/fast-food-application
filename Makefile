@@ -60,6 +60,14 @@ test-tracking:
 	cd tracking &&\
 		npm test
 
+set-up-id-generator:
+	cd id-generator &&\
+		$(PIP) install -r requirements.txt
+
+test-id-generator:
+	cd id-generator &&\
+		$(PYTHON) -m pytest
+
 test-run-samples:
 	( \
 		$(PIP) install -r tests/requirements.txt; \
