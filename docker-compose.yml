@@ -113,6 +113,24 @@ services:
     depends_on:
       - mongo
 
+  tracking-1:
+    container_name: tracking
+    build: ./tracking
+    volumes:
+      - ./tracking:/app
+    command: ["pm2", "start", "pm2.json", "--no-daemon"]
+    depends_on:
+      - mongo
+
+  tracking-2:
+    container_name: tracking
+    build: ./tracking
+    volumes:
+      - ./tracking:/app
+    command: ["pm2", "start", "pm2.json", "--no-daemon"]
+    depends_on:
+      - mongo
+
   nginx-proxy:
     container_name: nginx-proxy
     restart: always
