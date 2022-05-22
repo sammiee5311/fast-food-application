@@ -25,6 +25,4 @@ def test_predict_error(app, client):
 
     response = client.post("/predict", json=payload)
 
-    print(response.json)
-
     assert "error" in response.json
