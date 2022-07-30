@@ -16,7 +16,12 @@ import string
 import sys
 from pathlib import Path
 
+import environ
+
 from .jwt_settings import SIMPLE_JWT
+
+env = environ.Env(DEBUG=(bool, False))
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", env("DJANGO_SECRET_KEY"))
 
 AUTH_USER_MODEL = "accounts.Client"
 
@@ -202,6 +207,12 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
 }
+
+
+# Redis env variables
+REDIS_HOST = os.environ.get("REDIS_HOST", env("REDIS_HOST"))
+REDIS_PORT = os.environ.get("REDIS_PORT", env("REDIS_PORT"))
+REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", env("REDIS_PORT"))
 
 
 SIMPLE_JWT

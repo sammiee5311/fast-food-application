@@ -14,11 +14,14 @@ JsonObject = Dict[str, Dict[str, Any]]
 
 class TemporaryData:
     def __init__(self):
-        self.time_series_database = None
+        from redis_data.config import Redis
+
+        self.redis = Redis()
 
     def send(self, topic: str, order_data: JsonObject):
         """save data in time series database?"""
         print(f"Fail kafak connection : to - {topic} data - {order_data}")
+        self.redis.add(order_data)
 
 
 def json_serializer(data) -> JsonObject:
