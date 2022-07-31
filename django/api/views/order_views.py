@@ -1,16 +1,15 @@
-from order.models import Order
 from accounts.models import Client
-from rest_framework import request, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .kafka_connection import conntect_kafka
-from .serializers import (
+from api.kafka_connection import conntect_kafka
+from api.serializers import (
     OrderMenuCheckSerializer,
     OrderMenuSerializer,
     OrderSerializer,
     validate_or_create_menu,
 )
+from order.models import Order
+from rest_framework import request, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 producer = conntect_kafka()
 

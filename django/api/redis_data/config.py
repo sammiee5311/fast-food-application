@@ -13,7 +13,10 @@ JsonObject = Dict[str, Dict[str, Any]]
 
 
 class Redis:
-    def __init__(self, client: redis.Redis = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)):
+    def __init__(
+        self,
+        client: redis.Redis = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD),
+    ):
         self.client = client if not TESTING else fakeredis.FakeRedis()
 
     def add(self, order_data: JsonObject) -> None:

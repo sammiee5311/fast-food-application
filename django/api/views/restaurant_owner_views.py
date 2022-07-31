@@ -1,16 +1,15 @@
 from accounts.models import Client
-from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404
-from restaurant.models import FoodItem, Restaurant, RestaurantType
-from rest_framework import request, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .serializers import (
+from api.serializers import (
     RestaurantMenusSerializer,
     RestaurantSerializer,
     RestaurantTypesSerializer,
 )
+from django.db.models.query import QuerySet
+from django.shortcuts import get_object_or_404
+from rest_framework import request, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from restaurant.models import FoodItem, Restaurant, RestaurantType
 
 
 class RestaurantTypes(APIView):
@@ -21,9 +20,7 @@ class RestaurantTypes(APIView):
 
             return Response(restaurant_types_serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response(
-                restaurant_types_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(restaurant_types_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RestaurantMenus(APIView):
@@ -84,21 +81,15 @@ class RestaurantMenus(APIView):
 
                     restaurant_menus.append(menu_serializer.data["id"])
                 else:
-                    return Response(
-                        menu_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-                    )
+                    return Response(menu_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            restaurant_serializer = RestaurantSerializer(
-                restaurant, data={"menu": restaurant_menus}, partial=True
-            )
+            restaurant_serializer = RestaurantSerializer(restaurant, data={"menu": restaurant_menus}, partial=True)
 
             if restaurant_serializer.is_valid():
                 restaurant_serializer.save()
                 return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(
-                    restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-                )
+                return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response("Something went wrong", status=status.HTTP_400_BAD_REQUEST)
 
@@ -113,6 +104,4 @@ class RestaurantListByOwner(APIView):
             restaurant_serializer = RestaurantSerializer(queryset, many=True)
             return Response(restaurant_serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response(
-                restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(restaurant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

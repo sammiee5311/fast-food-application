@@ -32,6 +32,4 @@ class MyTokenValidation(APIView):
             return Response(valid_data, status=status.HTTP_200_OK)
 
         except ValidationError as err:
-            return Response(
-                f"Token is invalid. err: {err}", status=status.HTTP_401_UNAUTHORIZED
-            )
+            return Response(f"Token is invalid. err: {err}", status=status.HTTP_401_UNAUTHORIZED)

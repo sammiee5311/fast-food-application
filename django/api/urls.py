@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .jwt_views import MyTokenObtainPairView, MyTokenValidation
-from .order_views import OrderList
-from .restaruant_views import RestaurantList
-from .restaurant_owner_views import (
+from api.views.jwt_views import MyTokenObtainPairView, MyTokenValidation
+from api.views.order_views import OrderList
+from api.views.restaruant_views import RestaurantList
+from api.views.restaurant_owner_views import (
     RestaurantListByOwner,
     RestaurantMenus,
     RestaurantTypes,

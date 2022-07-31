@@ -14,7 +14,7 @@ JsonObject = Dict[str, Dict[str, Any]]
 
 class TemporaryData:
     def __init__(self):
-        from redis_data.config import Redis
+        from api.redis_data.config import Redis
 
         self.redis = Redis()
 
@@ -23,9 +23,19 @@ class TemporaryData:
         print(f"Fail kafak connection : to - {topic} data - {order_data}")
         self.redis.add(order_data)
 
+    def is_empty(self) -> bool:
+        return self.redis.is_empty()
+
 
 def json_serializer(data) -> JsonObject:
     return json.dumps(data).encode("utf-8")
+
+
+def check_local_data_and_send_to_kafka(producer: KafkaProducer) -> None:
+    order_data = TemporaryData().redis.get()
+
+    while order_data:
+        producer.send("fast-food-order", order_data)
 
 
 def conntect_kafka() -> Union[KafkaProducer, TemporaryData]:
@@ -37,6 +47,8 @@ def conntect_kafka() -> Union[KafkaProducer, TemporaryData]:
             retries=10,
             retry_backoff_ms=1000,
         )
+
+        check_local_data_and_send_to_kafka(producer)
 
     except KAFKA_ERRORS:
         producer = TemporaryData()

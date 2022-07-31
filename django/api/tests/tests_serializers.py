@@ -3,12 +3,12 @@ import uuid
 from accounts.models import Client
 from django.urls import reverse
 from django.utils import timezone
-from restaurant.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
 from order.models import Order, OrderMenu
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIClient, APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
+from restaurant.models import FOOD_TYPES, FoodItem, Menu, Restaurant, RestaurantType
 
 TEST_UUID = uuid.uuid4()
 
@@ -348,5 +348,3 @@ class TestViewJWT(APITestCase):
         response = self.client.get(url, user_data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-        
