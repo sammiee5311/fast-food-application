@@ -52,3 +52,5 @@ export interface JwtData {
   user_id?: number;
   username?: string;
 }
+
+export type MongoConfigParams = "user" | "password" | "host" | "port";
