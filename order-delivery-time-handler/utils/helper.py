@@ -1,5 +1,6 @@
 import os
 import random
+from dataclasses import asdict, dataclass
 from time import localtime, struct_time
 from typing import Any, Dict
 
@@ -8,7 +9,6 @@ from config.env import load_env
 from config.errors import APIConnectionError, DistanceError, WeatherError
 from mpu import haversine_distance
 from requests.exceptions import ConnectionError
-
 from utils.location import Location
 from utils.log import logger
 from utils.weather import WeatherApi
@@ -20,17 +20,43 @@ if "ML_API_URL" not in os.environ:
     load_env()
 
 URL = os.environ["ML_API_URL"]
+MONTH_TO_SEASON = {
+    12: "winter",
+    1: "winter",
+    2: "winter",
+    3: "spring",
+    4: "spring",
+    5: "spring",
+    6: "summer",
+    7: "summer",
+    8: "summer",
+    9: "fall",
+    10: "fall",
+    11: "fall",
+}
 
 weather_api = WeatherApi()
 
 
-def get_estimated_delivery_time_result(distance, current_time, weather, traffic, season) -> int:
+@dataclass
+class RequiredValues:
+    distance: str
+    current_time: int
+    weather: str
+    traffic: int
+    season: str
+
+    def dict(self):
+        return {k: str(v) for k, v in asdict(self).items()}
+
+
+def get_estimated_delivery_time_result(required_values: RequiredValues) -> int:
     """
     input : features that need to be trained
     output : predicted estimate time in tuple (hour, minutes)
     """
     try:
-        payload = dict(distance=10, current_time=current_time, weather=weather, traffic=traffic, season=season)
+        payload = required_values.dict()
         logger.info(f"Querying host {URL} with data: {payload}")
         response_data = requests.post(url=URL, json=payload)
 
@@ -59,11 +85,13 @@ def get_distance(data: JasonObject) -> float:
         restaurant_location = Location(zipcode=restaraunt_zipcode)
         restaurant_location.set_lat_and_long()
 
-        if user_location.get_lat_and_long() == (None, None) or restaurant_location.get_lat_and_long() == (None, None):
+        user_lat, user_long = user_location.get_lat_and_long()
+        restaurant_lat, restaurant_long = restaurant_location.get_lat_and_long()
+
+        if (user_lat, user_long) == (None, None) or (restaurant_lat, restaurant_long) == (None, None):
             raise DistanceError()
 
-        distance = haversine_distance(user_location.get_lat_and_long(), restaurant_location.get_lat_and_long())
-        return distance
+        return haversine_distance((user_lat, user_long), (restaurant_lat, restaurant_long))
 
     except KeyError:
         raise DistanceError()
@@ -102,11 +130,4 @@ def get_season() -> str:
     """
     current_month = localtime().tm_mon
 
-    if 3 <= current_month <= 5:
-        return "spring"
-    elif 6 <= current_month <= 8:
-        return "summer"
-    elif 9 <= current_month <= 11:
-        return "fall"
-
-    return "winter"
+    return MONTH_TO_SEASON[current_month]

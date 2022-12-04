@@ -8,6 +8,7 @@ from config.env import load_env
 from consumer import get_consumer
 from utils.db import PostgreSQL, update_estimated_delivery_time
 from utils.helper import (
+    RequiredValues,
     get_current_time,
     get_distance,
     get_estimated_delivery_time_result,
@@ -37,12 +38,14 @@ def predict(data: JasonObject) -> int:
         logger.info(
             f"{data['username']!r} ordered {data['menus']} from {data['restaurant_name']!r} at {data['created_on_str']}"
         )
-        distance = get_distance(data)
-        current_time = get_current_time(time.localtime())
-        weather = get_weather()
-        traffic = get_traffic()
-        season = get_season()
-        estimate_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
+        required_values = RequiredValues(
+            distance=get_distance(data),
+            current_time=get_current_time(time.localtime()),
+            weather=get_weather(),
+            traffic=get_traffic(),
+            season=get_season(),
+        )
+        estimate_time = get_estimated_delivery_time_result(required_values)
         update_estimated_delivery_time(DATABASE, data["id"], estimate_time)  # TODO: Need to seperate
     except Exception as error:  # TODO: Need to modify
         logger.warning(f"An error occured : {error}")

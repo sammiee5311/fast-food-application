@@ -2,7 +2,7 @@ import json
 import os
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import requests
 from config.env import load_env

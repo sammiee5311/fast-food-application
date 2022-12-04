@@ -3,13 +3,14 @@ import time
 import pytest
 from config.env import load_env
 from config.errors import (
-    APIConnectionError,
     DistanceError,
     EstimatedDeliveryTimeAlreadyExist,
     OrderNotFound,
 )
 from utils.db import SqlLite3, update_estimated_delivery_time
 from utils.helper import (
+    JasonObject,
+    RequiredValues,
     get_current_time,
     get_distance,
     get_estimated_delivery_time_result,
@@ -70,6 +71,16 @@ json_object5 = {
 }
 
 
+def get_required_values(data: JasonObject) -> RequiredValues:
+    return RequiredValues(
+        distance=get_distance(data),
+        current_time=get_current_time(time.localtime()),
+        weather=get_weather(),
+        traffic=get_traffic(),
+        season=get_season(),
+    )
+
+
 @pytest.mark.parametrize(
     "input, expected",
     [
@@ -80,13 +91,8 @@ json_object5 = {
 )
 def test_predict_fail(input, expected):
     with pytest.raises(expected):
-        distance = get_distance(input)
-        current_time = get_current_time(time.localtime())
-        weather = get_weather()
-        traffic = get_traffic()
-        season = get_season()
-
-        get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
+        required_values = get_required_values(input)
+        get_estimated_delivery_time_result(required_values)
 
 
 def test_mock_database():
@@ -98,13 +104,9 @@ def test_mock_database():
 def test_prediect_success(clear_database):
     data = json_object1
 
-    distance = get_distance(data)
-    current_time = get_current_time(time.localtime())
-    weather = get_weather()
-    traffic = get_traffic()
-    season = get_season()
+    required_values = get_required_values(data)
+    predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
-    predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
     update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
     assert predicted_delivery_time * 0 == 0
@@ -114,13 +116,8 @@ def test_database_with_wrong_order_id():
     with pytest.raises(OrderNotFound):
         data = json_object5
 
-        distance = get_distance(data)
-        current_time = get_current_time(time.localtime())
-        weather = get_weather()
-        traffic = get_traffic()
-        season = get_season()
-
-        predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
+        required_values = get_required_values(data)
+        predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
         update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
@@ -129,12 +126,7 @@ def test_database_with_exist_EDT():
     with pytest.raises(EstimatedDeliveryTimeAlreadyExist):
         data = json_object1
 
-        distance = get_distance(data)
-        current_time = get_current_time(time.localtime())
-        weather = get_weather()
-        traffic = get_traffic()
-        season = get_season()
-
-        predicted_delivery_time = get_estimated_delivery_time_result(distance, current_time, weather, traffic, season)
+        required_values = get_required_values(data)
+        predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
         update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
