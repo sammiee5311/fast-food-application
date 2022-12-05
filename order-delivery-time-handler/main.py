@@ -1,6 +1,5 @@
 import json
 import os
-import socket
 import time
 from typing import Any, Dict
 

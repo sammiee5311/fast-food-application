@@ -1,6 +1,8 @@
+import os
 import time
 
 import pytest
+import requests_mock
 from config.env import load_env
 from config.errors import (
     DistanceError,
@@ -20,6 +22,8 @@ from utils.helper import (
 )
 
 load_env()
+
+ML_API_URL = os.environ.get("ML_API_URL")
 
 json_object1 = {
     "id": "f455d3304fa14dd790486a2f5475f54f",
@@ -105,11 +109,15 @@ def test_prediect_success(clear_database):
     data = json_object1
 
     required_values = get_required_values(data)
-    predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
-    update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
+    mock: requests_mock.Mocker
+    with requests_mock.Mocker() as mock:
+        mock.post(ML_API_URL, json={"prediction": 10})
+        predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
-    assert predicted_delivery_time * 0 == 0
+        update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
+
+        assert predicted_delivery_time * 0 == 0
 
 
 def test_database_with_wrong_order_id():
@@ -117,9 +125,13 @@ def test_database_with_wrong_order_id():
         data = json_object5
 
         required_values = get_required_values(data)
-        predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
-        update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
+        mock: requests_mock.Mocker
+        with requests_mock.Mocker() as mock:
+            mock.post(ML_API_URL, json={"prediction": 10})
+            predicted_delivery_time = get_estimated_delivery_time_result(required_values)
+
+            update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
 
 
 def test_database_with_exist_EDT():
@@ -127,6 +139,10 @@ def test_database_with_exist_EDT():
         data = json_object1
 
         required_values = get_required_values(data)
-        predicted_delivery_time = get_estimated_delivery_time_result(required_values)
 
-        update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)
+        mock: requests_mock.Mocker
+        with requests_mock.Mocker() as mock:
+            mock.post(ML_API_URL, json={"prediction": 10})
+            predicted_delivery_time = get_estimated_delivery_time_result(required_values)
+
+            update_estimated_delivery_time(SqlLite3, data["id"], predicted_delivery_time)

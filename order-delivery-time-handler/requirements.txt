@@ -6,6 +6,7 @@ uszipcode
 pytest
 pytest-cov
 tox
+requests_mock
 python-dotenv
 python-Levenshtein
 psycopg2-binary
