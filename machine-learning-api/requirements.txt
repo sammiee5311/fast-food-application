@@ -1,6 +1,6 @@
 dvc
 dvc[gdrive]
-sklearn
+sklearn==0.0
 scikit-learn==1.0.2
 scipy==1.8.0
 flask
@@ -13,5 +13,6 @@ gunicorn
 click
 flask
 pyyaml
-mlflow
+mlflow==1.26.0
+protobuf==3.20.1
 pydantic
