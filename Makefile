@@ -38,6 +38,12 @@ run-kafka:
 stop-kafka:
 	docker-compose -f kafka/docker-compose.yml down
 
+run-otel-collector:
+	docker-compose -f otel-collector/docker-compose.yml up -d --build
+
+stop-otel-collector:
+	docker-compose -f otel-collector/docker-compose.yml down
+
 set-up-backend:
 	( \
 		cd django; \
