@@ -2,9 +2,8 @@ from pprint import pprint
 
 import click
 import requests
-from requests.exceptions import ConnectionError
-
 from config.errors import DataNotExist, FeatureDataError
+from requests.exceptions import ConnectionError
 from utils import get_features_payload, get_schema
 
 FEATURES = get_schema()["required"]

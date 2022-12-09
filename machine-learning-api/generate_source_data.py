@@ -3,7 +3,6 @@ from collections import defaultdict
 
 import click
 import pandas as pd
-
 from utils import read_params
 
 WEATHER = ["cloudy", "sunny", "rainy", "windy"]

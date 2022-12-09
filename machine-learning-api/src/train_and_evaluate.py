@@ -56,7 +56,9 @@ def run_mlflow(config: ConfigYaml, data: Data) -> None:
         mlflow.log_metrics(dict(rmse=rmse, mae=mae, r2=r2))
 
         if has_file_store_in_already(mlflow.get_artifact_uri()):
-            mlflow.sklearn.log_model(lr, "model", registered_model_name=registered_model_name)
+            mlflow.sklearn.log_model(
+                lr, "model", registered_model_name=registered_model_name
+            )
         else:
             mlflow.sklearn.load_model(lr, "model")
 

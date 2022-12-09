@@ -25,14 +25,18 @@ def read_params(config_path: str) -> ConfigYaml:
 def get_one_hot_encoded_data_frame(df: pd.DataFrame, encoder_path: str) -> pd.DataFrame:
     """Return data frame into one hot encoded and save it"""
     encoder = OneHotEncoder(categories="auto", handle_unknown="ignore")
-    encoded_df = pd.DataFrame(encoder.fit_transform(df[["weather", "season"]]).toarray())
+    encoded_df = pd.DataFrame(
+        encoder.fit_transform(df[["weather", "season"]]).toarray()
+    )
 
     save_encoder(encoder_path, encoder)
 
     return df.join(encoded_df).drop(columns=["weather", "season"])
 
 
-def get_dataset(config_path: str = os.path.join("config", "params.yaml")) -> pd.DataFrame:
+def get_dataset(
+    config_path: str = os.path.join("config", "params.yaml")
+) -> pd.DataFrame:
     """Get dataset from server which is indicated in config file."""
     config = read_params(config_path)
 

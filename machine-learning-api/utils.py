@@ -8,11 +8,10 @@ import joblib
 import numpy as np
 import pandas as pd
 import yaml
-from sklearn import linear_model
-from sklearn.preprocessing import OneHotEncoder
-
 from config.errors import FeatureDataError, FeaturesNotIncluded, FeaturesNotSame
 from config.feature_data import Features, Season, Weather
+from sklearn import linear_model
+from sklearn.preprocessing import OneHotEncoder
 
 CONFIG_PATH = os.path.join("config", "params.yaml")
 SCHEMA_PATH = os.path.join("config", "schema.json")
@@ -78,7 +77,11 @@ def get_features_payload(data: Union[List[str], JsonPayload], server=False) -> J
                 season = val
 
     features = Features(
-        distance=distance, current_time=current_time, weather=Weather(weather), traffic=traffic, season=Season(season)
+        distance=distance,
+        current_time=current_time,
+        weather=Weather(weather),
+        traffic=traffic,
+        season=Season(season),
     )
 
     payload = {}
@@ -127,7 +130,12 @@ def get_prediction(data: JsonPayload) -> JsonPayload:
         prediction = model.predict(data)
 
         return dict(prediction=prediction[0])
-    except (FeaturesNotSame, FeaturesNotIncluded, ValueError, FeatureDataError) as error:
+    except (
+        FeaturesNotSame,
+        FeaturesNotIncluded,
+        ValueError,
+        FeatureDataError,
+    ) as error:
         error_message = error.args[0]
         if isinstance(error_message, list):
             error_message = {}

@@ -23,11 +23,19 @@ def get_information(config: ConfigYaml) -> TrainDataInfo:
 
 
 @click.command("get")
-@click.option("--config_path", default=os.path.join("config", "params.yaml"), help="Config path")
+@click.option(
+    "--config_path", default=os.path.join("config", "params.yaml"), help="Config path"
+)
 def split_dataset(config_path: str):
     """Split dataset into test and train dataset as csv files."""
     config = read_params(config_path)
-    train_data_path, test_data_path, raw_data_path, test_size, random_state = get_information(config)
+    (
+        train_data_path,
+        test_data_path,
+        raw_data_path,
+        test_size,
+        random_state,
+    ) = get_information(config)
 
     data = pd.read_csv(raw_data_path, sep=",")
     train, test = train_test_split(data, test_size=test_size, random_state=random_state)

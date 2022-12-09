@@ -30,7 +30,9 @@ def get_logged_model_path(runs: pd.DataFrame, registered_model_name: str) -> str
             )
         else:
             current_version = mv["version"]
-            client.transition_model_version_stage(name=registered_model_name, version=current_version, stage="Staging")
+            client.transition_model_version_stage(
+                name=registered_model_name, version=current_version, stage="Staging"
+            )
 
     return logged_model_path
 
@@ -41,7 +43,9 @@ def log_production_model() -> None:
     remote_server = config["mlflow"]["remote_server_uri"]
     model_dir = config["model"]["path"]
     registered_model_name = config["mlflow"]["registered_model_name"]
-    experiment_ids = list(config["mlflow"]["experiment_ids"].split(","))  # TODO: Need to modify
+    experiment_ids = list(
+        config["mlflow"]["experiment_ids"].split(",")
+    )  # TODO: Need to modify
 
     mlflow.set_tracking_uri(remote_server)
 

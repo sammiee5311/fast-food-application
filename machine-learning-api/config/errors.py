@@ -11,7 +11,10 @@ class FeaturesNotSame(Exception):
 
 
 class FeaturesNotIncluded(Exception):
-    def __init__(self, message="Input is included features that are not in expected model features."):
+    def __init__(
+        self,
+        message="Input is included features that are not in expected model features.",
+    ):
         self.message = message
         super().__init__(self.message)
 

@@ -31,7 +31,11 @@ class Season(str, Enum):
 
 
 class Features(BaseModel):
-    distance: float = Field(ge=0, le=10, description="distance from restaurant's location to user's location (km)")
+    distance: float = Field(
+        ge=0,
+        le=10,
+        description="distance from restaurant's location to user's location (km)",
+    )
     current_time: int = Field(ge=0, le=60 * 24, description="current time which is represented by minutes")
     weather: Weather = Field(description="current weather")
     traffic: int = Field(ge=1, le=100, description="current traffic ratio")
