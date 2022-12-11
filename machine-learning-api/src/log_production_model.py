@@ -5,9 +5,8 @@ from typing import List
 import joblib
 import mlflow
 import pandas as pd
-from mlflow.tracking import MlflowClient
-
 from get_dataset import read_params
+from mlflow.tracking import MlflowClient
 
 CONFIG_PATH = os.path.join("config", "params.yaml")
 
@@ -30,9 +29,7 @@ def get_logged_model_path(runs: pd.DataFrame, registered_model_name: str) -> str
             )
         else:
             current_version = mv["version"]
-            client.transition_model_version_stage(
-                name=registered_model_name, version=current_version, stage="Staging"
-            )
+            client.transition_model_version_stage(name=registered_model_name, version=current_version, stage="Staging")
 
     return logged_model_path
 
@@ -43,18 +40,13 @@ def log_production_model() -> None:
     remote_server = config["mlflow"]["remote_server_uri"]
     model_dir = config["model"]["path"]
     registered_model_name = config["mlflow"]["registered_model_name"]
-    experiment_ids = list(
-        config["mlflow"]["experiment_ids"].split(",")
-    )  # TODO: Need to modify
+    experiment_ids = list(config["mlflow"]["experiment_ids"].split(","))  # TODO: Need to modify
 
     mlflow.set_tracking_uri(remote_server)
-
     runs = mlflow.search_runs(experiment_ids=experiment_ids)
 
     logged_model_path = get_logged_model_path(runs, registered_model_name)
-
     loaded_model = mlflow.pyfunc.load_model(logged_model_path)
-
     model_path = os.path.join(model_dir, "model.joblib")
 
     joblib.dump(loaded_model, model_path)

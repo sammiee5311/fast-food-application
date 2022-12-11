@@ -1,14 +1,11 @@
 import os
 
 import click
-
 from get_dataset import get_dataset, read_params
 
 
 @click.command("get")
-@click.option(
-    "--config_path", default=os.path.join("config", "params.yaml"), help="Config path"
-)
+@click.option("--config_path", default=os.path.join("config", "params.yaml"), help="Config path")
 def load_and_save_dataset(config_path: str) -> None:
     """Load dataset."""
     config = read_params(config_path)

@@ -59,29 +59,19 @@ def load_encoder() -> OneHotEncoder:
     return encoder
 
 
-def get_features_payload(data: Union[List[str], JsonPayload], server=False) -> JsonPayload:
-    distance = current_time = weather = traffic = season = None
-    if isinstance(data, list):  # TODO: need to refactor
-        distance, current_time, weather, traffic, season = data
-    else:
-        for key, val in data.items():
-            if key == "distance":
-                distance = val
-            elif key == "current_time":
-                current_time = val
-            elif key == "weather":
-                weather = val
-            elif key == "traffic":
-                traffic = val
-            else:
-                season = val
+def get_features_payload(data: JsonPayload, server: bool = False) -> JsonPayload:
+    distance = data.get("distance")
+    current_time = data.get("current_time")
+    weather = Weather(data.get("weather"))
+    traffic = data.get("traffic")
+    season = Season(data.get("season"))
 
     features = Features(
         distance=distance,
         current_time=current_time,
-        weather=Weather(weather),
+        weather=weather,
         traffic=traffic,
-        season=Season(season),
+        season=season,
     )
 
     payload = {}
@@ -106,7 +96,7 @@ def get_trainable_date(data) -> np.array:
     return trainable_data
 
 
-def validate_data(data) -> None:
+def validate_data(data) -> JsonPayload:
     schema = get_schema()["required"]
     features = get_features_payload(data, server=True)
 

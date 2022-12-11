@@ -1,3 +1,4 @@
+import json
 from pprint import pprint
 
 import click
@@ -22,17 +23,21 @@ def schema():
 
 
 @click.command("predict")
-@click.option("--data", help=f"{FEATURES}")
+@click.option(
+    "--data",
+    help=f"Required values: {FEATURES}."
+    + ' (example, \'{"season": "summer", "weather": "sunny", "distance": 10, "current_time": 131, "traffic": 10}\')',
+)
 @click.option("--host", default=f"http://{HOST}:{PORT}/predict", help="host")
 def predict_value(data: str, host: str):
     try:
         if not data:
             raise DataNotExist
-        _data = list(map(lambda feature: feature.strip(), data.split(",")))
-
+        _data = json.loads(data)
+        print(_data)
         payload = get_features_payload(_data)
-
         response_data = requests.post(url=host, json=payload)
+
     except (ValueError, DataNotExist, ConnectionError, FeatureDataError) as error:
         click.echo(click.style(f"{error}", bg="red", fg="white"))
         return
@@ -40,7 +45,6 @@ def predict_value(data: str, host: str):
     click.echo(click.style(f"Querying host {host} with data: {payload}", bg="black", fg="white"))
 
     result = response_data.json()
-
     bg, fg = ("red", "white") if "error" in result else ("green", "black")
 
     click.echo(click.style(f"Result : {result}", bg=bg, fg=fg))

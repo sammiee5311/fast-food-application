@@ -3,9 +3,8 @@ from typing import Any, Dict, Tuple
 
 import click
 import pandas as pd
-from sklearn.model_selection import train_test_split
-
 from get_dataset import read_params
+from sklearn.model_selection import train_test_split
 
 ConfigYaml = Dict[str, Dict[str, Any]]
 TrainDataInfo = Tuple[str, str, str, str, str]
@@ -23,9 +22,7 @@ def get_information(config: ConfigYaml) -> TrainDataInfo:
 
 
 @click.command("get")
-@click.option(
-    "--config_path", default=os.path.join("config", "params.yaml"), help="Config path"
-)
+@click.option("--config_path", default=os.path.join("config", "params.yaml"), help="Config path")
 def split_dataset(config_path: str):
     """Split dataset into test and train dataset as csv files."""
     config = read_params(config_path)
