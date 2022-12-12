@@ -1,19 +1,23 @@
 import os
 
 import uvicorn
+from config.env import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from config.env import load_dotenv
 from routers.id import router as id_router
+from utils.tracing import enable_open_telemetry
 
 load_dotenv()
 
+OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 HOST = os.environ["SERVER_HOST"]
 PORT = int(os.environ["SERVER_PORT"])
 ORIGINS = ["django-backend:8000"]
 
 app = FastAPI()
+
+if OTLP_ENDPOINT:
+    enable_open_telemetry(app, OTLP_ENDPOINT)
 
 app.add_middleware(
     CORSMiddleware,
