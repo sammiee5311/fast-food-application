@@ -1,3 +1,15 @@
+// Initialize jaeger tracing
+import path from "path";
+import dotenv from "dotenv";
+import tracing from "./uilts/tracer";
+
+dotenv.config({ path: path.join(__dirname, "./config/.env") });
+const JAEGER_ENDPOINT = process.env.JAEGER_ENDPOINT;
+
+if (JAEGER_ENDPOINT) {
+  const tracer = tracing("tracking", JAEGER_ENDPOINT);
+}
+
 import express, { Request, Response, NextFunction } from "express";
 import { json } from "body-parser";
 import cors from "cors";
