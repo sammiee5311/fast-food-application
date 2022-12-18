@@ -12,6 +12,7 @@ import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 
+/* istanbul ignore file */
 const isTest = process.env.NODE_ENV === "test" ? true : false;
 
 if (isTest) {
