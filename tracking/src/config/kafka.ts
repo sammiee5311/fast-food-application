@@ -1,6 +1,6 @@
 import { Kafka } from "kafkajs";
 import { KafkaOrderMessage, OrderMenu, Restaurant } from "../types/index";
-import { getCaculatedRestaurantIngredients } from "../uilts/helper";
+import { getCaculatedRestaurantIngredients } from "../utils/helper";
 import orders from "../models/orders";
 import mongoDb from "./database/mongoDb";
 

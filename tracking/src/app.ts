@@ -1,7 +1,7 @@
 // Initialize jaeger tracing
 import path from "path";
 import dotenv from "dotenv";
-import tracing from "./uilts/tracer";
+import tracing from "./utils/tracer";
 
 dotenv.config({ path: path.join(__dirname, "./config/.env") });
 const JAEGER_ENDPOINT = process.env.JAEGER_ENDPOINT;

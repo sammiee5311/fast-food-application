@@ -12,7 +12,7 @@ import initCustomTestSettings, {
   mongoCollectionData,
 } from "./customSettings";
 
-import { setTotalAddedIngredients } from "../../src/uilts/helper";
+import { setTotalAddedIngredients } from "../../src/utils/helper";
 
 let server: express.Application;
 

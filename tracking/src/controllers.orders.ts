@@ -4,7 +4,7 @@ import startConsumOrders from "./config/kafka";
 
 import orders from "./models/orders";
 import { Ingredients, Restaurant } from "./types";
-import { setTotalAddedIngredients } from "./uilts/helper";
+import { setTotalAddedIngredients } from "./utils/helper";
 
 import mongoDb from "./config/database/mongoDb";
 

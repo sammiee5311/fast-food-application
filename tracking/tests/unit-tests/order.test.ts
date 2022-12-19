@@ -8,7 +8,7 @@ import initCustomTestSettings, {
   ResponseText,
 } from "./customSettings";
 import orders from "../../src/models/orders";
-import { getCaculatedRestaurantIngredients } from "../../src/uilts/helper";
+import { getCaculatedRestaurantIngredients } from "../../src/utils/helper";
 
 import { OrderMenu, Restaurant } from "../../src/types";
 
