@@ -19,17 +19,22 @@ logger = create_logger(app)
 logger.setLevel(logging.INFO)
 tracer: Tracer | NotSetTracer = NotSetTracer()
 
-if not OTLP_ENDPOINT:
+if OTLP_ENDPOINT:
     tracer = enable_open_telemetry(app, OTLP_ENDPOINT)
 
 
 @app.route("/predict", methods=["POST"])
 def predict() -> Dict[str, str]:
-    json_payload = request.json
-    logger.info(f"JSON payload: {json_payload}")
-    result_payload = get_prediction(json_payload)
+    with tracer.start_as_current_span("predict") as span:
+        json_payload = request.json
+        logger.info(f"JSON payload: {json_payload}")
+        result_payload = get_prediction(json_payload)
 
-    return jsonify(result_payload)
+        if span.is_recording():
+            span.set_attributes(json_payload)
+            span.set_attribute("response.prediction", result_payload.get("prediction", None))
+
+        return jsonify(result_payload)
 
 
 if __name__ == "__main__":

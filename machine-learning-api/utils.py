@@ -2,7 +2,7 @@ import json
 import os
 import pickle
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any, Dict
 
 import joblib
 import numpy as np
@@ -113,7 +113,6 @@ def validate_data(data) -> JsonPayload:
 def get_prediction(data: JsonPayload) -> JsonPayload:
     try:
         data = validate_data(data)
-
         data = get_trainable_date(data)
 
         model = get_model()

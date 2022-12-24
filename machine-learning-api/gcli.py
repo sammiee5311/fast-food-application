@@ -34,7 +34,6 @@ def predict_value(data: str, host: str):
         if not data:
             raise DataNotExist
         _data = json.loads(data)
-        print(_data)
         payload = get_features_payload(_data)
         response_data = requests.post(url=host, json=payload)
 

@@ -22,8 +22,6 @@ class NotSetTracer:
 
 
 def enable_open_telemetry(app: Flask, endpoint) -> None:
-    global tracer
-
     resource = Resource(attributes={SERVICE_NAME: "machine-learning-api"})
     provider = TracerProvider(resource=resource)
     processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint))
