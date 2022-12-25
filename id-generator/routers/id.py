@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from redis.exceptions import ConnectionError
 from utils.log import logger
+from utils.tracing import tracer
 
 router = APIRouter(
     tags=["id"],
@@ -20,13 +21,22 @@ class UUID(BaseModel):
 
 @router.get("/id/", tags=["id"])
 async def read_uuid() -> JSONResponse:
-    try:
-        _uuid = UUID(uuid=uuid_redis.get_uuid())
-        payload = jsonable_encoder(_uuid)
+    with tracer.start_as_current_span("uuid") as span:
+        try:
+            _uuid = UUID(uuid=uuid_redis.get_uuid())
+            payload = jsonable_encoder(_uuid)
 
-        return JSONResponse(status_code=status.HTTP_200_OK, content=payload)
-    except ConnectionError:
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": f"Redis connection error."})
+            if span.is_recording():
+                span.set_attributes(payload)
+
+            return JSONResponse(status_code=status.HTTP_200_OK, content=payload)
+        except ConnectionError as err:
+            if span.is_recording():
+                span.set_attribute("error", str(err))
+
+            return JSONResponse(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": f"Redis connection error."}
+            )
 
 
 @router.get("/id-generator/", tags=["id"])

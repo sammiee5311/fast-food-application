@@ -3,7 +3,6 @@ import uuid
 
 import fakeredis
 import redis
-
 from config.env import load_env
 from utils.log import logger
 

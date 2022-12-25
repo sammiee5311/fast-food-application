@@ -1,16 +1,35 @@
-from fastapi import FastAPI
+import os
+from contextlib import contextmanager
+
+from config.env import load_dotenv
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import Tracer
 
-tracer: Tracer | None
+load_dotenv()
+
+OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 
 
-def enable_open_telemetry(app: FastAPI, endpoint) -> None:
+class NotSetSpan:
+    def is_recording(self) -> bool:
+        return False
+
+
+class NotSetTracer:
+    @contextmanager
+    def start_as_current_span(self, name: str):
+        print("Tracing is disabled.")
+        yield NotSetSpan()
+
+
+tracer: Tracer | NotSetTracer = NotSetTracer()
+
+
+def enable_open_telemetry(endpoint: str) -> None:
     global tracer
 
     resource = Resource(attributes={SERVICE_NAME: "id-generator-api"})
@@ -20,4 +39,7 @@ def enable_open_telemetry(app: FastAPI, endpoint) -> None:
     trace.set_tracer_provider(provider)
 
     tracer = trace.get_tracer(__name__)
-    FastAPIInstrumentor().instrument_app(app)
+
+
+if OTLP_ENDPOINT:
+    enable_open_telemetry(OTLP_ENDPOINT)
