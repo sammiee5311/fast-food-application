@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from redis.exceptions import ConnectionError
 from utils.log import logger
 
 router = APIRouter(
@@ -19,10 +20,13 @@ class UUID(BaseModel):
 
 @router.get("/id/", tags=["id"])
 async def read_uuid() -> JSONResponse:
-    _uuid = UUID(uuid=uuid_redis.get_uuid())
-    payload = jsonable_encoder(_uuid)
+    try:
+        _uuid = UUID(uuid=uuid_redis.get_uuid())
+        payload = jsonable_encoder(_uuid)
 
-    return JSONResponse(status_code=status.HTTP_200_OK, content=payload)
+        return JSONResponse(status_code=status.HTTP_200_OK, content=payload)
+    except ConnectionError:
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"error": f"Redis connection error."})
 
 
 @router.get("/id-generator/", tags=["id"])
