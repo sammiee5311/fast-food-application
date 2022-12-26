@@ -1,12 +1,17 @@
+import os
 from contextlib import contextmanager
 
-from flask import Flask
+from dotenv import load_dotenv
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.trace import Tracer
+
+load_dotenv(dotenv_path="./config/.env")
+
+OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 
 
 class NotSetSpan:
@@ -21,7 +26,12 @@ class NotSetTracer:
         yield NotSetSpan()
 
 
-def enable_open_telemetry(app: Flask, endpoint) -> None:
+tracer: Tracer | NotSetTracer = NotSetTracer()
+
+
+def enable_open_telemetry(endpoint: str) -> None:
+    global tracer
+
     resource = Resource(attributes={SERVICE_NAME: "machine-learning-api"})
     provider = TracerProvider(resource=resource)
     processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint))
@@ -29,6 +39,7 @@ def enable_open_telemetry(app: Flask, endpoint) -> None:
     trace.set_tracer_provider(provider)
 
     tracer = trace.get_tracer(__name__)
-    FlaskInstrumentor().instrument_app(app)
 
-    return tracer
+
+if OTLP_ENDPOINT:
+    enable_open_telemetry(OTLP_ENDPOINT)

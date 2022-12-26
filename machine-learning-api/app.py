@@ -3,10 +3,11 @@ import logging
 import os
 from typing import Dict
 
-from config.tracing import NotSetTracer, enable_open_telemetry
+from config.tracing import NotSetTracer, tracer
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask.logging import create_logger
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.trace import Tracer
 from utils import get_prediction
 
@@ -17,10 +18,9 @@ OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 app = Flask(__name__)
 logger = create_logger(app)
 logger.setLevel(logging.INFO)
-tracer: Tracer | NotSetTracer = NotSetTracer()
 
 if OTLP_ENDPOINT:
-    tracer = enable_open_telemetry(app, OTLP_ENDPOINT)
+    FlaskInstrumentor().instrument_app(app)
 
 
 @app.route("/predict", methods=["POST"])
