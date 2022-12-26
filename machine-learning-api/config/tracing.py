@@ -21,7 +21,7 @@ class NotSetSpan:
 
 class NotSetTracer:
     @contextmanager
-    def start_as_current_span(self, name: str):
+    def start_as_current_span(self, name: str | None, context: dict[str, str] | None):
         print("Tracing is disabled.")
         yield NotSetSpan()
 

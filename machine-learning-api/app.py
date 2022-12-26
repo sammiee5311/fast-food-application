@@ -3,12 +3,12 @@ import logging
 import os
 from typing import Dict
 
-from config.tracing import NotSetTracer, tracer
+from config.tracing import tracer
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask.logging import create_logger
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
-from opentelemetry.trace import Tracer
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from utils import get_prediction
 
 load_dotenv(dotenv_path="./config/.env")
@@ -25,7 +25,14 @@ if OTLP_ENDPOINT:
 
 @app.route("/predict", methods=["POST"])
 def predict() -> Dict[str, str]:
-    with tracer.start_as_current_span("predict") as span:
+    try:
+        traceparent = request.headers.get_all("traceparent")
+        carrier = {"traceparent": traceparent[0]}
+        ctx = TraceContextTextMapPropagator().extract(carrier)
+    except LookupError:
+        ctx = {}
+
+    with tracer.start_as_current_span("predict", context=ctx) as span:
         json_payload = request.json
         logger.info(f"JSON payload: {json_payload}")
         result_payload = get_prediction(json_payload)
