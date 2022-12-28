@@ -1,6 +1,6 @@
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { SimpleSpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 import { trace } from "@opentelemetry/api";
 
@@ -14,11 +14,17 @@ import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 
 const isTest = process.env.NODE_ENV === "test" ? true : false;
 
+class NotSetTracer {
+  constructor() {}
+}
+
+let tracer: Tracer | NotSetTracer = new NotSetTracer();
+
 if (isTest) {
   diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 }
 
-const tracing = (serviceName: string, jaeger_endpoint: string) => {
+export const enableTracing = (serviceName: string, jaeger_endpoint: string) => {
   const exporter = new JaegerExporter({
     endpoint: jaeger_endpoint,
   });
@@ -41,4 +47,4 @@ const tracing = (serviceName: string, jaeger_endpoint: string) => {
   return trace.getTracer(serviceName);
 };
 
-export default tracing;
+export default tracer;
