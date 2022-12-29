@@ -16,6 +16,7 @@ from utils.helper import (
     get_weather,
 )
 from utils.log import logger
+from utils.tracing import tracer
 
 load_env()
 
@@ -23,11 +24,13 @@ IP_ADDRESS = "kafka"
 PORT = os.environ["KAFKA_PORT"]
 TOPIC = os.environ["KAFKA_TOPIC"]
 DATABASE = PostgreSQL
+OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 
 
 JasonObject = Dict[str, Dict[str, Any]]
 
 
+@tracer.start_as_current_span("predict")
 def predict(data: JasonObject) -> int:
     """
     input : A jason object from web server

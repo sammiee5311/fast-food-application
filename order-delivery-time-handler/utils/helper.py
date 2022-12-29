@@ -8,9 +8,11 @@ import requests
 from config.env import load_env
 from config.errors import APIConnectionError, DistanceError, WeatherError
 from mpu import haversine_distance
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from requests.exceptions import ConnectionError
 from utils.location import Location
 from utils.log import logger
+from utils.tracing import tracer
 from utils.weather import WeatherApi
 
 JasonObject = Dict[str, Dict[str, Any]]
@@ -56,17 +58,30 @@ def get_estimated_delivery_time_result(required_values: RequiredValues) -> int:
     output : predicted estimate time in tuple (hour, minutes)
     """
     try:
-        payload = required_values.dict()
-        logger.info(f"Querying host {URL} with data: {payload}")
-        response_data = requests.post(url=URL, json=payload)
+        with tracer.start_as_current_span("EDT-result") as span:
+            payload = required_values.dict()
+            logger.info(f"Querying host {URL} with data: {payload}")
 
-        if response_data.status_code != 200:
-            raise APIConnectionError()
+            try:
+                carrier = {}
+                TraceContextTextMapPropagator().inject(carrier)
+                headers = {"traceparent": carrier["traceparent"]}
+            except LookupError:
+                headers = {}
 
-        response_data = response_data.json()
-        predicted_time = response_data["prediction"]
+            response_data = requests.post(url=URL, headers=headers, json=payload)
 
-        return predicted_time
+            if response_data.status_code != 200:
+                raise APIConnectionError()
+
+            response_data = response_data.json()
+            predicted_time = response_data["prediction"]
+
+            if span.is_recording():
+                span.set_attributes(payload)
+                span.set_attribute("prediction", predicted_time)
+
+            return predicted_time
     except ConnectionError:
         raise APIConnectionError()
 

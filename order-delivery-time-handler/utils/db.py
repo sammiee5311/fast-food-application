@@ -6,6 +6,7 @@ from typing import Protocol, Union
 import psycopg2
 from config.env import load_env
 from config.errors import EstimatedDeliveryTimeAlreadyExist, OrderNotFound
+from utils.tracing import tracer
 
 load_env()
 
@@ -53,19 +54,25 @@ DATABASE_TYPE = Union[SqlLite3, PostgreSQL]
 
 
 def update_estimated_delivery_time(database: DATABASE_TYPE, order_id: str, estimated_delivery_time: int) -> None:
-    with database() as cursor:
-        cursor.execute(f"SELECT estimated_delivery_time FROM {DB_TABLE} WHERE id = '{order_id}'")
-        result = cursor.fetchone()
+    with tracer.start_as_current_span("update-EDT") as span:
+        with database() as cursor:
+            cursor.execute(f"SELECT estimated_delivery_time FROM {DB_TABLE} WHERE id = '{order_id}'")
+            result = cursor.fetchone()
 
-        if not result:
-            raise OrderNotFound()
+            if not result:
+                raise OrderNotFound()
 
-        if result[0]:
-            raise EstimatedDeliveryTimeAlreadyExist()
+            if result[0]:
+                raise EstimatedDeliveryTimeAlreadyExist()
 
-        cursor.execute(
-            f"UPDATE {DB_TABLE} SET estimated_delivery_time = {estimated_delivery_time} WHERE id = '{order_id}'"
-        )
+            sql_statement = (
+                f"UPDATE {DB_TABLE} SET estimated_delivery_time = {estimated_delivery_time} WHERE id = '{order_id}'"
+            )
+
+            cursor.execute(sql_statement)
+
+            if span.is_recording():
+                span.set_attribute("sql-statement", sql_statement)
 
 
 if __name__ == "__main__":
