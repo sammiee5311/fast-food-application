@@ -214,5 +214,7 @@ REDIS_HOST = os.environ.get("REDIS_HOST", env("REDIS_HOST"))
 REDIS_PORT = os.environ.get("REDIS_PORT", env("REDIS_PORT"))
 REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", env("REDIS_PORT"))
 
+# Trace
+OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 
 SIMPLE_JWT
