@@ -114,7 +114,7 @@ services:
       - mongo
 
   tracking-1:
-    container_name: tracking
+    container_name: tracking-1
     build: ./tracking
     volumes:
       - ./tracking:/app
@@ -123,7 +123,7 @@ services:
       - mongo
 
   tracking-2:
-    container_name: tracking
+    container_name: tracking-2
     build: ./tracking
     volumes:
       - ./tracking:/app
