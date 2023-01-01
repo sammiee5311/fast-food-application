@@ -71,6 +71,15 @@ services:
     command: ["python", "main.py"]
     depends_on:
       - redis
+
+  machine-learning:
+    container_name: machine-learning
+    build: ./machine-learning-api
+    volumes:
+      - ./machine-learning-api:/app
+    command: ["python", "app.py"]
+    depends_on:
+      - redis
   
   frontend-react:
     container_name: frontend-react
