@@ -1,7 +1,10 @@
+from typing import Optional
+
 from database import UUIDRedis
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Header, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from pydantic import BaseModel
 from redis.exceptions import ConnectionError
 from utils.log import logger
@@ -20,8 +23,14 @@ class UUID(BaseModel):
 
 
 @router.get("/id/", tags=["id"])
-async def read_uuid() -> JSONResponse:
-    with tracer.start_as_current_span("uuid") as span:
+async def read_uuid(traceparent: Optional[list[str]] = Header(None)) -> JSONResponse:
+    try:
+        carrier = {"traceparent": traceparent[0]}
+        ctx = TraceContextTextMapPropagator().extract(carrier)
+    except (LookupError, TypeError):
+        ctx = {}
+
+    with tracer.start_as_current_span("uuid", context=ctx) as span:
         try:
             _uuid = UUID(uuid=uuid_redis.get_uuid())
             payload = jsonable_encoder(_uuid)

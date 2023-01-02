@@ -12,7 +12,7 @@ load_dotenv()
 OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 HOST = os.environ["SERVER_HOST"]
 PORT = int(os.environ["SERVER_PORT"])
-ORIGINS = ["django-backend:8000"]
+ORIGINS = ["django-backend:8000", "django-backend-1:8000", "django-backend-2:8000"]
 
 app = FastAPI()
 
