@@ -17,7 +17,7 @@ def connect_to_server() -> Response:
     try:
         response = requests.get(f"http://{HOST}:{PORT}/id")
 
-        if response.status_code != 201:
+        if response.status_code != 200:
             raise APIConnectionError()
 
         return response
