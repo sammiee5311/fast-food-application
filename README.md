@@ -52,6 +52,10 @@
 ### Proxy
  - nginx
  
+### Trace
+ - Opentelemetry
+ - Jaeger
+
 ### CI / CD
  - gitHub actions  
  - heroku 
@@ -68,6 +72,7 @@
 - [machine-learning](https://github.com/sammiee5311/fast-food-application/tree/main/machine-learning-api)
 - [tracking & restaurant](https://github.com/sammiee5311/fast-food-application/tree/main/tracking)
 - [id-generator](https://github.com/sammiee5311/fast-food-application/tree/main/id-generator)
+- [otel-collector](https://github.com/sammiee5311/fast-food-application/tree/main/otel-collector)
 
 ## ports
 
@@ -83,6 +88,8 @@
 - react: `3000`
 - mlflow: `1234`
 - postgres: `5432`
+- otel-collector: `4317`
+- jaeger: `14268`
 
 ## reference
 
