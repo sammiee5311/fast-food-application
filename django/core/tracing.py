@@ -1,4 +1,3 @@
-import os
 from contextlib import contextmanager
 
 from opentelemetry import trace
@@ -7,8 +6,6 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.trace import Tracer
-
-OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
 
 
 class NotSetSpan:
@@ -36,7 +33,3 @@ def enable_open_telemetry(endpoint: str) -> None:
     trace.set_tracer_provider(provider)
 
     tracer = trace.get_tracer(__name__)
-
-
-if OTLP_ENDPOINT:
-    enable_open_telemetry(OTLP_ENDPOINT)

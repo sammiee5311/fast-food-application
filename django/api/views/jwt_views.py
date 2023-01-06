@@ -28,12 +28,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class MyTokenValidation(APIView):
     def get(self, request: request.Request, **kwargs):
-        try:
-            traceparent = request.headers.get_all("traceparent")
+        traceparent = request.headers.get("traceparent")
+        ctx = {}
+
+        if traceparent:
             carrier = {"traceparent": traceparent[0]}
             ctx = TraceContextTextMapPropagator().extract(carrier)
-        except LookupError:
-            ctx = {}
 
         try:
             with tracer.start_as_current_span("get-token", context=ctx) as span:

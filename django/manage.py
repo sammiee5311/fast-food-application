@@ -13,7 +13,7 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
-    if OTLP_ENDPOINT:
+    if OTLP_ENDPOINT and not "test" in sys.argv:
         enable_open_telemetry(OTLP_ENDPOINT)
         DjangoInstrumentor().instrument()
         Psycopg2Instrumentor().instrument()
