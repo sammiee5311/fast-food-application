@@ -13,7 +13,6 @@ from opentelemetry.trace import Tracer
 load_env()
 
 OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
-print(OTLP_ENDPOINT)
 
 
 class NotSetSpan:
@@ -37,12 +36,6 @@ def enable_open_telemetry(endpoint: str) -> None:
     resource = Resource(attributes={SERVICE_NAME: "order-delivery-time-handler"})
     provider = TracerProvider(resource=resource)
     processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint))
-    # processor = BatchSpanProcessor(
-    #     JaegerExporter(
-    #         agent_host_name="localhost",
-    #         agent_port=14268,
-    #     )
-    # )
     provider.add_span_processor(processor)
     trace.set_tracer_provider(provider)
 
