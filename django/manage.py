@@ -6,6 +6,7 @@ import sys
 from core.settings import OTLP_ENDPOINT
 from core.tracing import enable_open_telemetry
 from opentelemetry.instrumentation.django import DjangoInstrumentor
+from opentelemetry.instrumentation.kafka import KafkaInstrumentor
 from opentelemetry.instrumentation.psycopg2 import Psycopg2Instrumentor
 
 
@@ -17,6 +18,7 @@ def main():
         enable_open_telemetry(OTLP_ENDPOINT)
         DjangoInstrumentor().instrument()
         Psycopg2Instrumentor().instrument()
+        KafkaInstrumentor().instrument()
 
     try:
         from django.core.management import execute_from_command_line

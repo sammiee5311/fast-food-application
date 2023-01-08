@@ -63,9 +63,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "phonenumber_field",
     "corsheaders",
+    "order",
     "restaurant",
     "accounts",
-    "order",
     "api",
 ]
 
