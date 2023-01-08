@@ -3,8 +3,8 @@ from contextlib import contextmanager
 
 from config.env import load_env
 from opentelemetry import trace
-from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.kafka import KafkaInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -13,6 +13,7 @@ from opentelemetry.trace import Tracer
 load_env()
 
 OTLP_ENDPOINT = os.environ.get("OTLP_ENDPOINT")
+HAS_KAFKA_VAR = os.environ.get("KAFKA_PORT") and os.environ.get("KAFKA_TOPIC")
 
 
 class NotSetSpan:
@@ -38,6 +39,9 @@ def enable_open_telemetry(endpoint: str) -> None:
     processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint))
     provider.add_span_processor(processor)
     trace.set_tracer_provider(provider)
+
+    if HAS_KAFKA_VAR:
+        KafkaInstrumentor().instrument()
 
     tracer = trace.get_tracer(__name__)
 
