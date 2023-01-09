@@ -1,5 +1,5 @@
-fastapi
-uvicorn[standard]
+fastapi==0.70.1
+uvicorn[standard]==0.20.0
 redis
 python-dotenv
 black
