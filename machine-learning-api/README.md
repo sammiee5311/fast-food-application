@@ -1,5 +1,7 @@
 # Machine Learning API (Heroku)
 
+This api service does not deploy to Heroku anymore.
+
 An api server for a prediction result (estimated delivery time)
 
 ## run mlfow command
