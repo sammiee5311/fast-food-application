@@ -5,7 +5,8 @@
         "args"      : "start",
         "watch"     : false,
         "env" : {
-            "NODE_ENV": "dev"
+            "NODE_ENV": "production",
+            "JAEGER_ENDPOINT": ""
         }
     }]
 }

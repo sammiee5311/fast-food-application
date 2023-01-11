@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
 import fetch, { Headers } from "node-fetch";
+import opentelemetry from "@opentelemetry/api";
 import { JwtData } from "../types/index";
+import tracer from "../utils/tracing";
+import { Span, ROOT_CONTEXT } from "@opentelemetry/api";
 
 /* istanbul ignore file */
 
@@ -12,7 +15,16 @@ export const tokenValidation = async (
 ) => {
   try {
     const requestHeaders = new Headers();
+    const span = tracer.startSpan("auth-validation");
+    opentelemetry.propagation.inject(ROOT_CONTEXT, {});
     requestHeaders.set("Authorization", <string>req.headers["authorization"]);
+
+    if (span.isRecording()) {
+      (span as Span).setAttribute(
+        "authorization",
+        <string>req.headers["authorization"]
+      );
+    }
 
     const response = await fetch(
       "https:/nginx-proxy/api/v0/token/validation/",
@@ -20,6 +32,8 @@ export const tokenValidation = async (
         headers: requestHeaders,
       }
     );
+
+    span.end();
 
     if (response.status === 500) {
       res.status(500).json({ message: "Something went wrong" });

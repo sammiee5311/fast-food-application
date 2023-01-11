@@ -15,8 +15,17 @@ import { KafkaJsInstrumentation } from "opentelemetry-instrumentation-kafkajs";
 
 const isTest = process.env.NODE_ENV === "test" ? true : false;
 
+class NoSetSpan {
+  end(): void {}
+  isRecording(): boolean {
+    return false;
+  }
+}
+
 class NotSetTracer {
-  constructor() {}
+  startSpan(name: string): NoSetSpan {
+    return new NoSetSpan();
+  }
 }
 
 let tracer: Tracer | NotSetTracer = new NotSetTracer();
