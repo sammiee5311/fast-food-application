@@ -11,6 +11,7 @@ import { MongoDBInstrumentation } from "@opentelemetry/instrumentation-mongodb";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
+import { KafkaJsInstrumentation } from "opentelemetry-instrumentation-kafkajs";
 
 const isTest = process.env.NODE_ENV === "test" ? true : false;
 
@@ -40,6 +41,7 @@ export const enableTracing = (serviceName: string, jaeger_endpoint: string) => {
       new HttpInstrumentation(),
       new ExpressInstrumentation(),
       new MongoDBInstrumentation(),
+      new KafkaJsInstrumentation(),
     ],
     tracerProvider: provider,
   });
