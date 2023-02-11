@@ -9,7 +9,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.auth.user);
   const { error, sendRequest } = useAuth();
-  const TIME = 1000 * 60 * 3;
+  const TIME = 1000 * 60 * 60;
   const authTokensSelector = useSelector((state) => state.auth.authTokens);
 
   const onLogoutClicked = () => {
@@ -34,7 +34,7 @@ const Header = () => {
     }, TIME);
 
     return () => clearInterval(interval);
-  }, [sendRequest, TIME, error, authTokensSelector, dispatch]);
+  }, [sendRequest, error, authTokensSelector, dispatch]);
 
   return (
     <div>
