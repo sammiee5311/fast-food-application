@@ -1,6 +1,6 @@
 import { CorsOptions } from "cors";
 
-const WHITELIST = ["http://localhost:3000", "http://localhost:3001"];
+const WHITELIST = ["http://127.0.0.1:3000", "http://127.0.0.1:3001"];
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {

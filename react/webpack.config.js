@@ -16,11 +16,11 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api/v1/*": {
-        target: "https://localhost",
+        target: "https://127.0.0.1",
         secure: false,
       },
       "/api/v0/*": {
-        target: "https://localhost",
+        target: "https://127.0.0.1",
         secure: false,
       },
     },

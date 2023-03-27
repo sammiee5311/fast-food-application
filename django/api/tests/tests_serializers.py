@@ -186,7 +186,7 @@ class TestViewRestaurant(APITestCase):
         invalid_data = {"phone_number": "invalid phone number"}
 
         url = reverse("api:restaurant_detail", kwargs={"pk": 1})
-        url_without_id = "http://localhost:8000/api/v0/restaurants/"
+        url_without_id = "http://127.0.0.1:8000/api/v0/restaurants/"
         url_id_does_not_exist = reverse("api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.patch(url, data, format="json")
@@ -205,7 +205,7 @@ class TestViewRestaurant(APITestCase):
         create_restaurant(self.user, client)
 
         url = reverse("api:restaurant_detail", kwargs={"pk": 1})
-        url_without_id = "http://localhost:8000/api/v0/restaurants/"
+        url_without_id = "http://127.0.0.1:8000/api/v0/restaurants/"
         url_id_does_not_exist = reverse("api:restaurant_detail", kwargs={"pk": 123})
 
         response = client.delete(url, format="json")

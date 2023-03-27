@@ -9,7 +9,7 @@ export interface ResponseText {
   orders?: { orders: Order[] };
 }
 
-export const ORIGIN_URL = "http://localhost:3000";
+export const ORIGIN_URL = "http://127.0.0.1:3000";
 export const mongoCollectionData = {
   _id: 1,
   ingredients: { lettuce: 1, tomato: 1 },

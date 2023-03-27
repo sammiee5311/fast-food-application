@@ -8,7 +8,7 @@ from requests.exceptions import ConnectionError
 from utils import get_features_payload, get_schema
 
 FEATURES = get_schema()["required"]
-HOST = "localhost"
+HOST = "127.0.0.1"
 PORT = "8080"
 
 

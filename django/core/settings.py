@@ -38,11 +38,11 @@ AUTH_USER_MODEL = "accounts.Client"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "kafka", "fastfood-application"]
+ALLOWED_HOSTS = ["127.0.0.1", "kafka", "fastfood-application"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CSRF_TRUSTED_ORIGINS = ["https://localhost"]
+CSRF_TRUSTED_ORIGINS = ["https://127.0.0.1"]
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
 
